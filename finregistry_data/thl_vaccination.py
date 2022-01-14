@@ -54,15 +54,18 @@ def merge_data(df_registry, df_protection):
     return df
 
 
-def parse_dates(date_col):
+def parse_dates(df, date_col):
     """
-    Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd hh:mm.
+    Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd.
     Invalid dates are returned as missing (NaT).
     Invalid dates include dates with invalid format or far in the future.
     """
-    res = pd.to_datetime(date_col, format="%d.%m.%Y %H:%M", errors="coerce")
-    res.loc[res.dt.year > 2100] = pd.NaT
-    return res
+    df[date_col] = pd.to_datetime(
+        df[date_col], format="%d.%m.%Y %H:%M", errors="coerce"
+    )
+    df.loc[df[date_col].dt.year > 2100] = pd.NaT
+    df[date_col] = df[date_col].dt.date
+    return df
 
 
 def replace_missing_and_invalid_with_na(df):
@@ -105,7 +108,7 @@ def preprocess_data():
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
     df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
     df = merge_data(df_registry, df_protection)
-    df["ROKOTE_ANTOPVM"] = parse_dates(df["ROKOTE_ANTOPVM"])
+    df = parse_dates(df, "ROKOTE_ANTOPVM")
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
     df = rename_columns(df)
