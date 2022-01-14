@@ -22,13 +22,14 @@ TODO: move writing to utils
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from config import VACCINATION_PROTECTION_PATH, VACCINATION_REGISTRY_PATH
+from config import VACCINATION_PROTECTION_DATA_PATH, VACCINATION_REGISTRY_DATA_PATH
+from finregistry_data.config import THL_VACCINATION_OUTPUT_DIR
 
 MISSING_VALUES = [0]
 INVALID_VALUES = [-1, -2]
 
 
-def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
+def read_vacc_protection_data(path=VACCINATION_PROTECTION_DATA_PATH):
     """Read vaccination protection data"""
     dtypes = {
         "KAYNTI_ID": int,
@@ -40,7 +41,7 @@ def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
     return df
 
 
-def read_vacc_registry_data(path=VACCINATION_REGISTRY_PATH):
+def read_vacc_registry_data(path=VACCINATION_REGISTRY_DATA_PATH):
     """Read vaccination registry data"""
     dtypes = {
         "KAYNTI_ID": int,
@@ -146,10 +147,10 @@ def preprocess_data(df):
 
 
 if __name__ == "__main__":
-    df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
-    df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
+    df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_DATA_PATH)
+    df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_DATA_PATH)
     df = merge_data(df_registry, df_protection)
     df = preprocess_data(df)
-    write_data(df, "/home/eviippol/finregistry-data/results", "csv")
-    write_data(df, "/home/eviippol/finregistry-data/results", "feather")
+    write_data(df, THL_VACCINATION_OUTPUT_DIR, "csv")
+    write_data(df, THL_VACCINATION_OUTPUT_DIR, "feather")
 
