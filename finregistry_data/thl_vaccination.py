@@ -13,7 +13,7 @@ import pandas as pd
 from config import VACCINATION_PROTECTION_PATH, VACCINATION_REGISTRY_PATH
 
 MISSING_VALUES = [0]
-INVALID_VALUES = [1, 2]
+INVALID_VALUES = [-1, -2]
 
 
 def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
