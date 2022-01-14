@@ -73,3 +73,5 @@ def profile(df, id_col=None):
     print(f"Number of columns: {ncols}")
     print("Column profiles:")
     print(profiles)
+
+    return profiles
