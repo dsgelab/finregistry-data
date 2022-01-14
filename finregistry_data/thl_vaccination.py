@@ -21,8 +21,11 @@ TODO: move writing to utils
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from config import VACCINATION_PROTECTION_DATA_PATH, VACCINATION_REGISTRY_DATA_PATH
-from finregistry_data.config import THL_VACCINATION_OUTPUT_DIR
+from config import (
+    VACCINATION_PROTECTION_DATA_PATH,
+    VACCINATION_REGISTRY_DATA_PATH,
+    THL_VACCINATION_OUTPUT_DIR,
+)
 
 MISSING_VALUES = [0]
 INVALID_VALUES = [-1, -2]
