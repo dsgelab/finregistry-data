@@ -6,7 +6,7 @@ Applies the following preprocessing steps to the data:
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
-- TODO: replace finnish column names with english column names
+- replace finnish column names with english column names
 """
 
 import pandas as pd
@@ -85,6 +85,22 @@ def drop_columns(df):
     return df
 
 
+def rename_columns(df):
+    d = {
+        "KAYNTI_ID": "visit_id",
+        "TNRO": "finregistryid",
+        "ROKOTE_ANTOPVM": "vaccination_date",
+        "LAAKEAINE": "drug",
+        "LAAKEAINE_SELITE": "drug_description",
+        "ROKOTUSTAPA": "method",
+        "PISTOSKOHTA": "injection_site",
+        "LAAKEPAKKAUSNRO": "vnr",
+        "ROKOTUSSUOJA": "protection",
+    }
+    df = df.rename(columns=d)
+    return df
+
+
 def preprocess_data():
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
     df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
@@ -92,5 +108,6 @@ def preprocess_data():
     df["ROKOTE_ANTOPVM"] = parse_dates(df["ROKOTE_ANTOPVM"])
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
+    df = rename_columns(df)
     return df_protection, df_registry, df
 
