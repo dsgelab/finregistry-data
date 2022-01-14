@@ -5,8 +5,8 @@ Applies the following preprocessing steps to the data:
 - merge the two datasets into one
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
+- drop redundant columns
 - TODO: replace finnish column names with english column names
-- TODO: drop redundant columns
 """
 
 import pandas as pd
@@ -79,11 +79,18 @@ def replace_missing_and_invalid_with_na(df):
     return df
 
 
+def drop_columns(df):
+    drop = ["ROKOTE_JARJESTYS", "LR_JARJESTYS"]
+    df = df.drop(columns=drop)
+    return df
+
+
 def preprocess_data():
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
     df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
     df = merge_data(df_registry, df_protection)
     df["ROKOTE_ANTOPVM"] = parse_dates(df["ROKOTE_ANTOPVM"])
     df = replace_missing_and_invalid_with_na(df)
+    df = drop_columns(df)
     return df_protection, df_registry, df
 
