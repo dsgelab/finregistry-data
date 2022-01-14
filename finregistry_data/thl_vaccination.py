@@ -6,7 +6,6 @@ Reads THL Vaccination data, applies the preprocessing steps below and writes the
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
-- replace finnish column names with english column names
 
 Input files: 
 - thl2196_rokotussuoja.csv
@@ -105,23 +104,6 @@ def drop_columns(df):
     return df
 
 
-def rename_columns(df):
-    """Rename columns in English"""
-    d = {
-        "KAYNTI_ID": "visit_id",
-        "TNRO": "finregistryid",
-        "ROKOTE_ANTOPVM": "vaccination_date",
-        "LAAKEAINE": "drug",
-        "LAAKEAINE_SELITE": "drug_description",
-        "ROKOTUSTAPA": "method",
-        "PISTOSKOHTA": "injection_site",
-        "LAAKEPAKKAUSNRO": "vnr",
-        "ROKOTUSSUOJA": "protection",
-    }
-    df = df.rename(columns=d)
-    return df
-
-
 def write_data(df, outputdir, format="csv"):
     """Write data to a csv or feather file"""
     today = datetime.today().strftime("%Y-%m-%d")
@@ -142,7 +124,6 @@ def preprocess_data(df):
     df = parse_dates(df, "ROKOTE_ANTOPVM")
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
-    df = rename_columns(df)
     return df
 
 
