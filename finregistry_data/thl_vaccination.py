@@ -10,7 +10,6 @@ Applies the following preprocessing steps to the data:
 - TODO: drop redundant columns
 """
 
-from os import register_at_fork
 import pandas as pd
 from config import VACCINATION_PROTECTION_PATH, VACCINATION_REGISTRY_PATH
 
@@ -57,8 +56,10 @@ def parse_dates(date_col):
     """
     Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd hh:mm.
     Invalid dates are returned as missing (NaT).
+    Invalid dates include dates with invalid format or far in the future.
     """
     res = pd.to_datetime(date_col, format="%d.%m.%Y %H:%M", errors="coerce")
+    res.loc[res.dt.year > 2100] = pd.NaT
     return res
 
 
