@@ -1,12 +1,20 @@
 """
 THL Vaccination data preprocessing
 
-Applies the following preprocessing steps to the data: 
+Reads THL Vaccination data, applies the preprocessing steps below and writes the data to files.
 - merge the two datasets into one
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
 - replace finnish column names with english column names
+
+Input files: 
+- thl2196_rokotussuoja.csv
+- thl2196_rokoterekisteri.csv.finreg_IDs
+
+Output files: 
+- vaccination_<YYYY-MM-DD>.csv
+- vaccination_<YYYY-MM-DD>.feather
 
 TODO: move writing to utils
 """
@@ -21,6 +29,7 @@ INVALID_VALUES = [-1, -2]
 
 
 def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
+    """Read vaccination protection data"""
     dtypes = {
         "KAYNTI_ID": int,
         "JARJESTYS": int,
@@ -32,6 +41,7 @@ def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
 
 
 def read_vacc_registry_data(path=VACCINATION_REGISTRY_PATH):
+    """Read vaccination registry data"""
     dtypes = {
         "KAYNTI_ID": int,
         "TNRO": str,
@@ -49,6 +59,11 @@ def read_vacc_registry_data(path=VACCINATION_REGISTRY_PATH):
 
 
 def merge_data(df_registry, df_protection):
+    """
+    Merge the vaccination registry dataset with the vaccination protection dataset.
+    The ROKOTUSSUOJA values are grouped in lists for each KAYNTI_ID, LR_JARJESTYS pair.
+    The resulting dataset contains all rows from the vaccination registry datasets.
+    """
     df_protection = (
         df_protection.groupby(["KAYNTI_ID", "LR_JARJESTYS"])["ROKOTUSSUOJA"]
         .agg(list)
@@ -61,8 +76,7 @@ def merge_data(df_registry, df_protection):
 def parse_dates(df, date_col):
     """
     Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd.
-    Invalid dates are returned as missing (NaT).
-    Invalid dates include dates with invalid format or far in the future.
+    Invalid dates (invalid format, future dates) are returned as missing (NaT).
     """
     df[date_col] = pd.to_datetime(
         df[date_col], format="%d.%m.%Y %H:%M", errors="coerce"
@@ -75,8 +89,6 @@ def parse_dates(df, date_col):
 def replace_missing_and_invalid_with_na(df):
     """
     Replace missing and invalid values with NA
-    Missing values are denoted with empty strings and 0s.
-    Invalid values are denoted with negative values (-1, -2).
     """
     d = dict.fromkeys(
         ["LAAKEAINE", "ROKOTUSTAPA", "PISTOSKOHTA", "LAAKEPAKKAUSNRO"],
@@ -93,6 +105,7 @@ def drop_columns(df):
 
 
 def rename_columns(df):
+    """Rename columns in English"""
     d = {
         "KAYNTI_ID": "visit_id",
         "TNRO": "finregistryid",
@@ -109,6 +122,7 @@ def rename_columns(df):
 
 
 def write_data(df, outputdir, format="csv"):
+    """Write data to a csv or feather file"""
     today = datetime.today().strftime("%Y-%m-%d")
     outputdir = Path(outputdir)
     if format == "csv":
@@ -122,6 +136,7 @@ def write_data(df, outputdir, format="csv"):
 
 
 def preprocess_data(df):
+    """Apply the preprocessing pipeline"""
     df = merge_data(df_registry, df_protection)
     df = parse_dates(df, "ROKOTE_ANTOPVM")
     df = replace_missing_and_invalid_with_na(df)
