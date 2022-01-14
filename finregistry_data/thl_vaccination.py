@@ -3,10 +3,10 @@ THL Vaccination data preprocessing
 
 Applies the following preprocessing steps to the data: 
 - merge the two datasets into one
+- parse dates
 - TODO: replace missing values (0 or empty) with NA 
 - TODO: replace invalid values (negative values) with NA 
 - TODO: replace finnish column names with english column names
-- TODO: parse dates
 - TODO: drop redundant columns
 """
 
@@ -53,9 +53,19 @@ def merge_data(df_registry, df_protection):
     return df
 
 
+def parse_dates(date_col):
+    """
+    Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd hh:mm.
+    Invalid dates are returned as missing (NaT).
+    """
+    res = pd.to_datetime(date_col, format="%d.%m.%Y %H:%M", errors="coerce")
+    return res
+
+
 def preprocess_data():
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
     df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
     df = merge_data(df_registry, df_protection)
+    df["ROKOTE_ANTOPVM"] = parse_dates(df["ROKOTE_ANTOPVM"])
     return df_protection, df_registry, df
 
