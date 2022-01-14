@@ -7,9 +7,13 @@ Applies the following preprocessing steps to the data:
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
 - replace finnish column names with english column names
+
+TODO: move writing to utils
 """
 
 import pandas as pd
+from pathlib import Path
+from datetime import datetime
 from config import VACCINATION_PROTECTION_PATH, VACCINATION_REGISTRY_PATH
 
 MISSING_VALUES = [0]
@@ -104,13 +108,33 @@ def rename_columns(df):
     return df
 
 
-def preprocess_data():
-    df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
-    df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
+def write_data(df, outputdir, format="csv"):
+    today = datetime.today().strftime("%Y-%m-%d")
+    outputdir = Path(outputdir)
+    if format == "csv":
+        filename = "vaccination_" + today + ".csv"
+        df.to_csv(outputdir / filename, sep=";", index=False)
+    elif format == "feather":
+        filename = "vaccination_" + today + ".feather"
+        df.to_feather(outputdir / filename)
+    else:
+        print("Invalid file format")
+
+
+def preprocess_data(df):
     df = merge_data(df_registry, df_protection)
     df = parse_dates(df, "ROKOTE_ANTOPVM")
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
     df = rename_columns(df)
-    return df_protection, df_registry, df
+    return df
+
+
+if __name__ == "__main__":
+    df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
+    df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
+    df = merge_data(df_registry, df_protection)
+    df = preprocess_data(df)
+    write_data(df, "/home/eviippol/finregistry-data/results", "csv")
+    write_data(df, "/home/eviippol/finregistry-data/results", "feather")
 
