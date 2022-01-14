@@ -16,6 +16,7 @@ Output files:
 - vaccination_<YYYY-MM-DD>.feather
 
 TODO: move writing to utils
+TODO: add "0", "-1", and "-2" to missing and invalid values to replace from str columns
 """
 
 import pandas as pd
