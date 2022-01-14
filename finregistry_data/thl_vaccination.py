@@ -4,14 +4,16 @@ THL Vaccination data preprocessing
 Applies the following preprocessing steps to the data: 
 - merge the two datasets into one
 - parse dates
-- TODO: replace missing values (0 or empty) with NA 
-- TODO: replace invalid values (negative values) with NA 
+- replace missing (0) and invalid (-1, -2) values with NA 
 - TODO: replace finnish column names with english column names
 - TODO: drop redundant columns
 """
 
 import pandas as pd
 from config import VACCINATION_PROTECTION_PATH, VACCINATION_REGISTRY_PATH
+
+MISSING_VALUES = [0]
+INVALID_VALUES = [1, 2]
 
 
 def read_vacc_protection_data(path=VACCINATION_PROTECTION_PATH):
@@ -63,10 +65,25 @@ def parse_dates(date_col):
     return res
 
 
+def replace_missing_and_invalid_with_na(df):
+    """
+    Replace missing and invalid values with NA
+    Missing values are denoted with empty strings and 0s.
+    Invalid values are denoted with negative values (-1, -2).
+    """
+    d = dict.fromkeys(
+        ["LAAKEAINE", "ROKOTUSTAPA", "PISTOSKOHTA", "LAAKEPAKKAUSNRO"],
+        MISSING_VALUES + INVALID_VALUES,
+    )
+    df = df.replace(d, pd.NA)
+    return df
+
+
 def preprocess_data():
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_PATH)
     df_registry = read_vacc_registry_data(VACCINATION_REGISTRY_PATH)
     df = merge_data(df_registry, df_protection)
     df["ROKOTE_ANTOPVM"] = parse_dates(df["ROKOTE_ANTOPVM"])
+    df = replace_missing_and_invalid_with_na(df)
     return df_protection, df_registry, df
 
