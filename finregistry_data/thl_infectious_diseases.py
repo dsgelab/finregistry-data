@@ -107,3 +107,10 @@ def drop_columns(df):
     df = df.drop(columns=drop)
     return df
 
+
+def preprocess_data(df):
+    df = replace_missing_with_na(df)
+    df = translate_variables(df)
+    df = reshape_long_to_wide(df)
+    df = drop_columns(df)
+    return df
