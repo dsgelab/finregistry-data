@@ -25,3 +25,68 @@ def replace_missing_with_na(df):
     df = df.replace(d, pd.NA)
     return df
 
+
+def translate_variables(df):
+    """
+    Translate variables with _ as separator.
+    Needed to reshape data from long to wide format.
+    """
+    d = {
+        "Alkuperäinen sairaanhoitopiiri": "original_hospital_district",
+        "Diagnoosikoodi": "diagnosis_code",
+        "Hengityksen tukihoito": "breathing_assistance_treatment",
+        "Hoidon lopputulos/status": "treatment_status",
+        "Ikä vuosina": "age_years",
+        "Ilmoitustyyppi": "notice_group",
+        "Kansalaisuusluokka": "nationality_category",
+        "Kulunut aika tilastoinnin ja kuoleman välillä": "time_between_recording_and_death",
+        "Laboratoriotyyppi": "laboratory_type",
+        "Lähikontakti COVID-19 -tapaukseen tai -epäiltyyn": "contact_with_covid19_case_or_suspected_case",
+        "Mikrobi": "microbe",
+        "Mikrobiominaisuus": "microbe_property",
+        "Mikrobisuku": "microbal_family",
+        "Näyte kantakokoelmassa": "sample_in_kantakokoelma",
+        "Näytelaatu": "sample_type",
+        "Näytteenottopäivä": "sampling_date",
+        "Pitkäaikaissairaus": "chronic_disease",
+        "Postinumero": "zip_code",
+        "Potilaan alkuperä": "patient_origin",
+        "Potilaan alkuperän maantieteellinen alue": "patient_origin_geographical_area",
+        "Raportointiryhmä": "reporting_group",
+        "Sairaalahoito": "hospital_care",
+        "Sairaanhoitopiiri": "hospital_district",
+        "Sairauden oireiden alkamiskuukausi": "symptom_start_month",
+        "Sairauden oireiden alkamispäivämäärä": "symptom_start_date",
+        "Sairauden oireiden alkamisvuosi": "symptom_start_year",
+        "Sairauden oireita": "symptoms",
+        "Seurantakohde, myös historia": "monitoring_target_incl_history",
+        "Syntymävuosi": "birth_year",
+        "Tartuntamaa": "infection_country",
+        "Tartuntamaaluokka": "infection_country_category",
+        "Tauti": "disease",
+        "Tehohoito": "intensive_care",
+        "Terveydenhuollon työntekijä": "healthcare_worker",
+        "Tilastointikuukausi": "recording_month",
+        "Tilastointiviikko": "recording_week",
+        "Tilastointivuosi": "recording_year",
+        "Toteamistapa": "diagnosis_method",
+        "Viikko": "week",
+    }
+    df = df.replace({"KUVAUS": d})
+    return df
+
+
+def reshape_long_to_wide(df):
+    """
+    Reshape the data from long to wide format.
+    KOODIN_TNS-ARVO_KOODI pairs with more than one value per KUVAUS are returned as lists.
+    """
+    df = (
+        df.groupby(["TAPAUS_ID", "TNRO", "KUVAUS"])["ARVO_TEKSTI"]
+        .agg(list)
+        .reset_index()
+    )
+    df = df.pivot(
+        index=["TAPAUS_ID", "TNRO"], columns="KUVAUS", values="ARVO_TEKSTI"
+    ).reset_index()
+    return df
