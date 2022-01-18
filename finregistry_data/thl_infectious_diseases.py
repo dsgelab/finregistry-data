@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from config import THL_INFECTIOUS_DISEASES_DATA_PATH
 
 MISSING_VALUES = [0]
@@ -108,9 +109,22 @@ def drop_columns(df):
     return df
 
 
+def flatten_lists(df):
+    """Flatten lists if the column only includes lists of length one"""
+    cols = set(df.columns) - set(["TAPAUS_ID", "TNRO"])
+    for col in cols:
+        list_lengths = df[col].str.len().unique()
+        list_lengths = list_lengths[~np.isnan(list_lengths)]
+        if len(list_lengths) == 1:
+            df[col] = df[col].str[0]
+    return df
+
+
 def preprocess_data(df):
+    """Apply the preprocessing pipeline"""
     df = replace_missing_with_na(df)
     df = translate_variables(df)
     df = reshape_long_to_wide(df)
     df = drop_columns(df)
+    df = flatten_lists(df)
     return df
