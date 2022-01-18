@@ -81,6 +81,7 @@ def reshape_long_to_wide(df):
     Reshape the data from long to wide format.
     KOODIN_TNS-ARVO_KOODI pairs with more than one value per KUVAUS are returned as lists.
     """
+    df = df.dropna(subset=["ARVO_TEKSTI"]).reset_index()
     df = (
         df.groupby(["TAPAUS_ID", "TNRO", "KUVAUS"])["ARVO_TEKSTI"]
         .agg(list)
