@@ -91,3 +91,19 @@ def reshape_long_to_wide(df):
         index=["TAPAUS_ID", "TNRO"], columns="KUVAUS", values="ARVO_TEKSTI"
     ).reset_index()
     return df
+
+
+def drop_columns(df):
+    """Drop columns that are not needed"""
+    drop = [
+        "age_years",
+        "recording_month",
+        "recording_year",
+        "symptom_start_month",
+        "symptom_start_year",
+        "time_between_recording_and_death",
+        "week",
+    ]
+    df = df.drop(columns=drop)
+    return df
+
