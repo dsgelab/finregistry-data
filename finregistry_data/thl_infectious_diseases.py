@@ -1,3 +1,42 @@
+"""
+THL Infectious Diseases data processing 
+
+Reads THL Infectious Diseases data, applies the preprocessing steps below, and writes the result to a file.
+- Replace missing values with NA
+- Translate variables to English
+- Reshape data from wide to long format 
+- Drop redundant columns 
+- Flatten lists of length 1
+- TODO: insert ARVO_KOODI to missing ARVO_TEKSTI
+
+Input file: 
+- thl2021_2196_ttr.csv.finreg_IDs
+
+Output files: 
+- infectious_diseases_<YYYY-MM-DD>.csv
+- infectious_diseases_<YYYY-MM-DD>.feather
+
+Examples of output dataset usage: 
+
+Example 1: Filter by value in list column
+```
+temp = df[~df["diagnosis_code"].isna()]
+temp[temp["diagnosis_code"].apply(lambda x: "<diagnosis code>" in x)]
+```
+
+Example 2: Unlist list column
+```
+temp = df.loc[~df["diagnosis_code"].isna()] # not required but faster
+temp["diagnosis_code"].apply(pd.Series)
+```
+
+Example 3: Count unique values in list column:
+```
+temp = df.loc[~df["diagnosis_code"].isna()]
+pd.Series([item for sublist in temp["diagnosis_code"] for item in sublist]).value_counts()
+```
+"""
+
 import pandas as pd
 import numpy as np
 from config import THL_INFECTIOUS_DISEASES_DATA_PATH
