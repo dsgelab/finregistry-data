@@ -39,7 +39,8 @@ pd.Series([item for sublist in temp["diagnosis_code"] for item in sublist]).valu
 
 import pandas as pd
 import numpy as np
-from config import THL_INFECTIOUS_DISEASES_DATA_PATH
+from config import THL_INFECTIOUS_DISEASES_DATA_PATH, THL_INFECTIOUS_DISEASES_OUTPUT_DIR
+from utils import write_data
 
 MISSING_VALUES = [0]
 MISSING_VALUES_STR = [
@@ -172,3 +173,10 @@ def preprocess_data(df):
     df = drop_columns(df)
     df = flatten_lists(df)
     return df
+
+
+if __name__ == "__main__":
+    df = read_data()
+    df = preprocess_data(df)
+    write_data(df, THL_INFECTIOUS_DISEASES_OUTPUT_DIR, "infectious_diseases", "csv")
+    write_data(df, THL_INFECTIOUS_DISEASES_OUTPUT_DIR, "infectious_diseases", "feather")
