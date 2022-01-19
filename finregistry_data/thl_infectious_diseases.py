@@ -42,7 +42,12 @@ import numpy as np
 from config import THL_INFECTIOUS_DISEASES_DATA_PATH
 
 MISSING_VALUES = [0]
-MISSING_VALUES_STR = [str(i) for i in MISSING_VALUES]
+MISSING_VALUES_STR = [
+    "0",
+    "ei tietoa",
+    "Ei tietoa",
+    "ei tiedossa",
+]
 
 
 def read_data(filepath=THL_INFECTIOUS_DISEASES_DATA_PATH):
