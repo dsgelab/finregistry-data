@@ -2,7 +2,7 @@
 FICC Intensive Care data preprocessing
 
 Reads FICC Intensive Care data, applies the preprocessing steps below and writes the result to a file.
-- TODO: parse dates
+- parse dates
 - TODO: parse missing values 
 - TODO: reshape TISS from long to wide format
 - TODO: drop redundant columns 
@@ -29,7 +29,17 @@ def read_data(filepath):
     return df
 
 
+def parse_dates(df, date_cols):
+    """Parse dates as pandas dates. Invalid dates are returned as NaT."""
+    for date_col in date_cols:
+        df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+    return df
+
+
 def preprocess_data():
     teho = read_data(FICC_INTENSIVE_CARE_TEHO_DATA_PATH)
     tiss = read_data(FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH)
+    teho = parse_dates(teho, ["HOSP_DISCH_TIME", "ADM_TIME", "DISCH_TIME"])
+    tiss = parse_dates(tiss, ["DATETIME"])
+    return teho, tiss
 
