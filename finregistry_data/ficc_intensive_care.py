@@ -18,9 +18,11 @@ Output files:
 """
 
 import pandas as pd
+from utils import write_data
 from config import (
     FICC_INTENSIVE_CARE_TEHO_DATA_PATH,
     FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH,
+    FICC_INTENSIVE_CARE_OUTPUT_DIR,
 )
 
 
@@ -62,3 +64,5 @@ if __name__ == "__main__":
     tiss = read_data(FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH)
     teho = preprocess_teho_data(teho)
     tiss = preprocess_tiss_data(tiss)
+    write_data(teho, FICC_INTENSIVE_CARE_OUTPUT_DIR, "intensive_care", "csv")
+    write_data(tiss, FICC_INTENSIVE_CARE_OUTPUT_DIR, "tiss", "csv")
