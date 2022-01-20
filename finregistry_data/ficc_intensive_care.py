@@ -4,6 +4,16 @@ FICC Intensive Care data preprocessing
 Reads FICC Intensive Care data, applies the preprocessing steps below and writes the result to a file.
 - TODO: parse dates
 - TODO: parse missing values 
+- TODO: reshape TISS from long to wide format
+- TODO: drop redundant columns 
+
+Input files: 
+- thl2020_2196_teho.csv.finreg_IDs
+- thl2020_2196_teho_tiss.csv.finreg_IDs
+
+Output files: 
+- intensive_care.csv
+- tiss.csv
 """
 
 import pandas as pd
