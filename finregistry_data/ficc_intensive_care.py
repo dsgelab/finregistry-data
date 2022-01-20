@@ -4,7 +4,7 @@ FICC Intensive Care data preprocessing
 Reads FICC Intensive Care data, applies the preprocessing steps below and writes the result to a file.
 - parse dates
 - drop redundant columns 
-- TODO: parse missing values (probably 0 and/or 99)
+- TODO: parse missing and invalid values (probably 0 and/or 99)
 - TODO: reshape TISS from long to wide format
 - TODO: replace GROUP_SEX with FEMALE
 
@@ -44,14 +44,21 @@ def drop_columns(df):
     return df
 
 
-def preprocess_data():
-    """Apply the data preprocessing pipeline"""
+def preprocess_teho_data(df):
+    """Preprocess Teho dataset"""
+    df = parse_dates(df, ["HOSP_DISCH_TIME", "ADM_TIME", "DISCH_TIME"])
+    df = drop_columns(df)
+    return df
+
+
+def preprocess_tiss_data(df):
+    """Preprocess TISS dataset"""
+    df = parse_dates(df, ["DATETIME"])
+    return df
+
+
+if __name__ == "__main__":
     teho = read_data(FICC_INTENSIVE_CARE_TEHO_DATA_PATH)
-    teho = parse_dates(teho, ["HOSP_DISCH_TIME", "ADM_TIME", "DISCH_TIME"])
-    teho = drop_columns(teho)
-
     tiss = read_data(FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH)
-    tiss = parse_dates(tiss, ["DATETIME"])
-
-    return teho, tiss
-
+    teho = preprocess_teho_data(teho)
+    tiss = preprocess_tiss_data(tiss)
