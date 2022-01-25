@@ -4,8 +4,7 @@ THL Malformations data processing
 Reads THL Malformations data, applies the preprocessing steps below, and writes the result to a file.
 - remove extra linebreaks
 - parse dates
-- TODO: replace missing values with NA 
-- TODO: drop redundant columns
+- replace missing values with NA
 
 Input files: 
 - thl2020_2196_er_basic.csv.finreg_IDs
@@ -22,6 +21,8 @@ from finregistry_data.config import (
     THL_MALFORMATIONS_BASIC_DATA_PATH,
     THL_MALFORMATIONS_ANOMALIES_DATA_PATH,
 )
+
+MISSING_VALUES = [""]
 
 
 def join_multiline_rows(lines):
@@ -57,3 +58,8 @@ def remove_extra_quotations(df):
     df["DIAGNOSE"] = df["DIAGNOSE"].str.replace('"', "")
     return df
 
+
+def replace_missing_with_na(df):
+    """Replace missing vaues with NA"""
+    df = df.replace(MISSING_VALUES, pd.NA)
+    return df
