@@ -50,3 +50,10 @@ def remove_extra_linebreaks(df):
     df["DIAGNOSE"] = df["DIAGNOSE"].str.replace("\s+", " ", regex=True)
     df["ICD10"] = df["ICD10"].str.replace("\s+", "", regex=True)
     return df
+
+
+def remove_extra_quotations(df):
+    """Remove extra quotation marks from anomaly.DIAGNOSE"""
+    df["DIAGNOSE"] = df["DIAGNOSE"].str.replace('"', "")
+    return df
+
