@@ -18,7 +18,7 @@ Output files:
 
 import pandas as pd
 import re
-from config import (
+from finregistry_data.config import (
     THL_MALFORMATIONS_BASIC_DATA_PATH,
     THL_MALFORMATIONS_ANOMALIES_DATA_PATH,
 )
