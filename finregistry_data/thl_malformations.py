@@ -2,8 +2,8 @@
 THL Malformations data processing 
 
 Reads THL Malformations data, applies the preprocessing steps below, and writes the result to a file.
-- TODO: remove extra linebreaks
-- TODO: parse dates
+- remove extra linebreaks
+- parse dates
 - TODO: replace missing values with NA 
 - TODO: drop redundant columns
 
@@ -42,4 +42,11 @@ def read_anomaly_data(filepath=THL_MALFORMATIONS_ANOMALIES_DATA_PATH):
 def read_basic_data(filepath=THL_MALFORMATIONS_BASIC_DATA_PATH):
     date_cols = ["DATE_OF_DEATH", "C_BIRTHDATE"]
     df = pd.read_csv(filepath, sep=";", parse_dates=date_cols)
+    return df
+
+
+def remove_extra_linebreaks(df):
+    """Remove extra linebreaks from anomaly.DIAGNOSE and anomaly.ICD10"""
+    df["DIAGNOSE"] = df["DIAGNOSE"].str.replace("\s+", " ", regex=True)
+    df["ICD10"] = df["ICD10"].str.replace("\s+", "", regex=True)
     return df
