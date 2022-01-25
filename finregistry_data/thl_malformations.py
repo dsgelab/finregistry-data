@@ -2,7 +2,7 @@
 THL Malformations data processing 
 
 Reads THL Malformations data, applies the preprocessing steps below, and writes the result to a file.
-- remove extra linebreaks
+- remove extra linebreaks and quotations
 - parse dates
 - replace missing values with NA
 
@@ -11,13 +11,15 @@ Input files:
 - thl2020_2196_er_anomalies.csv.finreg_IDs
 
 Output files:
-- malformations_<YYYY-MM-DD>.csv
-- malformations_<YYYY-MM-DD>.feather
+- malformations_basic_<YYYY-MM-DD>.csv
+- malformations_anomaly_<YYYY-MM-DD>.csv
 """
 
 import pandas as pd
 import re
+from finregistry_data.utils import write_data
 from finregistry_data.config import (
+    THL_MALFORMATIONS_OUTPUT_DIR,
     THL_MALFORMATIONS_BASIC_DATA_PATH,
     THL_MALFORMATIONS_ANOMALIES_DATA_PATH,
 )
@@ -63,3 +65,26 @@ def replace_missing_with_na(df):
     """Replace missing vaues with NA"""
     df = df.replace(MISSING_VALUES, pd.NA)
     return df
+
+
+def preprocess_basic_data(df):
+    """Apply the preprocessing pipeline to basic data"""
+    df = replace_missing_with_na(df)
+    return df
+
+
+def preprocess_anomaly_data(df):
+    """Apply the preprocessing pipeline to anomaly data"""
+    df = remove_extra_linebreaks(df)
+    df = remove_extra_quotations(df)
+    df = replace_missing_with_na(df)
+    return df
+
+
+if __name__ == "__main__":
+    basic = read_basic_data()
+    anomaly = read_anomaly_data()
+    basic = preprocess_basic_data(basic)
+    anomaly = preprocess_anomaly_data(anomaly)
+    write_data(basic, THL_MALFORMATIONS_OUTPUT_DIR, "malformations_basic", "csv")
+    write_data(anomaly, THL_MALFORMATIONS_OUTPUT_DIR, "malformations_anomaly", "csv")
