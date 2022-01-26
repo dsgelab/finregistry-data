@@ -24,7 +24,7 @@ from finregistry_data.config import (
     THL_MALFORMATIONS_ANOMALIES_DATA_PATH,
 )
 
-MISSING_VALUES = [""]
+MISSING_VALUES = ["", "nan", "0.0", "00000", "000000"]
 
 
 def join_multiline_rows(lines):
@@ -38,7 +38,7 @@ def read_anomaly_data(filepath=THL_MALFORMATIONS_ANOMALIES_DATA_PATH):
     """Read anomaly dataset"""
     with open(filepath) as f:
         lines = join_multiline_rows(f.read())
-    df = pd.DataFrame(lines, columns=["TNRO", "DIAGNOSE", "ICD9", "ICD10"])
+    df = pd.DataFrame(lines, columns=["TNRO", "DIAGNOSE", "ICD9", "ICD10"], dtype=str)
     return df
 
 
