@@ -150,14 +150,14 @@ def write_chunk_to_csv(chunk, output_filepath):
 if __name__ == "__main__":
 
     # Preprocess drug prescriptions
-    # prescription_files = KELA_KANTA_INPUT_DIR.glob("107_522_2021_LM_*")
-    # for prescription_file in prescription_files:
-    #     print(prescription_file)
-    #     output_filepath = get_output_filepath(prescription_file)
-    #     chunks = read_prescription_data(prescription_file)
-    #     for chunk in chunks:
-    #         chunk = chunk.replace("\n", " ", regex=True)
-    #         write_chunk_to_csv(chunk, output_filepath)
+    prescription_files = KELA_KANTA_INPUT_DIR.glob("107_522_2021_LM_*")
+    for prescription_file in prescription_files:
+        print(prescription_file)
+        output_filepath = get_output_filepath(prescription_file)
+        chunks = read_prescription_data(prescription_file)
+        for chunk in chunks:
+            chunk = chunk.replace("\n", " ", regex=True)
+            write_chunk_to_csv(chunk, output_filepath)
 
     # Preprocess drug deliveries
     delivery_files = KELA_KANTA_INPUT_DIR.glob("107_522_2021_LT_*")
