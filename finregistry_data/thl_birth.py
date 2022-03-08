@@ -242,6 +242,7 @@ def parse_dates(df):
     ]
     for date_col in date_cols:
         df[date_col] = pd.to_datetime(df[date_col], format="%d.%m.%Y", errors="coerce")
+        df[date_col] = df[date_col].dt.date
 
     return df
 
