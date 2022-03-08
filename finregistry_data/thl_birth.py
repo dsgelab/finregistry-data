@@ -25,19 +25,6 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
     Read THL Birth dataset. 
     Numeric columns with at least one NaN are read as floats.
     """
-    date_cols = [
-        "AIDIN_SYNTYMAPVM",
-        "NEUVOLAPVM",
-        "VIIMEINEN_KUUKAUTISPVM",
-        "LAPSIVEDENMENOPVM",
-        "LAPSEN_SYNTYMAPVM",
-        "LAPSEN_LAHTOPVM",
-        "LAPSEN_KUOLINPVM",
-        "AITI_TULOPVM",
-        "AITI_LAHTOPVM",
-        "AITI_SEURANTAPVM",
-    ]
-
     dtypes = {
         "AITI_TNRO": str,
         "LAPSI_TNRO": str,
@@ -45,6 +32,7 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
         "TILASTOVUOSI": int,
         "AITI_HETU_OK": bool,
         "LAPSI_HETU_OK": bool,
+        "AIDIN_SYNTYMAPVM": str,
         "AITI_IKA": int,
         "ASUINKUNTA": int,
         "KANSALAISUUS": float,
@@ -60,6 +48,7 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
         "KUOLLEENASYNT": float,
         "TARKASTUKSET": float,
         "POLILLA": float,
+        "NEUVOLAPVM": str,
         "APAINO": float,
         "APITUUS": float,
         "TUPAKOINTITUNNUS": int,
@@ -113,6 +102,8 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
         "TUKIOMM": float,
         "SYNNYTYS_PALTU": float,
         "SYNTYMAPAIKKA": float,
+        "VIIMEINEN_KUUKAUTISPVM": str,
+        "LAPSIVEDENMENOPVM": str,
         "SKESTO_AVAUT": float,
         "SKESTO_PONN": float,
         "SKESTO_AVAUT_H": float,
@@ -163,6 +154,7 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
         "SDIAG8": str,
         "SDIAG9": str,
         "SDIAG10": str,
+        "LAPSEN_SYNTYMAPVM": str,
         "SYNTYMAKLO": str,
         "SYNTYMATILATUNNUS": int,
         "SUKUP": int,
@@ -213,21 +205,49 @@ def read_data(filepath=THL_BIRTH_DATA_PATH):
         "ICD10_9": str,
         "ICD10_10": str,
         "HOITOPAIKKATUNNUS": float,
+        "LAPSEN_LAHTOPVM": str,
         "LAPSEN_LAHTOKLO": str,
+        "LAPSEN_KUOLINPVM": str,
         "LAPSEN_KUOLINKLO": str,
         "KUOLLEISUUS": int,
         "IMEVAISKUOLLEISUUS": int,
         "LAPSEN_RAVINTO_7VRK": float,
         "LISAMAITO": float,
+        "AITI_SEURANTAPVM": str,
+        "AITI_TULOPVM": str,
+        "AITI_LAHTOPVM": str,
     }
 
-    df = pd.read_csv(
-        filepath, sep=";", dtype=dtypes, parse_dates=date_cols, na_values=NA_VALUES
-    )
+    df = pd.read_csv(filepath, sep=";", dtype=dtypes, na_values=NA_VALUES)
 
     return df
 
+
+def parse_dates(df):
+    """
+    Parse dates from dd.mm.yyyy to yyyy-mm-dd.
+    Invalid dates (invalid format, too far in the future) are returned as missing (NaT).
+    """
+    date_cols = [
+        "AIDIN_SYNTYMAPVM",
+        "NEUVOLAPVM",
+        "VIIMEINEN_KUUKAUTISPVM",
+        "LAPSIVEDENMENOPVM",
+        "LAPSEN_SYNTYMAPVM",
+        "LAPSEN_LAHTOPVM",
+        "LAPSEN_KUOLINPVM",
+        "AITI_TULOPVM",
+        "AITI_LAHTOPVM",
+        "AITI_SEURANTAPVM",
+    ]
+    for date_col in date_cols:
+        df[date_col] = pd.to_datetime(df[date_col], format="%d.%m.%Y", errors="coerce")
+
+    return df
+
+
 if __name__ == "__main__":
     df = read_data(THL_BIRTH_DATA_PATH)
+    df = parse_dates(df)
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "csv")
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "feather")
