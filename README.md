@@ -1,2 +1,8 @@
 # finregistry-data
-FinRegistry data preprocessing scripts
+FinRegistry data preprocessing scripts for the following registries:
+- FICC Intensive Care
+- Kela Kanta (drug prescriptions & drug deliveries)
+- THL Birth 
+- THL Infectious Diseases
+- THL Malformations
+- THL Vaccination
