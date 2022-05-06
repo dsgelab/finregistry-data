@@ -7,5 +7,6 @@ FinRegistry data preprocessing scripts for the following datasets:
 - THL Infectious Diseases
 - THL Malformations
 - THL Vaccination
+- ETK Pension
 
 
