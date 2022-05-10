@@ -22,7 +22,7 @@ TODO: add "0", "-1", and "-2" to missing and invalid values to replace from str 
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from config import (
+from finregistry_data.config import (
     VACCINATION_PROTECTION_DATA_PATH,
     VACCINATION_REGISTRY_DATA_PATH,
     THL_VACCINATION_OUTPUT_DIR,

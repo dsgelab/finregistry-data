@@ -16,7 +16,7 @@ VACCINATION_PROTECTION_DATA_PATH = (
     THL_VACCINATION_INPUT_DIR / "thl2196_rokotussuoja.csv"
 )
 VACCINATION_REGISTRY_DATA_PATH = (
-    THL_VACCINATION_INPUT_DIR / "thl2196_rokoterekisteri.csv.finreg_IDs"
+    THL_VACCINATION_INPUT_DIR / "thl2196_rokotus.csv.finreg_IDs"
 )
 
 # THL Infectious Diseases
