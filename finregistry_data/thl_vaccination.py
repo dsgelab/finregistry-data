@@ -113,8 +113,8 @@ def drop_columns(df):
 
 def preprocess_data(df):
     """Apply the preprocessing pipeline"""
-    df = merge_data(df_registry, df_protection)
     df = parse_dates(df, "ROKOTE_ANTOPVM")
+    df = parse_dates(df, "KAYNTI_ALKOI")
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
     return df
