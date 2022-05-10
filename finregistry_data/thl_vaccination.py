@@ -14,8 +14,6 @@ Input files:
 Output files: 
 - vaccination_<YYYY-MM-DD>.csv
 - vaccination_<YYYY-MM-DD>.feather
-
-TODO: add "0", "-1", and "-2" to missing and invalid values to replace from str columns
 """
 
 import pandas as pd
@@ -26,8 +24,8 @@ from finregistry_data.config import (
 )
 from finregistry_data.utils import write_data
 
-MISSING_VALUES = [0]
-INVALID_VALUES = [-1, -2]
+MISSING_VALUES = ["0"]
+INVALID_VALUES = ["-1", "-2"]
 
 
 def read_vacc_protection_data(path=VACCINATION_PROTECTION_DATA_PATH):
@@ -52,7 +50,7 @@ def read_vacc_registry_data(path=VACCINATION_REGISTRY_DATA_PATH):
         "LAAKEAINE_SELITE": str,
         "ROKOTUSTAPA": str,
         "PISTOSKOHTA": str,
-        "LAAKEPAKKAUSNRO": float,
+        "LAAKEPAKKAUSNRO": str,
         "ROKOTE_JARJESTYS": int,
         "LR_JARJESTYS": int,
     }
@@ -89,9 +87,8 @@ def parse_dates(df, date_col):
 
 
 def replace_missing_and_invalid_with_na(df):
-    """
-    Replace missing and invalid values with NA
-    """
+    """Replace missing and invalid values with NA"""
+    logging.info("Replacing missing and invalid values")
     d = dict.fromkeys(
         ["LAAKEAINE", "ROKOTUSTAPA", "PISTOSKOHTA", "LAAKEPAKKAUSNRO"],
         MISSING_VALUES + INVALID_VALUES,
