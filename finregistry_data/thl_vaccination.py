@@ -6,6 +6,7 @@ Reads THL Vaccination data, applies the preprocessing steps below and writes the
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
+- TODO: create column COVID
 
 Input files: 
 - thl2196_rokotussuoja.csv
@@ -16,7 +17,9 @@ Output files:
 - vaccination_<YYYY-MM-DD>.feather
 """
 
+import numpy as np
 import pandas as pd
+from re import IGNORECASE
 from finregistry_data.config import (
     VACCINATION_PROTECTION_DATA_PATH,
     VACCINATION_REGISTRY_DATA_PATH,
@@ -25,6 +28,7 @@ from finregistry_data.config import (
 from finregistry_data.utils import write_data
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 MISSING_VALUES = ["0"]
@@ -111,12 +115,50 @@ def drop_columns(df):
     return df
 
 
+def add_covid_indicator(df):
+    """
+    Add column `COVID` to indicate rows with COVID vaccination.
+
+    `COVID` is True if any of the following applies:
+    - `LAAKEAINE_SELITE` contains "cov", "cor", "kor" "mod", "astra", "co19", "cvid" or "cominarty"  but does not contain "dukoral", "ticovac" or "vesiro"
+    - `LAAKEAINE` is "J07BX03"
+    - `VACCINE_PROTECTION` contains 29 
+    """
+    logging.info("Adding COVID")
+
+    LAAKEAINE_INCL = "cov|cor|kor|mod|astra|co19|cvid|cominarty"
+    LAAKEAINE_EXCL = "dukoral|ticovac|vesiro"
+    LAAKEAINE_COVID = "J07BX03"
+    PROTECTION_COVID = 29.0
+
+    df["COVID"] = False
+
+    df.loc[
+        df["LAAKEAINE_SELITE"].str.contains(LAAKEAINE_INCL, flags=IGNORECASE, na=False),
+        "COVID",
+    ] = True
+    df.loc[
+        df["LAAKEAINE_SELITE"].str.contains(LAAKEAINE_EXCL, flags=IGNORECASE, na=False),
+        "COVID",
+    ] = False
+
+    df.loc[df["LAAKEAINE"] == LAAKEAINE_COVID, "COVID"] = True
+
+    mask = df["ROKOTUSSUOJA"].apply(
+        lambda x: PROTECTION_COVID in x if x is not np.NaN else False
+    )
+    df.loc[mask, "COVID"] = True
+
+    return df
+
+
 def preprocess_data(df):
     """Apply the preprocessing pipeline"""
     df = parse_dates(df, "ROKOTE_ANTOPVM")
     df = parse_dates(df, "KAYNTI_ALKOI")
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
+    df = add_covid_indicator(df)
     return df
 
 
