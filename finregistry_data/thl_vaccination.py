@@ -24,6 +24,9 @@ from finregistry_data.config import (
 )
 from finregistry_data.utils import write_data
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 MISSING_VALUES = ["0"]
 INVALID_VALUES = ["-1", "-2"]
 
@@ -37,6 +40,7 @@ def read_vacc_protection_data(path=VACCINATION_PROTECTION_DATA_PATH):
         "LR_JARJESTYS": int,
     }
     df = pd.read_csv(path, sep=";", header=0, dtype=dtypes)
+    logging.info(f"Vaccination protection dataset loaded: {df.shape[0]:,} rows")
     return df
 
 
@@ -55,6 +59,7 @@ def read_vacc_registry_data(path=VACCINATION_REGISTRY_DATA_PATH):
         "LR_JARJESTYS": int,
     }
     df = pd.read_csv(path, sep=";", header=0, dtype=dtypes)
+    logging.info(f"Vaccination registry dataset loaded: {df.shape[0]:,} rows")
     return df
 
 
@@ -64,6 +69,7 @@ def merge_data(df_registry, df_protection):
     The ROKOTUSSUOJA values are grouped in lists for each KAYNTI_ID, LR_JARJESTYS pair.
     The resulting dataset contains all rows from the vaccination registry datasets.
     """
+    logging.info(f"Merging datasets")
     df_protection = (
         df_protection.groupby(["KAYNTI_ID", "LR_JARJESTYS"])["ROKOTUSSUOJA"]
         .agg(list)
@@ -78,6 +84,7 @@ def parse_dates(df, date_col):
     Parse dates from dd.mm.yyyy hh:mm to yyyy-mm-dd.
     Invalid dates (invalid format, future dates) are returned as missing (NaT).
     """
+    logging.info(f"Parsing date column {date_col}")
     df[date_col] = pd.to_datetime(
         df[date_col], format="%d.%m.%Y %H:%M", errors="coerce"
     )
@@ -98,6 +105,7 @@ def replace_missing_and_invalid_with_na(df):
 
 
 def drop_columns(df):
+    logging.info("Dropping columns")
     drop = ["ROKOTE_JARJESTYS", "LR_JARJESTYS"]
     df = df.drop(columns=drop)
     return df
