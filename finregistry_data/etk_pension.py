@@ -29,6 +29,10 @@ from finregistry_data.config import (
 )
 from finregistry_data.utils import write_data
 
+CENTS_IN_EURO = 100.0
+
+logging.basicConfig(level=logging.INFO)
+
 
 def read_data(
     elake_path=ETK_PENSION_ELAKE_DATA_PATH,
@@ -85,14 +89,21 @@ if __name__ == "__main__":
     elake, palkaton, vuansiot = read_data()
 
     elake = parse_dates(elake, ["aalk", "apvm", "ppvm"])
+    
+    logging.info("Writing elake dataset to a file")
     write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "csv")
     write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "feather")
 
     palkaton = parse_dates(palkaton, ["alkamispvm", "paattymispvm"])
+    
+    logging.info("Writing palkaton dataset to a file")
     write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "palkaton", "csv")
     write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "palkaton", "feather")
 
     vuansiot.columns = vuansiot.columns.str.lower()
     vuansiot = vuansiot.drop(columns="he00hsur")
+    vuansiot["vuosiansio"] = vuansiot["vuosiansio"] / CENTS_IN_EURO
+    
+    logging.info("Writing vuansiot dataset to a file")
     write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "csv")
     write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "feather")
