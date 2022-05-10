@@ -15,18 +15,16 @@ Output files:
 - vaccination_<YYYY-MM-DD>.csv
 - vaccination_<YYYY-MM-DD>.feather
 
-TODO: move writing to utils
 TODO: add "0", "-1", and "-2" to missing and invalid values to replace from str columns
 """
 
 import pandas as pd
-from pathlib import Path
-from datetime import datetime
 from finregistry_data.config import (
     VACCINATION_PROTECTION_DATA_PATH,
     VACCINATION_REGISTRY_DATA_PATH,
     THL_VACCINATION_OUTPUT_DIR,
 )
+from finregistry_data.utils import write_data
 
 MISSING_VALUES = [0]
 INVALID_VALUES = [-1, -2]
@@ -108,20 +106,6 @@ def drop_columns(df):
     return df
 
 
-def write_data(df, outputdir, format="csv"):
-    """Write data to a csv or feather file"""
-    today = datetime.today().strftime("%Y-%m-%d")
-    outputdir = Path(outputdir)
-    if format == "csv":
-        filename = "vaccination_" + today + ".csv"
-        df.to_csv(outputdir / filename, sep=";", index=False)
-    elif format == "feather":
-        filename = "vaccination_" + today + ".feather"
-        df.to_feather(outputdir / filename)
-    else:
-        print("Invalid file format")
-
-
 def preprocess_data(df):
     """Apply the preprocessing pipeline"""
     df = merge_data(df_registry, df_protection)
@@ -136,6 +120,6 @@ if __name__ == "__main__":
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_DATA_PATH)
     df = merge_data(df_registry, df_protection)
     df = preprocess_data(df)
-    write_data(df, THL_VACCINATION_OUTPUT_DIR, "csv")
-    write_data(df, THL_VACCINATION_OUTPUT_DIR, "feather")
+    write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "csv")
+    write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "feather")
 
