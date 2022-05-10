@@ -88,7 +88,7 @@ def parse_dates(df, date_col):
     df[date_col] = pd.to_datetime(
         df[date_col], format="%d.%m.%Y %H:%M", errors="coerce"
     )
-    df.loc[df[date_col].dt.year > 2100] = pd.NaT
+    df.loc[df[date_col].dt.year > 2100, date_col] = pd.NaT
     df[date_col] = df[date_col].dt.date
     return df
 
