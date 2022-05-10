@@ -19,7 +19,7 @@ def write_data(df, outputdir, dataset_name, format="csv"):
     outputdir = Path(outputdir)
     if format == "csv":
         filename = dataset_name + "_" + today + ".csv"
-        df.to_csv(outputdir / filename, sep=";", index=False)
+        df.to_csv(outputdir / filename, sep=",", index=False)
     elif format == "feather":
         filename = dataset_name + "_" + today + ".feather"
         df.to_feather(outputdir / filename)
