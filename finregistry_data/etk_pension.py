@@ -6,11 +6,14 @@ Reads ETK Pension data, applies the preprocessing steps below and writes the res
 - Parse dates
 - Set data types (feather)
 - drop redundant columns
+- transform income from cents to euros
+- add indexed income to `vuansiot`
 
 Input files: 
 - etk_elake1990_2021.csv.finreg_IDs
 - etk_palkaton2005_2021.csv.finreg_IDs
 - etk_vuansiot2005_2021.csv.finreg_IDs
+- consumer_price_index_1972_2021.csv
 
 Output files: 
 - elake.csv, elake.feather
@@ -18,10 +21,12 @@ Output files:
 - vuansiot.csv, vuansiot.feather
 """
 
+from multiprocessing.sharedctypes import Value
 import pandas as pd
 import logging
 
 from finregistry_data.config import (
+    ETK_PENSION_CPI_DATA_PATH,
     ETK_PENSION_ELAKE_DATA_PATH,
     ETK_PENSION_PALKATON_DATA_PATH,
     ETK_PENSION_VUANSIOT_DATA_PATH,
@@ -38,6 +43,7 @@ def read_data(
     elake_path=ETK_PENSION_ELAKE_DATA_PATH,
     palkaton_path=ETK_PENSION_PALKATON_DATA_PATH,
     vuansiot_path=ETK_PENSION_VUANSIOT_DATA_PATH,
+    cpi_path=ETK_PENSION_CPI_DATA_PATH
 ):
     """
     Read the three datasets into Pandas DataFrames.
@@ -64,7 +70,10 @@ def read_data(
     vuansiot = pd.read_csv(vuansiot_path)
     logging.info(f"Vuansiot dataset loaded: {vuansiot.shape[0]:,} rows")
 
-    return (elake, palkaton, vuansiot)
+    cpi = pd.read_csv(cpi_path)
+    logging.info(f"CPI dataset loaded: {cpi.shape[0]:,} rows")
+
+    return (elake, palkaton, vuansiot, cpi)
 
 
 def parse_dates(df, date_cols):
@@ -83,10 +92,35 @@ def parse_dates(df, date_cols):
     )
     return df
 
+def add_indexed_value(df, value_col, year_col, cpi):
+    """
+    Add indexed value as a new column to `df`.
+
+    Args: 
+        df (DataFrame): dataset for adding the indexed value
+        value_col (str): name of the column with values in df
+        year_col (str): name of the column with years in df
+        cpi (DataFrame): Consumer Price Index dataset. Must include all years in df[col].
+
+    Returns:
+        df (DataFrame): dataset with a column for the indexed value
+
+    Raises:
+        ValueError: if cpi does not include all years in df[col]
+    """
+    if set(df[year_col]) - set(cpi["year"]) != set():
+        raise ValueError("All years in df are not covered in CPI")
+
+    df = df.merge(cpi, left_on=year_col, right_on="year", how="left")
+    df[value_col + "_indexed"] = df[value_col] * df["cpi"]
+    df = df.drop(columns={"cpi", "year"})
+
+    return df
+
 
 if __name__ == "__main__":
 
-    elake, palkaton, vuansiot = read_data()
+    elake, palkaton, vuansiot, cpi = read_data()
 
     elake = parse_dates(elake, ["aalk", "apvm", "ppvm"])
     
@@ -103,6 +137,7 @@ if __name__ == "__main__":
     vuansiot.columns = vuansiot.columns.str.lower()
     vuansiot = vuansiot.drop(columns="he00hsur")
     vuansiot["vuosiansio"] = vuansiot["vuosiansio"] / CENTS_IN_EURO
+    vuansiot = add_indexed_value(vuansiot, "vuosiansio", "vuosi", cpi)
     
     logging.info("Writing vuansiot dataset to a file")
     write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "csv")
