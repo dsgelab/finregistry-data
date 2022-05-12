@@ -21,7 +21,6 @@ Output files:
 - vuansiot.csv, vuansiot.feather
 """
 
-from multiprocessing.sharedctypes import Value
 import pandas as pd
 import logging
 
