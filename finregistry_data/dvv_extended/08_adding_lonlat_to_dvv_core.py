@@ -12,3 +12,5 @@ shp <- fread("~/dvv_ext_core.csv")
 shp <- shp %>% left_join(latlon, by="ident")
 
 shp <- shp %>% select(FINREGISTRYID:pinta_ala, lon, lat, TaajamaLuo:ident)
+
+fwrite(shp, "~/dvv_ext_core.csv")
