@@ -3,7 +3,7 @@ import geopandas
 import pandas
 
 pno = geopandas.read_file('/data/projects/project_akarvane/geo/pno_2022/pno_2022Polygon.shp')  # 2022 Postal Codes and Municipalities
-living = pandas.read_csv('/data/processed_data/dvv/Tulokset_1900-2010_tutkhenk_asuinhist.txt.finreg_IDsp')
+living = pandas.read_csv('/data/processed_data/dvv/Tulokset_1900-2010_tutkhenk_asuinhist.txt.finreg_IDsp')  # DVV Living Registry
 
 living = living.head(10)
 
