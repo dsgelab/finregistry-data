@@ -8,7 +8,7 @@ library(ggplot2)
 library(data.table)
 
 
-km_df <- fread("~/dvv_azip_1km_shp_2010.csv.gz")
+km_df <- fread("~/dvv_azip_1km_shp_2010.csv")
 
 km_df2 <- km_df %>% select(ident, ko_perus:pt_muut)
 km_df2 <- km_df2 %>% select(-hr_tuy)
