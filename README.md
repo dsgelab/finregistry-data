@@ -1,5 +1,6 @@
 # finregistry-data
 FinRegistry data preprocessing scripts for the following datasets:
+- DVV extended
 - minimal phenotype
 - FICC Intensive Care
 - Kela Kanta (drug prescriptions & drug deliveries)
