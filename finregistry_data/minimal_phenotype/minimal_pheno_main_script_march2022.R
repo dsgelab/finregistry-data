@@ -18,7 +18,7 @@ dvv_dir <- "/data/processed_data/dvv/"
 dvv_living_name <- "Tulokset_1900-2010_tutkhenk_asuinhist.txt.finreg_IDsp"
 dvv_marriage_name <- "Tulokset_1900-2010_tutkhenk_aviohist.txt.finreg_IDsp"
 dvv_relative_name <- "Tulokset_1900-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDsp"
-id_bd_path <- "/data/processed_data/dvv/Finregistry_IDs_and_full_DOB.txt"
+id_bd_path <- "/data/original_data/dvv/Finregistry_IDs_and_full_DOB_SEX.txt"
 birth_path <- "/data/processed_data/thl_birth/THL2019_1776_synre.csv.finreg_IDsp"
 
 vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2022-01-14.csv"
