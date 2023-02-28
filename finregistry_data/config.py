@@ -49,3 +49,12 @@ ETK_PENSION_ELAKE_DATA_PATH = ETK_PENSION_INPUT_DIR / "etk_elake1990_2021.csv.fi
 ETK_PENSION_PALKATON_DATA_PATH = ETK_PENSION_INPUT_DIR / "etk_palkaton2005_2021.csv.finreg_IDs"
 ETK_PENSION_VUANSIOT_DATA_PATH = ETK_PENSION_INPUT_DIR / "etk_vuansiot2005_2021.csv.finreg_IDs"
 ETK_PENSION_CPI_DATA_PATH = ETK_PENSION_INPUT_DIR / "consumer_price_index_1972_2021.csv"
+
+# SF education, occupation & SES
+SF_SOCIOECONOMIC_INPUT_DIR = ORIGINAL_DATA_DIR / "sf_socioeconomic"
+SF_SOCIOECONOMIC_OUTPUT_DIR = PROCESSED_DATA_DIR / "sf_socioeconomic"
+SF_EDUCATION_DATA_PATHS = [
+    SF_SOCIOECONOMIC_INPUT_DIR / "tutkinto_u1442_a.csv.finreg_IDs",
+    SF_SOCIOECONOMIC_INPUT_DIR / "tutkinto_u1442_al10_osa1.csv.finreg_IDs",
+    SF_SOCIOECONOMIC_INPUT_DIR / "tutkinto_u1442_al10_osa2.csv.finreg_IDs",
+]
