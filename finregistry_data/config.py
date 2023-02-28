@@ -58,3 +58,7 @@ SF_EDUCATION_DATA_PATHS = [
     SF_SOCIOECONOMIC_INPUT_DIR / "tutkinto_u1442_al10_osa1.csv.finreg_IDs",
     SF_SOCIOECONOMIC_INPUT_DIR / "tutkinto_u1442_al10_osa2.csv.finreg_IDs",
 ]
+SF_OCCUPATION_DATA_PATHS = [
+    SF_SOCIOECONOMIC_INPUT_DIR / "ammatti_u1442_a.csv.finreg_IDs",
+    SF_SOCIOECONOMIC_INPUT_DIR / "ammatti_u1442_al10.csv.finreg_IDs"
+]
