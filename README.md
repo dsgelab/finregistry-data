@@ -10,6 +10,7 @@ This repository contains data preprocessing scripts for the following datasets i
 - KELA Drug Purchase
 - Minimal Phenotype
 - SF Causes of Death
+- SF Education, Occupation, and SES
 - THL AvoHilmo
 - THL Birth 
 - THL Cancer
