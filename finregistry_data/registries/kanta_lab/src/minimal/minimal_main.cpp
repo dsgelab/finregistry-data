@@ -105,8 +105,11 @@ int main(int argc, char *argv[]) {
     std::string line;
     while(std::getline(std::cin, line)) {
         ++total_line_count;
+        if(total_line_count % 10000000 == 0) {
+            cout << total_line_count << "\n";
+        }
         // Getting current line as vector
-        std::vector<std::string> final_line_vec = read_correct_lines(line, total_line_count, skip_count, error_file);
+        std::vector<std::string> final_line_vec = read_correct_lines(line, total_line_count, skip_count, error_file, lines_valid_status);
 
         // Line or newline is valid
         if((lines_valid_status == 0) | (lines_valid_status == 3)) {
@@ -115,6 +118,8 @@ int main(int argc, char *argv[]) {
                 res_file << "FINREGISTRYID;DATE_TIME;SERVICE_PROVIDER;LAB_ID;LAB_ID_SOURCE;LAB_ABBREVIATION;LAB_VALUE;LAB_UNIT;LAB_ABNORMALITY\n"; 
                 ++valid_line_count;
             } else {
+
+
                 // Fixing the NA indicators to actual NAs
                 fix_nas(final_line_vec);
 
@@ -126,42 +131,44 @@ int main(int argc, char *argv[]) {
                 std::string lab_unit = final_line_vec[20];
                 std::string lab_abnormality = final_line_vec[22];
 
+                // Removing characters like " ", "_", etc from unit
+                lab_unit = clean_units(lab_unit);
+
                 // Column values needed for mapping and cleaning
+                std::string lab_name = final_line_vec[14];
                 std::string local_lab_id = final_line_vec[15];
                 std::string thl_lab_id = final_line_vec[16];
-                std::string lab_name = final_line_vec[14];
-            
+
                 // Lab ID, and source depend on data
                 std::string lab_id; 
                 std::string lab_id_source;
-                get_lab_id_and_source(local_lab_id, thl_lab_id, lab_id, lab_id_source); 
 
-                // Mapped column values
-                std::string service_provider_name = get_service_provider_name(thl_sote_map, service_provider_oid);
-                std::string lab_abbrv = get_lab_abbrv(thl_abbrv_map, lab_id, lab_id_source, lab_abbrv);
+                // Duplicate line
+                std::vector<std::string> dup_vec = {finregistry_id, date_time, service_provider_oid, lab_id, lab_name, lab_value, lab_unit};
+                std::string dup_line = concat_string(dup_vec, std::string("")); 
+                // Only saving non-duplicated lines
+                if(all_dup_lines.find(dup_line) == all_dup_lines.end()) {
+                    // Now doing the rest
+                    get_lab_id_and_source(local_lab_id, thl_lab_id, lab_id, lab_id_source); 
 
-                // Only saving if we have either the value or at least the abnormality
-                // and an lab ID
-                if((!((lab_value == "NA") & (lab_abnormality == "NA"))) & (lab_id != "NA") ) { 
-                    std::vector<std::string> dup_vec = {finregistry_id, date_time, service_provider_name, lab_id, lab_abbrv, lab_value, lab_unit};
-                    std::string dup_line = concat_string(dup_vec, std::string("")); 
+                    // Mapped column values
+                    std::string service_provider_name = get_service_provider_name(thl_sote_map, service_provider_oid);
+                    std::string lab_abbrv = get_lab_abbrv(thl_abbrv_map, lab_id, lab_id_source, lab_name);
 
-                    // Only saving non-duplicated lines
-                    if(all_dup_lines.find(dup_line) == all_dup_lines.end()) {
-                        // Increasing line count for this file to one
-                        all_dup_lines[dup_line] = 1;
-                        // Writing line to file
-                        res_file << finregistry_id << ";" <<  date_time << ";" << service_provider_name << ";" << lab_id << ";" << lab_id_source << ";" << lab_abbrv << ";" << lab_value << ";" << lab_unit << ";" <<  lab_abnormality << "\n";
-                        // Increasing valid line count
-                        ++valid_line_count;
+                    // Only saving if we have either the value or at least the abnormality
+                    // and an lab ID
+                    if((!((lab_value == "NA") & (lab_abnormality == "NA"))) & (lab_id != "NA") ) { 
+                            // Increasing line count for this file to one
+                            all_dup_lines[dup_line] = 1;
+                            // Writing line to file
+                            res_file << finregistry_id << ";" <<  date_time << ";" << service_provider_name << ";" << lab_id << ";" << lab_id_source << ";" << lab_abbrv << ";" << lab_value << ";" << lab_unit << ";" <<  lab_abnormality << "\n";
+                            // Increasing valid line count
+                            ++valid_line_count;
 
-                    // Duplicate line
-                    } else {
-                        // Increasing line count for this file to one
-                        all_dup_lines[dup_line]++;
-                        ++dup_count;
-                    }
-                
+                        // Duplicate line
+                        } else {
+                            ++dup_count;
+                        }
                 // Invalid line because of NAs in both value, and abnormality or NA in lab ID
                 } else {
                     ++na_count;       
@@ -169,9 +176,8 @@ int main(int argc, char *argv[]) {
                 }
             }  
         }
-        
-
     }
+
     // Closing
     error_file.close();
     missing_file.close();
@@ -179,6 +185,17 @@ int main(int argc, char *argv[]) {
 
     // Writing final files
     write_row_count_report(report_path, total_line_count, valid_line_count,skip_count, dup_count, na_count);
-    write_dup_lines_file(res_path, file, report_path, report_file, all_dup_lines);
+    write_dup_lines_file(res_path, file, report_path, all_dup_lines);
 }
 
+std::string clean_units(std::string lab_unit) {
+    lab_unit = remove_chars(lab_unit, ' ');
+    lab_unit = remove_chars(lab_unit, '_');
+    lab_unit = remove_chars(lab_unit, ',');
+    lab_unit = remove_chars(lab_unit, '.');
+    lab_unit = remove_chars(lab_unit, '-');
+    lab_unit = remove_chars(lab_unit, ')');
+    lab_unit = remove_chars(lab_unit, '(');
+
+    return(lab_unit);
+}
