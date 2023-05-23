@@ -78,7 +78,7 @@ void read_thl_sote_map(std::unordered_map<std::string, std::string> &thl_sote_ma
 
 **/
 void read_thl_lab_id_abbrv_map(std::unordered_map<std::string, std::string> &thl_abbrv_map,
-                      std::string thl_abbrv_path) {
+                               std::string thl_abbrv_path) {
     // Opening file
     std::ifstream abbrv_file; abbrv_file.open(thl_abbrv_path); check_in_open(abbrv_file, thl_abbrv_path);
 
@@ -99,10 +99,10 @@ void read_thl_lab_id_abbrv_map(std::unordered_map<std::string, std::string> &thl
 std::vector<std::string> read_correct_lines(std::string &line,
                                             unsigned long long &total_line_count,
                                             unsigned long long &skip_count,
-                                            std::ofstream &error_file) {
+                                            std::ofstream &error_file,
+                                            int &lines_valid_status) {
     int n_cols(25);
     const char *delim = ";";
-    int lines_valid_status;
     std::vector<std::string> new_line_vec;
 
     /// LINE VECTORS
@@ -206,7 +206,7 @@ void fix_nas(std::vector<std::string> &final_line_vec) {
  * @return std::string The service provider name
 */
 std::string get_service_provider_name(std::unordered_map<std::string, std::string> &thl_sote_map,
-                               std::string &service_provider_oid) {
+                                      std::string &service_provider_oid) {
     std::string service_provider_name;
     // Mapping laboratory IDs to laboratory names
     if(thl_sote_map.find(service_provider_oid) != thl_sote_map.end()) {
@@ -255,12 +255,14 @@ void get_lab_id_and_source(std::string &local_lab_id,
  * 
  * @details If the laboratory ID is the local code, returns the abbreviation from the data. If the labroatory ID is a regional THL code, returns the abbreviation from the THL abbreviation map. If the laboratory ID is not found in the THL abbreviation map, returns "NA".
 */
-std::string get_lab_abbrv(std::unordered_map<std::string, std::string> thl_abbrv_map,
+std::string get_lab_abbrv(std::unordered_map<std::string, std::string> &thl_abbrv_map,
                           std::string &lab_id,
                           std::string &lab_id_source,
                           std::string &lab_name) {
     std::string lab_abbrv;
     if(lab_id_source == "0") {
+        lab_name = to_lower(lab_name);
+        lab_name = remove_chars(lab_name, ' ');
         lab_abbrv = lab_name;
     } else {
         // Mapping lab IDs to abbreviations
@@ -268,7 +270,8 @@ std::string get_lab_abbrv(std::unordered_map<std::string, std::string> thl_abbrv
             lab_abbrv = thl_abbrv_map[lab_id];
         } else {
             lab_abbrv = "NA";
-        }    
+        }  
+    }  
     return(lab_abbrv);
 }
 
@@ -297,7 +300,6 @@ void write_row_count_report(std::string &report_path,
 void write_dup_lines_file(std::string &res_path,
                           std::string &file,
                           std::string &report_path,
-                          std::ofstream &report_file,
                           std::unordered_map<std::string, int> &all_dup_lines) {
     // File paths
     std::vector<std::string> duplines_path_vec = {res_path, "processed/reports/problem_rows/", "duplines_", file, ".csv"};    
