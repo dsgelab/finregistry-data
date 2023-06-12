@@ -21,7 +21,6 @@ dvv_marriage_name <- "Tulokset_1900-2010_tutkhenk_aviohist.txt.finreg_IDsp"
 dvv_relative_name <- "Tulokset_1900-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDsp"
 id_bd_path <- "/data/original_data/dvv/Finregistry_IDs_and_full_DOB_SEX.txt"
 birth_path <- "/data/processed_data/thl_birth/birth_2022-03-08.csv"
-
 vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2022-05-10.csv"
 infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2022-05-24.csv"
 malf_path <- "/data/processed_data/thl_malformations/malformations_anomaly_2022-01-26.csv"
