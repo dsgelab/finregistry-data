@@ -32,6 +32,29 @@ THL_CANCER_INPUT_DIR = ORIGINAL_DATA_DIR / "thl_cancer"
 THL_CANCER_OUTPUT_DIR = PROCESSED_DATA_DIR / "thl_cancer"
 THL_CANCER_DATA_PATH = THL_CANCER_INPUT_DIR / "fcr_data.csv.finreg_IDs"
 
+# THL Avohilmo
+THL_AVOHILMO_INPUT_DIR = ORIGINAL_DATA_DIR / "thl_avohilmo"
+THL_AVOHILMO_MAIN = [
+    THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_11_12.csv.finreg_IDs",
+    THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_13_14.csv.finreg_IDs",
+    THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_15_16.csv.finreg_IDs",
+    THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_18.csv.finreg_IDs",
+    THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_19_20.csv.finreg_IDs",
+    THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_2020.csv.finreg_IDs", 
+    THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_2021.csv.finreg_IDs",
+]
+THL_AVOHILMO_ICD10 = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_ICD10_DIAG.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_icd10.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_icd10.csv.finreg_IDs"]
+THL_AVOHILMO_ICPC2 = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_ICPC2_DIAG.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_icpc2.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_icpc2.csv.finreg_IDs"]
+THL_AVOHILMO_JATKOHOITO = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_JATKOH.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_jatkoh.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_jatkohoito.csv.finreg_IDs"]
+THL_AVOHILMO_KOTIHOITO = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_KOTIHOITO.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_kotihoito.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_kotihoito.csv.finreg_IDs"]
+THL_AVOHILMO_LAAKE = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_LAAKE.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_laake.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_laake.csv.finreg_IDs"]
+THL_AVOHILMO_LAHETE = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_LAHETE.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_lahete.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_lahete.csv.finreg_IDs"]
+THL_AVOHILMO_ROKOSUOJA = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_ROKOSUOJA.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_rokotussuoja.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_rokotussuoja.csv.finreg_IDs"]
+THL_AVOHILMO_ROKOTUS = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_ROKOTUS.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_rokotus.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_rokotus.csv.finreg_IDs"]
+THL_AVOHILMO_TOIMENPIDE = [THL_AVOHILMO_INPUT_DIR / "THL2021_2196_AVOHILMO_TOIMP.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_toimenpide.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_toimenpide.csv.finreg_IDs"]
+THL_AVOHILMO_SUU_TOIMENPIDE = [THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_17_20_suu_toimp.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2019_1776_avohilmo_suu_toimenpide.csv.finreg_IDs", THL_AVOHILMO_INPUT_DIR / "thl2021_2196_avohilmo_suu_toimp.csv.finreg_IDs"]
+THL_AVOHILMO_OUTPUT_DIR = PROCESSED_DATA_DIR / "thl_avohilmo"
+
 # FICC Intensive Care
 FICC_INTENSIVE_CARE_INPUT_DIR = ORIGINAL_DATA_DIR / "ficc_intensive_care"
 FICC_INTENSIVE_CARE_OUTPUT_DIR = PROCESSED_DATA_DIR / "ficc_intensive_care"
