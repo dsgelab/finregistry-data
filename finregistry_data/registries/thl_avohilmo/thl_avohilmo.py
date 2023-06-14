@@ -105,6 +105,10 @@ def preprocess_avohilmo_main(file):
         "KAYNTI_LUONNE": str,
         "KAYNTI_ENSIKAYNTI": str,
         "KAYNTI_ERIKOISALA": str,
+        "KAYNTI_AMMATTIOIKEUS": str,
+        "KAYNTI_AMMATTI": str,
+        "KAYNTI_PALVELUMUOTO": str,
+        "KAYNTI_YHTEYSTAPA": str,
         "ULKOINEN_SYY": str,
         "TAPATURMATYYPPI": str,
         "PAINO": float,
@@ -139,6 +143,8 @@ def preprocess_avohilmo_main(file):
         "KOTIHOITO_TARKISTUS_AJANKOHTA",
         "PERUUTUS_AJANKOHTA",
         "RASKAUS_LASKETTUAIKA",
+        "KAYNTI_ALKOI",
+        "KAYNTI_LOPPUI"
     ]
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols)
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
