@@ -123,4 +123,4 @@ if __name__ == "__main__":
                 "purchases_" + str(year) + "_" + today + ".csv"
             )
             df.to_csv(output_path, mode="a", header=header, index=False)
-        convert_csv_to_feather(output_path, "purchases_" + str(year))
+        convert_csv_to_feather(KELA_PURCHASE_OUTPUT_DIR, "purchases_" + str(year))
