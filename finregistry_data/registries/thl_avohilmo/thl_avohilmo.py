@@ -61,6 +61,7 @@ Output files:
 - avohilmo_suu_toimenpide.csv
 """
 
+import os
 import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
@@ -82,6 +83,9 @@ from finregistry_data.config import (
 
 
 def preprocess_avohilmo_main(file):
+    """
+    Preprocess the AvoHilmo main file in chunks and write to a file.
+    """
     dtypes = {
         "AVOHILMO_ID": int,
         "TNRO": str,
@@ -144,11 +148,31 @@ def preprocess_avohilmo_main(file):
         "PERUUTUS_AJANKOHTA",
         "RASKAUS_LASKETTUAIKA",
         "KAYNTI_ALKOI",
-        "KAYNTI_LOPPUI"
+        "KAYNTI_LOPPUI",
     ]
-    df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols)
-    assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
-    return df
+
+    # Output path
+    today = datetime.today().strftime("%Y-%m-%d")
+    output_path = THL_AVOHILMO_OUTPUT_DIR / ("avohilmo_" + today + ".csv")
+    
+    # Write header if file does not exist
+    if not os.path.isfile(output_path):
+        header = pd.DataFrame(columns=(list(dtypes.keys()) + date_cols))
+        header.to_csv(output_path)
+
+    # Write content in chunks
+    chunksize = 10**5
+    with pd.read_csv(
+        file,
+        chunksize=chunksize,
+        sep=";",
+        encoding="latin-1",
+        dtype=dtypes,
+        parse_dates=date_cols,
+    ) as reader:
+        for chunk in tqdm(reader):
+            assert chunk.shape[1] == (len(dtypes.keys()) + len(date_cols))
+            chunk.to_csv(output_path, mode="a", index=False, header=False)
 
 
 def preprocess_avohilmo_icd10(file):
@@ -336,7 +360,11 @@ def preprocessing_loop(files, func, output_filename):
 
 if __name__ == "__main__":
     # Preprocessing all the files by category
-    preprocessing_loop(THL_AVOHILMO_MAIN, preprocess_avohilmo_main, "avohilmo")
+
+    # HACK: the main AvoHilmo files are written in chunks due to the size of the data
+    for file in THL_AVOHILMO_MAIN:
+        preprocess_avohilmo_main(file)
+
     preprocessing_loop(THL_AVOHILMO_ICD10, preprocess_avohilmo_icd10, "avohilmo_icd10")
     preprocessing_loop(THL_AVOHILMO_ICPC2, preprocess_avohilmo_icpc2, "avohilmo_icpc2")
     preprocessing_loop(
