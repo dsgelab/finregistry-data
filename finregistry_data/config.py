@@ -66,3 +66,22 @@ SF_SES_DATA_PATHS = [
     SF_SOCIOECONOMIC_INPUT_DIR / "sose_u1442_a.csv.finreg_IDs",
     SF_SOCIOECONOMIC_INPUT_DIR / "sose_u1442_al10.csv.finreg_IDs"
 ]
+
+# DVV
+DVV_INPUT_DIR = ORIGINAL_DATA_DIR / "dvv"
+DVV_OUTPUT_DIR = PROCESSED_DATA_DIR / "dvv"
+DVV_LIVING_HISTORY_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_asuinhist.txt.finreg_IDs"
+]
+DVV_MARRIAGES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_aviohist.txt.finreg_IDs"
+]
+DVV_RELATIVES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDs"
+]
