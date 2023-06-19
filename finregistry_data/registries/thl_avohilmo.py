@@ -82,7 +82,7 @@ from finregistry_data.config import (
 )
 
 
-def preprocess_avohilmo_main(file):
+def preprocess_avohilmo_main(file, output_path):
     """
     Preprocess the AvoHilmo main file in chunks and write to a file.
     """
@@ -150,10 +150,6 @@ def preprocess_avohilmo_main(file):
         "KAYNTI_ALKOI",
         "KAYNTI_LOPPUI",
     ]
-
-    # Output path
-    today = datetime.today().strftime("%Y-%m-%d")
-    output_path = THL_AVOHILMO_OUTPUT_DIR / ("avohilmo_" + today + ".csv")
     
     # Write header if file does not exist
     if not os.path.isfile(output_path):
@@ -362,8 +358,10 @@ if __name__ == "__main__":
     # Preprocessing all the files by category
 
     # HACK: the main AvoHilmo files are written in chunks due to the size of the data
+    today = datetime.today().strftime("%Y-%m-%d")
+    output_path = THL_AVOHILMO_OUTPUT_DIR / ("avohilmo_" + today + ".csv")
     for file in THL_AVOHILMO_MAIN:
-        preprocess_avohilmo_main(file)
+        preprocess_avohilmo_main(file, output_path)
 
     preprocessing_loop(THL_AVOHILMO_ICD10, preprocess_avohilmo_icd10, "avohilmo_icd10")
     preprocessing_loop(THL_AVOHILMO_ICPC2, preprocess_avohilmo_icpc2, "avohilmo_icpc2")
