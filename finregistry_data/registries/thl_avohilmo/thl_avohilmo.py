@@ -158,7 +158,7 @@ def preprocess_avohilmo_main(file):
     # Write header if file does not exist
     if not os.path.isfile(output_path):
         header = pd.DataFrame(columns=(list(dtypes.keys()) + date_cols))
-        header.to_csv(output_path)
+        header.to_csv(output_path, index=False)
 
     # Write content in chunks
     chunksize = 10**5
