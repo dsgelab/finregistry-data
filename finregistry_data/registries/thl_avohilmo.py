@@ -168,7 +168,7 @@ def preprocess_avohilmo_main(file, output_path):
     ) as reader:
         for chunk in tqdm(reader):
             assert chunk.shape[1] == (len(dtypes.keys()) + len(date_cols))
-            chunk.to_csv(output_path, mode="a", index=False, header=False)
+            chunk[header.columns].to_csv(output_path, mode="a", index=False, header=False)
 
 
 def preprocess_avohilmo_icd10(file):
