@@ -170,7 +170,10 @@ def preprocess_hilmo_main(file):
     missing_cols = [col for col in all_cols if col not in df.columns]
     for col in missing_cols:
         df[col] = pd.NA
-
+        
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(all_cols)
 
     return df
@@ -184,6 +187,10 @@ def preprocess_hilmo_diag(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "KENTTA": str, "N": int, "KOODI": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -195,6 +202,10 @@ def preprocess_hilmo_haitmp(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "HAITMP": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -207,6 +218,10 @@ def preprocess_hilmo_hhaitta(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "HHAITTA": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -232,6 +247,10 @@ def preprocess_hilmo_laakkeet(file):
     df["MAAR_PVM"] = pd.to_datetime(
         df["MAAR_PVM"].str[:9],
     ).dt.date
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -243,6 +262,10 @@ def preprocess_hilmo_psyklaake(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TOTLAAKPSYK": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -281,7 +304,10 @@ def preprocess_hilmo_psykp(file):
     missing_cols = [col for col in all_cols if col not in df.columns]
     for col in missing_cols:
         df[col] = pd.NA
-
+        
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
 
     return df
@@ -294,6 +320,10 @@ def preprocess_hilmo_psykppak(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TOTPAKPSYK": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -340,6 +370,10 @@ def preprocess_hilmo_syp(file):
         "KOMPL5": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -355,6 +389,10 @@ def preprocess_hilmo_tehohoito(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, parse_dates=date_cols, encoding="latin-1"
     )
+    
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -370,6 +408,10 @@ def preprocess_hilmo_toimenpide(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, parse_dates=date_cols, encoding="latin-1"
     )
+    
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -381,6 +423,10 @@ def preprocess_hilmo_tusyy(file):
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "TUSYY": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
