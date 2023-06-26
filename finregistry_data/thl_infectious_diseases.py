@@ -235,6 +235,11 @@ if __name__ == "__main__":
 
     df = merge_data(df_original, df_amendment)
     df = preprocess_data(df)
-
+    
+    # change header to upper case
+    df.columns= df.columns.str.upper()
+    # change TNRO to FINREGISTRYID
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     write_data(df, THL_INFECTIOUS_DISEASES_OUTPUT_DIR, "infectious_diseases", "csv")
     write_data(df, THL_INFECTIOUS_DISEASES_OUTPUT_DIR, "infectious_diseases", "feather")
