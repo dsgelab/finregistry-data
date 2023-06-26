@@ -1104,7 +1104,11 @@ mpf <- mpf %>%
 # change header to uppercase
 header(mpf) <- toupper(header(mpf))
 
+# add automatic date
+today <- Sys.Date()
+filename <- paste0("minimal_phenotype_",today,".csv")
+
 # save 
 setwd("/data/processed_data/minimal_phenotype/")
-write.csv(mpf, "minimal_phenotype_2023-05-02.csv", 
+write.csv(mpf, filename, 
           row.names = FALSE)
