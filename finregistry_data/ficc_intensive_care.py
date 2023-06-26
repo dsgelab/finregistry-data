@@ -64,5 +64,10 @@ if __name__ == "__main__":
     tiss = read_data(FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH)
     teho = preprocess_teho_data(teho)
     tiss = preprocess_tiss_data(tiss)
+
+    # change ID to FINREGISTRYID
+    teho = teho.rename(columns={"TNRO": "FINREGISTRYID"})
+    tiss = tiss.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     write_data(teho, FICC_INTENSIVE_CARE_OUTPUT_DIR, "intensive_care", "csv")
     write_data(tiss, FICC_INTENSIVE_CARE_OUTPUT_DIR, "tiss", "csv")
