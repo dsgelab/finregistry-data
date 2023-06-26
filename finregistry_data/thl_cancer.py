@@ -61,6 +61,7 @@ def read_data(path=THL_CANCER_DATA_PATH):
     logging.info(f"Cancer dataset loaded: {df.shape[0]:,} rows")
 
     df = df.rename({"FINREGISTRYID": "finregistryid"})
+    df.columns= df.columns.str.upper()
     return df
 
 
