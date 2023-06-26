@@ -1101,6 +1101,8 @@ kanta_prescriptions <- fread(kanta_prescriptions_path) %>% as_tibble
 mpf <- mpf %>%
   left_join(kanta_prescriptions, by = c("FINREGISTRYID" = "PATIENT_ID"))
 
+# change header to uppercase
+header(mpf) <- toupper(header(mpf))
 
 # save 
 setwd("/data/processed_data/minimal_phenotype/")
