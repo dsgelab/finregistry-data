@@ -62,7 +62,6 @@ def read_data(path=THL_CANCER_DATA_PATH):
     logging.info(f"Cancer dataset loaded: {df.shape[0]:,} rows")
 
     df = df.rename({"FINREGISTRYID": "finregistryid"})
-    df.columns= df.columns.str.upper()
     return df
 
 
@@ -87,6 +86,9 @@ def parse_dates(df, date_cols):
 if __name__ == "__main__":
     df = read_data()
     df = parse_dates(df, ["dg_date", "ex_date"])
+
+    # change header to upper case
+    df.columns= df.columns.str.upper()
     logging.info("Writing cancer dataset to a file")
     write_data(df, THL_CANCER_OUTPUT_DIR, "cancer", "csv")
     write_data(df, THL_CANCER_OUTPUT_DIR, "cancer", "feather")
