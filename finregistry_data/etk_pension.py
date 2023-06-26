@@ -123,12 +123,22 @@ if __name__ == "__main__":
     elake, palkaton, vuansiot, cpi = read_data()
 
     elake = parse_dates(elake, ["aalk", "apvm", "ppvm"])
+
+    # change header to upper case
+    elake.columns= elake.columns.str.upper()
+    # change ID to FINREGISTRYID
+    elake = elake.rename(columns={"ID": "FINREGISTRYID"})
     
     logging.info("Writing elake dataset to a file")
     write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "csv")
     write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "feather")
 
     palkaton = parse_dates(palkaton, ["alkamispvm", "paattymispvm"])
+
+    # change header to upper case
+    palkaton.columns= palkaton.columns.str.upper()
+    # change ID to FINREGISTRYID
+    palkaton = palkaton.rename(columns={"ID": "FINREGISTRYID"})
     
     logging.info("Writing palkaton dataset to a file")
     write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "palkaton", "csv")
@@ -138,6 +148,11 @@ if __name__ == "__main__":
     vuansiot = vuansiot.drop(columns="he00hsur")
     vuansiot["vuosiansio"] = vuansiot["vuosiansio"] / CENTS_IN_EURO
     vuansiot = add_indexed_value(vuansiot, "vuosiansio", "vuosi", cpi)
+
+    # change header to upper case
+    vuansiot.columns= vuansiot.columns.str.upper()
+    # change ID to FINREGISTRYID
+    vuansiot = vuansiot.rename(columns={"ID": "FINREGISTRYID"})
     
     logging.info("Writing vuansiot dataset to a file")
     write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "csv")
