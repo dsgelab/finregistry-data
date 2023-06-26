@@ -167,6 +167,12 @@ if __name__ == "__main__":
     df_protection = read_vacc_protection_data(VACCINATION_PROTECTION_DATA_PATH)
     df = merge_data(df_registry, df_protection)
     df = preprocess_data(df)
+
+    # change header to upper case
+    df.columns= df.columns.str.upper()
+    # change TNRO to FINREGISTRYID
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "csv")
     write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "feather")
 
