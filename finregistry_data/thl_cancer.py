@@ -3,6 +3,7 @@ THL Cancer data preprocessing
 
 Reads THL Cancer data, applies the preprocessing steps below and writes the result to a file.
 - Rename `FINREGISTRYID` to `finregistryid`
+- header in capitals
 - Parse dates
 
 Input files: 
