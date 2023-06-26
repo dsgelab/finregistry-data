@@ -3,7 +3,7 @@
 
 # libraries
 library(data.table)
-library(feather)
+#library(feather)
 library(dplyr)
 library(tibble)
 library(tidyr)
@@ -16,15 +16,15 @@ library(stringr)
 
 dvv_dir <- "/data/processed_data/dvv/"
 
-dvv_living_name <- "Tulokset_1900-2010_tutkhenk_asuinhist.txt.finreg_IDsp"
-dvv_marriage_name <- "Tulokset_1900-2010_tutkhenk_aviohist.txt.finreg_IDsp"
-dvv_relative_name <- "Tulokset_1900-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDsp"
+dvv_living_name <- "living_history_2023-06-14.csv"
+dvv_marriage_name <- "marriages_2023-06-14.csv"
+dvv_relative_name <- "relatives_2023-06-14.csv"
 id_bd_path <- "/data/original_data/dvv/Finregistry_IDs_and_full_DOB_SEX.txt"
-birth_path <- "/data/processed_data/thl_birth/birth_2022-03-08.csv"
-vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2022-05-10.csv"
-infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2022-05-24.csv"
-malf_path <- "/data/processed_data/thl_malformations/malformations_anomaly_2022-01-26.csv"
-cancer_path <- "/data/processed_data/thl_cancer/cancer_2022-06-23.csv"
+birth_path <- "/data/processed_data/thl_birth/birth_2023-06-26.csv"
+vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2023-06-26.csv"
+infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2023-06-26.csv"
+malf_path <- "/data/processed_data/thl_malformations/malformations_anomaly_2023-06-26.csv"
+cancer_path <- "/data/processed_data/thl_cancer/cancer_2023-06-26.csv"
 
 # paths to the custom datafiles created for the minimal pheno 
 drug_purchases_path <- '/data/projects/mpf/mpf_create/drug_purchases.csv'
@@ -41,40 +41,43 @@ replace.na.0 <- function(var) {
 
 # start with the id, dob, sex file (updated file from THL in dec 2022)
 # sex: 0 = male, 1 = female
+cat("Reading dvv id list", "\n")
+
 id_bd <- fread(id_bd_path) %>% as_tibble %>%
   # rename variables
-  rename(date_of_birth = `DOB(DD-MM-YYYY-format)`,
-         sex = `SEX(1=male,2=female)`) %>%
+  rename(DATE_OF_BIRTH = `DOB(DD-MM-YYYY-format)`,
+         SEX = `SEX(1=male,2=female)`) %>%
   # recode gender to match 0 = male, 1 = female
-  mutate(sex = sex - 1) %>%
+  mutate(SEX = SEX - 1) %>%
   ## mutate date of birth to the standard R format.
   # produces 10 missing values who have BD during non-existent feb 29 
-  mutate(formatted_date_of_birth = (as.Date(date_of_birth, format = "%d-%m-%Y"))) %>%
+  mutate(FORMATTED_DATE_OF_BIRTH = (as.Date(DATE_OF_BIRTH, format = "%d-%m-%Y"))) %>%
   # recode non-existing false leap year dates into actual dates
-  mutate(date_of_birth = case_when(
+  mutate(DATE_OF_BIRTH = case_when(
     
-    is.na(formatted_date_of_birth)&
-      substr(date_of_birth, 1, 5) == "29-02" ~ paste0("28", substr(date_of_birth, 3, 10)),
+    is.na(FORMATTED_DATE_OF_BIRTH)&
+      substr(DATE_OF_BIRTH, 1, 5) == "29-02" ~ paste0("28", substr(DATE_OF_BIRTH, 3, 10)),
     
-    TRUE ~ date_of_birth)) %>%
+    TRUE ~ DATE_OF_BIRTH)) %>%
   # change the DOB into date format 
-  mutate(date_of_birth = as.Date(date_of_birth, format = "%d-%m-%Y")) %>%
-  select(-formatted_date_of_birth) 
+  mutate(DATE_OF_BIRTH = as.Date(DATE_OF_BIRTH, format = "%d-%m-%Y")) %>%
+  select(-FORMATTED_DATE_OF_BIRTH) 
 
 
 ## check: no missingness
-# id_bd %>% filter(is.na(sex)|is.na(date_of_birth))
+# id_bd %>% filter(is.na(SEX)|is.na(DATE_OF_BIRTH))
 
 
 
 
 # load the registries
+cat("Reading dvv_living", "\n")
 dvv_living <- fread(paste0(dvv_dir, dvv_living_name)) %>% as_tibble
-
+cat("Reading dvv_marriage", "\n")
 dvv_marriage <- fread(paste0(dvv_dir, dvv_marriage_name)) %>% as_tibble
-
+cat("Reading dvv_relative", "\n")
 dvv_relative <- fread(paste0(dvv_dir, dvv_relative_name)) %>% as_tibble
-
+cat("Reading thl_birth", "\n")
 thl_birth <- fread(birth_path) %>% as_tibble
 
 # get id numbers from each registries
@@ -100,7 +103,7 @@ all_ids_multi <- bind_rows(id_living, id_mar, id_relative)
 all_ids <- unique(all_ids_multi)
 
 # 7 070 389 unique relative id's
-all_relative_ids <- dvv_relative %>% select(Relative_ID) %>% unique
+all_relative_ids <- dvv_relative %>% select(RELATIVE_ID) %>% unique
 
 # mpf is the minimum phenotype file
 mpf <- all_ids %>%
@@ -108,7 +111,7 @@ mpf <- all_ids %>%
 
 # get all relative id's
 all_relative_ids <- all_relative_ids %>%
-  rename(FINREGISTRYID = Relative_ID)
+  rename(FINREGISTRYID = RELATIVE_ID)
 
 # 1,730,585 relatives not index persons
 only_relatives <- setdiff(all_relative_ids, all_ids) 
@@ -116,9 +119,9 @@ only_relatives <- setdiff(all_relative_ids, all_ids)
 
 # get all spouses' ids from marriage registry
 all_spouse_ids <- dvv_marriage %>% 
-  select(Spouse_personal_ID) %>%
-  filter(Spouse_personal_ID != "") %>%
-  rename(FINREGISTRYID = Spouse_personal_ID) 
+  select(SPOUSE_ID) %>%
+  filter(SPOUSE_ID != "") %>%
+  rename(FINREGISTRYID = SPOUSE_ID) 
 
 # identify unique spouses (not in index persons or in relatives!)
 # n = 96,028
@@ -158,12 +161,12 @@ mpf <- mpf %>%
 # get birth and death dates from DVV relative registry
 
 death_dates <- dvv_relative %>%
-  select(Relative_ID, Relative_death_date) %>%
-  rename(FINREGISTRYID = Relative_ID,
-         death_date = Relative_death_date) %>%
+  select(RELATIVE_ID, RELATIVE_DEATH_DATE) %>%
+  rename(FINREGISTRYID = RELATIVE_ID,
+         DEATH_DATE = RELATIVE_DEATH_DATE) %>%
   distinct() 
 
-
+#### I AM HERE - JOANNE ####
 
 ## Death dates from causes of death registry 
 
