@@ -32,10 +32,22 @@ def read_data(filepath):
     return df
 
 
-def parse_dates(df, date_cols):
-    """Parse dates as pandas dates. Invalid dates are returned as NaT."""
+def parse_dates(df):
+    """
+    Parse dates from dd.mm.yyyy to yyyy-mm-dd.
+    Invalid dates (invalid format, too far in the future) are returned as missing (NaT).
+    """
+    date_cols = [
+        "HOSP_ADM_TIME",
+        "HOSP_DISCH_TIME",
+        "ADM_TIME",
+        "DISCH_TIME",
+        "DATETIME",
+    ]
     for date_col in date_cols:
-        df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+        df[date_col] = pd.to_datetime(df[date_col], format="%d.%m.%Y", errors="coerce")
+        df[date_col] = df[date_col].dt.date
+
     return df
 
 
