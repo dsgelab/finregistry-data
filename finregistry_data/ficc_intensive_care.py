@@ -18,8 +18,8 @@ Output files:
 """
 
 import pandas as pd
-from utils import write_data
-from config import (
+from finregistry_data.utils import write_data
+from finregistry_data.config import (
     FICC_INTENSIVE_CARE_TEHO_DATA_PATH,
     FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH,
     FICC_INTENSIVE_CARE_OUTPUT_DIR,
