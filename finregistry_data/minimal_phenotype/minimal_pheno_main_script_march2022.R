@@ -166,7 +166,6 @@ death_dates <- dvv_relative %>%
          DEATH_DATE = RELATIVE_DEATH_DATE) %>%
   distinct() 
 
-#### I AM HERE - JOANNE ####
 
 ## Death dates from causes of death registry 
 
@@ -174,16 +173,16 @@ death_dates <- dvv_relative %>%
 sf_dir <- "/data/processed_data/sf_death/"
 # cod_name <- "thl2019_1776_ksyy_tutkimus.csv.finreg_IDsp"
 # cod_name_vuosi <- "thl2019_1776_ksyy_vuosi.csv.finreg_IDsp"
-cod_recent_name <- "thl2021_2196_ksyy_tutkimus.csv.finreg_IDsp"
+cod_recent_name <- "death_tutkimus_2023-06-27.csv"
 
 # load causes of death
+cat("Reading sf_death", "\n")
 cod <- fread(paste0(sf_dir, cod_recent_name)) %>% as_tibble
 # cod_vuosi <- fread(paste0(sf_dir, cod_name_vuosi)) %>% as_tibble
 
 # select death date from both cause of death registries
 cod_date <- cod %>% 
-  select(TNRO, KPV) %>%
-  rename(FINREGISTRYID = TNRO)
+  select(FINREGISTRYID, KPV)
 
 # cod_date_vuosi <- cod_vuosi %>% 
 #     select(TNRO, KPV) %>%
@@ -193,7 +192,7 @@ cod_date <- cod %>%
 all_cod_dates <- cod_date %>% distinct
 
 mpf_death_date <- death_dates %>%
-  select(FINREGISTRYID, death_date)
+  select(FINREGISTRYID, DEATH_DATE)
 
 
 # join two sources of death dates (KPV from cod, death_date from dvv_relatives)
@@ -210,8 +209,8 @@ compare_death_dates <- left_join(mpf_death_date, all_cod_dates, by = "FINREGISTR
 #
 #
 compare_death_dates %>%
-  filter(death_date != KPV) %>%
-  mutate(deathdiff = difftime(death_date, KPV) %>% as.numeric) %>%
+  filter(DEATH_DATE != KPV) %>%
+  mutate(deathdiff = difftime(DEATH_DATE, KPV) %>% as.numeric) %>%
   pull(deathdiff) %>% quantile(., c(0, 0.01, (1:9)/10, 0.99, 1)) 
 
 #
@@ -229,14 +228,14 @@ compare_death_dates %>%
 
 # identify those with discrebant death dates
 not_identical_death_dates <- compare_death_dates %>%
-  filter(death_date != KPV) %>%
-  mutate(deathdiff = difftime(death_date, KPV) %>% as.numeric) %>%
+  filter(DEATH_DATE != KPV) %>%
+  mutate(deathdiff = difftime(DEATH_DATE, KPV) %>% as.numeric) %>%
   filter(deathdiff != 0)
 
 # If there's discrepancy in death dates, we'll use the COD death date.
 use_cod_for_these <- not_identical_death_dates %>%
   select(FINREGISTRYID, KPV) %>%
-  rename(death_date_cod = KPV)
+  rename(DEATH_DATE_COD = KPV)
 
 
 
@@ -244,32 +243,32 @@ use_cod_for_these <- not_identical_death_dates %>%
 # find missing death dates from both & combine
 
 missing_relative_death_dates <- compare_death_dates %>%
-  filter(!is.na(KPV)& is.na(death_date)) %>%
+  filter(!is.na(KPV)& is.na(DEATH_DATE)) %>%
   select(FINREGISTRYID, KPV) %>%
-  rename(death_date = KPV)
+  rename(DEATH_DATE = KPV)
 
 missing_cod_death_dates <- compare_death_dates %>%
-  filter(is.na(KPV)& !is.na(death_date)) %>%
-  select(FINREGISTRYID, death_date) 
+  filter(is.na(KPV)& !is.na(DEATH_DATE)) %>%
+  select(FINREGISTRYID, DEATH_DATE) 
 
 missing_death_dates <- bind_rows(missing_cod_death_dates, missing_relative_death_dates) %>%
   distinct()
 
 bd_dates_2 <- left_join(death_dates, missing_death_dates, by = "FINREGISTRYID") %>%
-  mutate(death_date = case_when(
-    !is.na(death_date.y) ~ death_date.y,
-    TRUE ~ death_date.x
+  mutate(DEATH_DATE = case_when(
+    !is.na(DEATH_DATE.y) ~ DEATH_DATE.y,
+    TRUE ~ DEATH_DATE.x
   )) %>%
-  select(-c(death_date.x, death_date.y))
+  select(-c(DEATH_DATE.x, DEATH_DATE.y))
 
 # replace death dates (from dvv_relatives) with COD dates for those with discrebancies
 bd_dates_2 <- bd_dates_2 %>%
   left_join(use_cod_for_these, by = "FINREGISTRYID") %>% 
-  mutate(death_date = case_when(
-    !is.na(death_date_cod) ~ death_date_cod,
-    TRUE ~ death_date
+  mutate(DEATH_DATE = case_when(
+    !is.na(DEATH_DATE_COD) ~ DEATH_DATE_COD,
+    TRUE ~ DEATH_DATE
   )) %>%
-  select(-death_date_cod) 
+  select(-DEATH_DATE_COD) 
 
 
 ## NOT RUN
@@ -310,7 +309,7 @@ mpf_without_dupl <- mpf %>%
 # get duplicate cases and remove cases with missing death dates. n = 257
 actual_dupl_cases <- mpf %>%
   filter(FINREGISTRYID %in% dupl_id) %>%
-  filter(!is.na(death_date)) %>%
+  filter(!is.na(DEATH_DATE)) %>%
   distinct()
 
 # join rows. Produces data with 257 cases less. 
@@ -334,43 +333,43 @@ if(sum(duplicated(mpf$FINREGISTRYID)) > 0) {
 
 
 change_post_codes <- dvv_living %>%
-  mutate(post_code_length = nchar(Post_code)) %>%
-  mutate(Post_code = as.character(Post_code)) %>%
-  mutate(Post_code = case_when(
-    post_code_length == 4 ~ paste0("0", Post_code),
-    post_code_length == 3 ~ paste0("00", Post_code),
-    TRUE ~ Post_code)) %>%
-  select(-post_code_length)
+  mutate(POST_CODE_LENGTH = nchar(POST_CODE)) %>%
+  mutate(POST_CODE = as.character(POST_CODE)) %>%
+  mutate(POST_CODE = case_when(
+    POST_CODE_LENGTH == 4 ~ paste0("0", POST_CODE),
+    POST_CODE_LENGTH == 3 ~ paste0("00", POST_CODE),
+    TRUE ~ POST_CODE)) %>%
+  select(-POST_CODE_LENGTH)
 
 
 # 80 post codes still "0", exclude these.
 dvv_living <- change_post_codes %>%
-  filter(Post_code != "0")
+  filter(POST_CODE != "0")
 
 # get the latest residence place. Checked a few dates, they match e.g. date of death
 
 # arrange according to descing start of residence, and select the latest. 
 residence <- dvv_living %>% 
   group_by(FINREGISTRYID) %>%
-  arrange(desc(Start_of_residence), .by_group = TRUE) %>%
+  arrange(desc(START_OF_RESIDENCE), .by_group = TRUE) %>%
   filter(row_number() == 1)
 
 residence <- residence %>%
-  select(FINREGISTRYID, Residence_type, Post_code, Latitude, Longitude,
-         Start_of_residence, End_of_residence)
+  select(FINREGISTRYID, RESIDENCE_TYPE, POST_CODE, LATITUDE, LONGITUDE,
+         START_OF_RESIDENCE, END_OF_RESIDENCE)
 
-test <- left_join(mpf, residence, by = "FINREGISTRYID", suffix = c("", "_latest"))
-
-
-
-mpf <- test %>% rename(residence_type_last = Residence_type,
-                       post_code_last = Post_code,
-                       latitude_last = Latitude,
-                       longitude_last = Longitude,
-                       residence_start_date_last = Start_of_residence,
-                       residence_end_date_last = End_of_residence)
+test <- left_join(mpf, residence, by = "FINREGISTRYID", suffix = c("", "_LATEST"))
 
 
+
+mpf <- test %>% rename(RESIDENCE_TYPE_LAST = RESIDENCE_TYPE,
+                       POST_CODE_LAST = POST_CODE,
+                       LATITUDE_LAST = LATITUDE,
+                       LONGITUDE_LAST = LONGITUDE,
+                       RESIDENCE_START_DATE_LAST = START_OF_RESIDENCE,
+                       RESIDENCE_END_DATE_LAST = END_OF_RESIDENCE)
+
+#### I AM HERE - JOANNE ####
 
 
 # first place of residence  #####
