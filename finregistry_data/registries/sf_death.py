@@ -99,6 +99,10 @@ if __name__ == "__main__":
     vuosi = format_dates(vuosi, ["KPV"])
     tutkimus = format_dates(tutkimus, ["KPV"])
 
+    # change TNRO to FINREGISTRYID
+    vuosi = vuosi.rename(columns={"TNRO": "FINREGISTRYID"})
+    tutkimus = tutkimus.rename(columns={"TNRO": "FINREGISTRYID"})    
+    
     # Write the output to file
     logging.info("Writing data")
     write_data(vuosi, SF_DEATH_OUTPUT_DIR, "death_vuosi", "csv")
