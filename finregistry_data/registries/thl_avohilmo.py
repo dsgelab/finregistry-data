@@ -154,6 +154,10 @@ def preprocess_avohilmo_main(file, output_path):
     # Write header if file does not exist
     if not os.path.isfile(output_path):
         header = pd.DataFrame(columns=(list(dtypes.keys()) + date_cols))
+
+        # jcd comment - quick fix, but not rerun yet
+        # header = header.rename(columns={"TNRO": "FINREGISTRYID"})
+        
         header.to_csv(output_path, index=False)
 
     # Write content in chunks
@@ -178,6 +182,10 @@ def preprocess_avohilmo_icd10(file):
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "ICD10": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -189,6 +197,10 @@ def preprocess_avohilmo_icpc2(file):
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "ICPC2": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -200,6 +212,10 @@ def preprocess_avohilmo_jatkohoito(file):
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "TOIMENPIDE": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -221,6 +237,10 @@ def preprocess_avohilmo_kotihoito(file):
         "OMAISHOIDONTUKI": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -242,6 +262,10 @@ def preprocess_avohilmo_laake(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -265,6 +289,10 @@ def preprocess_avohilmo_lahete(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -282,6 +310,10 @@ def preprocess_avohilmo_rokosuoja(file):
         "LR_JARJESTYS": int,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -306,6 +338,10 @@ def preprocess_avohilmo_rokotus(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -317,6 +353,10 @@ def preprocess_avohilmo_toimenpide(file):
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "TOIMENPIDE": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -333,6 +373,10 @@ def preprocess_avohilmo_suu_toimenpide(file):
         "TOIMENPIDE_HAMMAS": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+
+    # jcd comment - quick fix, but not rerun yet
+    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
