@@ -4,6 +4,8 @@ THL Avohilmo data preprocessing
 Reads the data, applies the preprocessing steps below and writes the result to a file.
 - Combine files into a single output by category
 - Harmonize date formats
+- Fix column order 
+- Rename TNRO to FINREGISTRYID
 - TODO: combine everything to a single file, merging based on Avohilmo ID
 - TODO: remove duplicated rows
 - TODO: rename TNRO to FINREGISTRYID
@@ -85,6 +87,9 @@ from finregistry_data.config import (
 def preprocess_avohilmo_main(file, output_path):
     """
     Preprocess the AvoHilmo main file in chunks and write to a file.
+    - Fix data types
+    - Parse dates
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -151,16 +156,16 @@ def preprocess_avohilmo_main(file, output_path):
         "KAYNTI_LOPPUI",
     ]
     
+    header = pd.DataFrame(columns=(list(dtypes.keys()) + date_cols))
+
     # Write header if file does not exist
     if not os.path.isfile(output_path):
         header = pd.DataFrame(columns=(list(dtypes.keys()) + date_cols))
-
-        # jcd comment - quick fix, but not rerun yet
-        # header = header.rename(columns={"TNRO": "FINREGISTRYID"})
-        
+        header = header.rename(columns={"TNRO": "FINREGISTRYID"})
         header.to_csv(output_path, index=False)
 
     # Write content in chunks
+    # TODO: rename TNRO to FINREGISTRYID
     chunksize = 10**5
     with pd.read_csv(
         file,
@@ -168,7 +173,7 @@ def preprocess_avohilmo_main(file, output_path):
         sep=";",
         encoding="latin-1",
         dtype=dtypes,
-        parse_dates=date_cols,
+        parse_dates=date_cols
     ) as reader:
         for chunk in tqdm(reader):
             assert chunk.shape[1] == (len(dtypes.keys()) + len(date_cols))
@@ -179,13 +184,11 @@ def preprocess_avohilmo_icd10(file):
     """
     Preprocess THL Avohilmo ICD10
     - Fix data types
+    - Fix column order
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "ICD10": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -194,13 +197,11 @@ def preprocess_avohilmo_icpc2(file):
     """
     Preprocess THL Avohilmo ICDPC2
     - Fix data types
+    - Fix column order
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "ICPC2": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -209,13 +210,11 @@ def preprocess_avohilmo_jatkohoito(file):
     """
     Preprocess THL Avohilmo Jatkohoito (follow-up care)
     - Fix data types
+    - Fix column order
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "TOIMENPIDE": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -224,6 +223,7 @@ def preprocess_avohilmo_kotihoito(file):
     """
     Preprocess THL Avohilmo Kotihoito (home care)
     - Fix data types
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -237,10 +237,7 @@ def preprocess_avohilmo_kotihoito(file):
         "OMAISHOIDONTUKI": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"}) 
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -250,6 +247,7 @@ def preprocess_avohilmo_laake(file):
     Preprocess THL Avohilmo Laake (medication)
     - Fix data types
     - Convert date formats
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -262,10 +260,7 @@ def preprocess_avohilmo_laake(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -274,6 +269,7 @@ def preprocess_avohilmo_lahete(file):
     """
     Preprocess THL Avohilmo Lahete (referral)
     - Fix data types
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -289,10 +285,7 @@ def preprocess_avohilmo_lahete(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -301,6 +294,7 @@ def preprocess_avohilmo_rokosuoja(file):
     """
     Preprocess THL Avohilmo Rokosuoja (vaccine protection)
     - Fix data types
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -310,10 +304,7 @@ def preprocess_avohilmo_rokosuoja(file):
         "LR_JARJESTYS": int,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -322,6 +313,7 @@ def preprocess_avohilmo_rokotus(file):
     """
     Preprocess THL Avohilmo Rokotus (vaccination)
     - Fix data types
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -338,10 +330,7 @@ def preprocess_avohilmo_rokotus(file):
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, encoding="latin-1", parse_dates=date_cols
     )
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})   
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -350,13 +339,11 @@ def preprocess_avohilmo_toimenpide(file):
     """
     Preprocess THL Avohilmo Toimenpide (operation)
     - Fix data types
+    - Fix column order
     """
     dtypes = {"AVOHILMO_ID": int, "TNRO": str, "JARJESTYS": int, "TOIMENPIDE": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})  
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -364,6 +351,8 @@ def preprocess_avohilmo_toimenpide(file):
 def preprocess_avohilmo_suu_toimenpide(file):
     """
     Preprocess THL Avohilmo suu toimenpide (mouth operation)
+    - Fix data types
+    - Fix column order
     """
     dtypes = {
         "AVOHILMO_ID": int,
@@ -373,10 +362,7 @@ def preprocess_avohilmo_suu_toimenpide(file):
         "TOIMENPIDE_HAMMAS": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
-
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -393,19 +379,13 @@ def preprocessing_loop(files, func, output_filename):
     today = datetime.today().strftime("%Y-%m-%d")
     output_path = THL_AVOHILMO_OUTPUT_DIR / (output_filename + "_" + today + ".csv")
 
-    for file in tqdm(files):
+    for file in tqdm(files, desc=output_filename):
         header = True if file == files[0] else False
         func(file).to_csv(output_path, mode="a", index=False, header=header)
 
 
 if __name__ == "__main__":
     # Preprocessing all the files by category
-
-    # HACK: the main AvoHilmo files are written in chunks due to the size of the data
-    today = datetime.today().strftime("%Y-%m-%d")
-    output_path = THL_AVOHILMO_OUTPUT_DIR / ("avohilmo_" + today + ".csv")
-    for file in THL_AVOHILMO_MAIN:
-        preprocess_avohilmo_main(file, output_path)
 
     preprocessing_loop(THL_AVOHILMO_ICD10, preprocess_avohilmo_icd10, "avohilmo_icd10")
     preprocessing_loop(THL_AVOHILMO_ICPC2, preprocess_avohilmo_icpc2, "avohilmo_icpc2")
@@ -433,3 +413,9 @@ if __name__ == "__main__":
         preprocess_avohilmo_suu_toimenpide,
         "avohilmo_suu_toimenpide",
     )
+
+    # HACK: the main AvoHilmo files are written in chunks due to the size of the data
+    today = datetime.today().strftime("%Y-%m-%d")
+    output_path = THL_AVOHILMO_OUTPUT_DIR / ("avohilmo_" + today + ".csv")
+    for file in tqdm(THL_AVOHILMO_MAIN, desc="avohilmo main"):
+        preprocess_avohilmo_main(file, output_path)
