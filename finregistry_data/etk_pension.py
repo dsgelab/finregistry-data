@@ -16,9 +16,9 @@ Input files:
 - consumer_price_index_1972_2021.csv
 
 Output files: 
-- elake.csv, elake.feather
-- palkaton.csv, palkaton.feather
-- vuansiot.csv, vuansiot.feather
+- pension.csv, pension.feather
+- unpaid.csv, unpaid.feather
+- income.csv, income.feather
 """
 
 from multiprocessing.sharedctypes import Value
@@ -43,11 +43,11 @@ def read_data(
     elake_path=ETK_PENSION_ELAKE_DATA_PATH,
     palkaton_path=ETK_PENSION_PALKATON_DATA_PATH,
     vuansiot_path=ETK_PENSION_VUANSIOT_DATA_PATH,
-    cpi_path=ETK_PENSION_CPI_DATA_PATH
+    cpi_path=ETK_PENSION_CPI_DATA_PATH,
 ):
     """
     Read the three datasets into Pandas DataFrames.
-    
+
     Numeric categorical variables are read as strings.
     Column names are set to lowercase.
 
@@ -56,7 +56,7 @@ def read_data(
         palkaton_path (str): File path to palkaton dataset
         vuansiot_path (str): File path to vuansiot dataset
 
-    Returns: 
+    Returns:
         (elake, palkaton, vuansiot): tuple of DataFrames.
     """
     elake = pd.read_csv(
@@ -84,7 +84,7 @@ def parse_dates(df, date_cols):
         df (DataFrame): dataset with date cols
         date_cols (list of str): names for date cols
 
-    Returns: 
+    Returns:
         df (DataFrame): dataset with dates parsed to YYYY-MM-DD
     """
     df[date_cols] = df[date_cols].apply(
@@ -92,11 +92,12 @@ def parse_dates(df, date_cols):
     )
     return df
 
+
 def add_indexed_value(df, value_col, year_col, cpi):
     """
     Add indexed value as a new column to `df`.
 
-    Args: 
+    Args:
         df (DataFrame): dataset for adding the indexed value
         value_col (str): name of the column with values in df
         year_col (str): name of the column with years in df
@@ -119,30 +120,29 @@ def add_indexed_value(df, value_col, year_col, cpi):
 
 
 if __name__ == "__main__":
-
     elake, palkaton, vuansiot, cpi = read_data()
 
     elake = parse_dates(elake, ["aalk", "apvm", "ppvm"])
 
     # change header to upper case
-    elake.columns= elake.columns.str.upper()
+    elake.columns = elake.columns.str.upper()
     # change ID to FINREGISTRYID
     elake = elake.rename(columns={"ID": "FINREGISTRYID"})
-    
+
     logging.info("Writing elake dataset to a file")
-    write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "csv")
-    write_data(elake, ETK_PENSION_OUTPUT_DIR, "elake", "feather")
+    write_data(elake, ETK_PENSION_OUTPUT_DIR, "pension", "csv")
+    write_data(elake, ETK_PENSION_OUTPUT_DIR, "pension", "feather")
 
     palkaton = parse_dates(palkaton, ["alkamispvm", "paattymispvm"])
 
     # change header to upper case
-    palkaton.columns= palkaton.columns.str.upper()
+    palkaton.columns = palkaton.columns.str.upper()
     # change ID to FINREGISTRYID
     palkaton = palkaton.rename(columns={"ID": "FINREGISTRYID"})
-    
+
     logging.info("Writing palkaton dataset to a file")
-    write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "palkaton", "csv")
-    write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "palkaton", "feather")
+    write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "unpaid", "csv")
+    write_data(palkaton, ETK_PENSION_OUTPUT_DIR, "unpaid", "feather")
 
     vuansiot.columns = vuansiot.columns.str.lower()
     vuansiot = vuansiot.drop(columns="he00hsur")
@@ -150,10 +150,10 @@ if __name__ == "__main__":
     vuansiot = add_indexed_value(vuansiot, "vuosiansio", "vuosi", cpi)
 
     # change header to upper case
-    vuansiot.columns= vuansiot.columns.str.upper()
+    vuansiot.columns = vuansiot.columns.str.upper()
     # change ID to FINREGISTRYID
     vuansiot = vuansiot.rename(columns={"ID": "FINREGISTRYID"})
-    
+
     logging.info("Writing vuansiot dataset to a file")
-    write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "csv")
-    write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "vuansiot", "feather")
+    write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "income", "csv")
+    write_data(vuansiot, ETK_PENSION_OUTPUT_DIR, "income", "feather")
