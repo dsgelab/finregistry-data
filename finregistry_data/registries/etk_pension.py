@@ -21,7 +21,6 @@ Output files:
 - income.csv, income.feather
 """
 
-from multiprocessing.sharedctypes import Value
 import pandas as pd
 import logging
 

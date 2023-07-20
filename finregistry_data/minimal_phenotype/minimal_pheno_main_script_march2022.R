@@ -1,3 +1,4 @@
+
 # minimal phenotype creation
 
 # libraries
@@ -18,19 +19,53 @@ dvv_dir <- "/data/processed_data/dvv/"
 dvv_living_name <- "Tulokset_1900-2010_tutkhenk_asuinhist.txt.finreg_IDsp"
 dvv_marriage_name <- "Tulokset_1900-2010_tutkhenk_aviohist.txt.finreg_IDsp"
 dvv_relative_name <- "Tulokset_1900-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDsp"
-id_bd_path <- "/data/processed_data/dvv/Finregistry_IDs_and_full_DOB.txt"
-birth_path <- "/data/processed_data/thl_birth/THL2019_1776_synre.csv.finreg_IDsp"
-
-vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2022-01-14.csv"
-infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2022-01-19.csv"
+id_bd_path <- "/data/original_data/dvv/Finregistry_IDs_and_full_DOB_SEX.txt"
+birth_path <- "/data/processed_data/thl_birth/birth_2022-03-08.csv"
+vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2022-05-10.csv"
+infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2022-05-24.csv"
 malf_path <- "/data/processed_data/thl_malformations/malformations_anomaly_2022-01-26.csv"
-cancer_path <- "/data/processed_data/thl_cancer/fcr_data.txt.finreg_IDsp"
+cancer_path <- "/data/processed_data/thl_cancer/cancer_2022-06-23.csv"
 
 # paths to the custom datafiles created for the minimal pheno 
-ses_path <- "/data/projects/mpf/mpf_create/mpf_ses_variables_22032022.csv" 
 drug_purchases_path <- '/data/projects/mpf/mpf_create/drug_purchases.csv'
 kanta_prescriptions_path <- '/data/projects/mpf/mpf_create/kanta_prescriptions.csv'
 # kela purchases not joined
+
+# function to replace missing values with 0s
+replace.na.0 <- function(var) {
+  ifelse(is.na(var), 0, var)
+}
+
+
+#### START 
+
+# start with the id, dob, sex file (updated file from THL in dec 2022)
+# sex: 0 = male, 1 = female
+id_bd <- fread(id_bd_path) %>% as_tibble %>%
+  # rename variables
+  rename(date_of_birth = `DOB(DD-MM-YYYY-format)`,
+         sex = `SEX(1=male,2=female)`) %>%
+  # recode gender to match 0 = male, 1 = female
+  mutate(sex = sex - 1) %>%
+  ## mutate date of birth to the standard R format.
+  # produces 10 missing values who have BD during non-existent feb 29 
+  mutate(formatted_date_of_birth = (as.Date(date_of_birth, format = "%d-%m-%Y"))) %>%
+  # recode non-existing false leap year dates into actual dates
+  mutate(date_of_birth = case_when(
+    
+    is.na(formatted_date_of_birth)&
+      substr(date_of_birth, 1, 5) == "29-02" ~ paste0("28", substr(date_of_birth, 3, 10)),
+    
+    TRUE ~ date_of_birth)) %>%
+  # change the DOB into date format 
+  mutate(date_of_birth = as.Date(date_of_birth, format = "%d-%m-%Y")) %>%
+  select(-formatted_date_of_birth) 
+
+
+## check: no missingness
+# id_bd %>% filter(is.na(sex)|is.na(date_of_birth))
+
+
 
 
 # load the registries
@@ -39,9 +74,6 @@ dvv_living <- fread(paste0(dvv_dir, dvv_living_name)) %>% as_tibble
 dvv_marriage <- fread(paste0(dvv_dir, dvv_marriage_name)) %>% as_tibble
 
 dvv_relative <- fread(paste0(dvv_dir, dvv_relative_name)) %>% as_tibble
-
-id_bd <- fread(id_bd_path) %>% as_tibble %>%
-  rename(date_of_birth = 'DOB(YYYY-MM-DD)')
 
 thl_birth <- fread(birth_path) %>% as_tibble
 
@@ -56,10 +88,7 @@ id_birth <- thl_birth %>%
 
 
 
-# function to replace missing values with 0s
-replace.na.0 <- function(var) {
-    ifelse(is.na(var), 0, var)
-}
+
 
 
 # get IDs from DVV registries (also adding spouse ids and checking thl birth registry for extra ids) ####
@@ -81,7 +110,7 @@ mpf <- all_ids %>%
 all_relative_ids <- all_relative_ids %>%
   rename(FINREGISTRYID = Relative_ID)
 
-# 1,7 million relatives not in IDs
+# 1,730,585 relatives not index persons
 only_relatives <- setdiff(all_relative_ids, all_ids) 
 
 
@@ -92,7 +121,7 @@ all_spouse_ids <- dvv_marriage %>%
   rename(FINREGISTRYID = Spouse_personal_ID) 
 
 # identify unique spouses (not in index persons or in relatives!)
-# n = 96028
+# n = 96,028
 only_spouses <- setdiff(all_spouse_ids, all_relative_ids)
 
 # join relatives and spouses to index persons
@@ -101,19 +130,20 @@ only_rels_and_spouses <- bind_rows(only_relatives, only_spouses) %>%
 
 mpf_all_ids <- bind_rows(mpf, only_rels_and_spouses)
 
-# remove id ID is missing
+# remove if ID is missing
+# 7,166,416 IDs
 mpf <- mpf_all_ids %>%
   filter(FINREGISTRYID != "")
 
 
 # check if this list matches the data containing all ID's and birth dates
-id_bd <- fread(id_bd_path) %>% as_tibble %>%
-  rename(date_of_birth = 'DOB(YYYY-MM-DD)')
 
 setdiff(mpf$FINREGISTRYID, id_bd$FINREGISTRYID) # empty vector
 setdiff(id_birth$FINREGISTRYID, mpf$FINREGISTRYID) # empty vector - no extra IDs in the birth registry
 
-
+# join birth dates and sex 
+mpf <- mpf %>%
+  left_join(id_bd, by = "FINREGISTRYID")
 
 
 # dates of death and birth #####
@@ -133,35 +163,33 @@ death_dates <- dvv_relative %>%
          death_date = Relative_death_date) %>%
   distinct() 
 
-# use id_bd for birth dates, read in the last section (death date here is from DVV relatives)
-bd_dates <- left_join(id_bd, death_dates, by = "FINREGISTRYID")
 
 
-## 106 additional death dates from causes of death registry 
+## Death dates from causes of death registry 
 
 # Causes of death dirs and names
 sf_dir <- "/data/processed_data/sf_death/"
-cod_name <- "thl2019_1776_ksyy_tutkimus.csv.finreg_IDsp"
-cod_name_vuosi <- "thl2019_1776_ksyy_vuosi.csv.finreg_IDsp"
+# cod_name <- "thl2019_1776_ksyy_tutkimus.csv.finreg_IDsp"
+# cod_name_vuosi <- "thl2019_1776_ksyy_vuosi.csv.finreg_IDsp"
+cod_recent_name <- "thl2021_2196_ksyy_tutkimus.csv.finreg_IDsp"
 
 # load causes of death
-cod <- fread(paste0(sf_dir, cod_name)) %>% as_tibble
-cod_vuosi <- fread(paste0(sf_dir, cod_name_vuosi)) %>% as_tibble
+cod <- fread(paste0(sf_dir, cod_recent_name)) %>% as_tibble
+# cod_vuosi <- fread(paste0(sf_dir, cod_name_vuosi)) %>% as_tibble
 
 # select death date from both cause of death registries
 cod_date <- cod %>% 
   select(TNRO, KPV) %>%
   rename(FINREGISTRYID = TNRO)
 
-cod_date_vuosi <- cod_vuosi %>% 
-  select(TNRO, KPV) %>%
-  rename(FINREGISTRYID = TNRO)
+# cod_date_vuosi <- cod_vuosi %>% 
+#     select(TNRO, KPV) %>%
+#     rename(FINREGISTRYID = TNRO)
 
-# bind the dates and select unique rows (n = 1558314)
-all_cod_dates <- bind_rows(cod_date, cod_date_vuosi) %>% distinct
+# bind the dates and select unique rows
+all_cod_dates <- cod_date %>% distinct
 
-# select dvv relative based death dates
-mpf_death_date <- bd_dates %>%
+mpf_death_date <- death_dates %>%
   select(FINREGISTRYID, death_date)
 
 
@@ -173,28 +201,24 @@ compare_death_dates <- left_join(mpf_death_date, all_cod_dates, by = "FINREGISTR
 ## checks ##
 # There's not full overlap between COD and DVV registries.
 
-# 46078 death dates that are not in dvv relatives.
-# 54560 death dates that are not in causes of death registry
 
-# in 1786 cases, death dates are not identical.
+# in 1815 cases, death dates are not identical.
 
 #
 #
- compare_death_dates %>%
+compare_death_dates %>%
   filter(death_date != KPV) %>%
   mutate(deathdiff = difftime(death_date, KPV) %>% as.numeric) %>%
   pull(deathdiff) %>% quantile(., c(0, 0.01, (1:9)/10, 0.99, 1)) 
-# 
-#      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-#   <-7000    -1.000     1.000     1.349     2.000 12414.000 
+
 #
 # percentiles of differences
 
-#       0%       1%      10%      20%      30%      40%      50%      60% 
-#   <-7000   -365.00    -5.00    -1.00    -1.00    -1.00     1.00     1.00 
+# 0%       1%      10%      20%      30%      40%        
+# -7305 -356.60    -5.00    -1.00    -1.00    -1.00     
 #
-#      70%      80%      90%      99%     100% 
-#     1.00     3.00    10.00   304.15   >12 000 
+# 50%       60%      70%      80%       90%     99%     100% 
+# 1.00     1.00     1.00     3.00    10.00   273.86   366.00 
 #
 #
 #
@@ -206,9 +230,8 @@ not_identical_death_dates <- compare_death_dates %>%
   mutate(deathdiff = difftime(death_date, KPV) %>% as.numeric) %>%
   filter(deathdiff != 0)
 
-# Those with difference in death dates < 10 days, we'll use COD death date.
+# If there's discrepancy in death dates, we'll use the COD death date.
 use_cod_for_these <- not_identical_death_dates %>%
-  filter(abs(deathdiff) < 10) %>%
   select(FINREGISTRYID, KPV) %>%
   rename(death_date_cod = KPV)
 
@@ -229,7 +252,7 @@ missing_cod_death_dates <- compare_death_dates %>%
 missing_death_dates <- bind_rows(missing_cod_death_dates, missing_relative_death_dates) %>%
   distinct()
 
-bd_dates_2 <- left_join(bd_dates, missing_death_dates, by = "FINREGISTRYID") %>%
+bd_dates_2 <- left_join(death_dates, missing_death_dates, by = "FINREGISTRYID") %>%
   mutate(death_date = case_when(
     !is.na(death_date.y) ~ death_date.y,
     TRUE ~ death_date.x
@@ -246,17 +269,22 @@ bd_dates_2 <- bd_dates_2 %>%
   select(-death_date_cod) 
 
 
-## join relative- and causes_of_death -based death and birth dates
+## NOT RUN
+## use id_bd for birth dates, read in the last section (death date here is from DVV relatives)
+## bd_dates <- left_join(id_bd, death_dates, by = "FINREGISTRYID")
 
-mpf <- left_join(mpf, bd_dates_2, by = "FINREGISTRYID") 
+## join relative- and causes_of_death -based death dates
+mpf_temporary <- left_join(mpf, bd_dates_2, by = "FINREGISTRYID") 
 
-rm(bd_dates, bd_dates_2, missing_cod_death_dates, missing_relative_death_dates,
+mpf <- mpf_temporary
+
+# remove temporary files to save memory
+rm(death_dates, bd_dates_2, missing_cod_death_dates, missing_relative_death_dates,
    cod_date, cod, cod_vuosi, cod_name, cod_name_vuosi)
 gc()
 
 # Now 'mpf' has 7,166,673 rows.
-
-
+# nrow(mpf)
 
 
 
@@ -294,20 +322,6 @@ if(sum(duplicated(mpf$FINREGISTRYID)) > 0) {
 
 
 
-# Join sex from DVV relatives registry #######
-# sex exists in 7,070,389 / 7,166,416
-
-dvv_sex <- dvv_relative %>% 
-  select(Relative_ID, Sex) %>%
-  rename(FINREGISTRYID = Relative_ID,
-        sex = Sex) %>%
-  distinct() %>%
-  mutate(sex = sex - 1)
-
-mpf <- left_join(mpf, dvv_sex, by = "FINREGISTRYID")
-
-# 96 028 ids without sex information, most likely the spouses from DVV marriages
-# mpf %>% filter(is.na(sex))
 
 
 # last place of residence ######
@@ -347,11 +361,11 @@ test <- left_join(mpf, residence, by = "FINREGISTRYID", suffix = c("", "_latest"
 
 
 mpf <- test %>% rename(residence_type_last = Residence_type,
-                post_code_last = Post_code,
-                latitude_last = Latitude,
-                longitude_last = Longitude,
-                residence_start_date_last = Start_of_residence,
-                residence_end_date_last = End_of_residence)
+                       post_code_last = Post_code,
+                       latitude_last = Latitude,
+                       longitude_last = Longitude,
+                       residence_start_date_last = Start_of_residence,
+                       residence_end_date_last = End_of_residence)
 
 
 
@@ -376,13 +390,13 @@ birth_dates <- mpf %>%
 # first residences according to the end date
 # - to be used at least in immigration
 first_residence_by_end_date <- dvv_living %>%
-    select(FINREGISTRYID, Start_of_residence, End_of_residence,
+  select(FINREGISTRYID, Start_of_residence, End_of_residence,
          Residence_type, Post_code, Latitude, Longitude) %>%
-    group_by(FINREGISTRYID) %>%
-    arrange(End_of_residence, by.group = TRUE) %>%
-    slice(1) %>%
-    ungroup()
-  
+  group_by(FINREGISTRYID) %>%
+  arrange(End_of_residence, by.group = TRUE) %>%
+  slice(1) %>%
+  ungroup()
+
 first_residence <- first_residence_by_end_date
 
 # the following scripts compare whether we should use the definition of first residency 
@@ -497,9 +511,9 @@ emigr_singled <- mo_to_dupl %>%
 # bind singled-out cases with earlier duplicates to those with no duplicates
 mo_to <- bind_rows(mo_to_unique, emigr_singled) %>% 
   mutate(mother_tongue = case_when(
-  Mother_tongue %in% c("fi", "sv", "ru") ~ Mother_tongue,
-  Mother_tongue == "" ~ NA_character_,
-  TRUE ~ "other")) %>%
+    Mother_tongue %in% c("fi", "sv", "ru") ~ Mother_tongue,
+    Mother_tongue == "" ~ NA_character_,
+    TRUE ~ "other")) %>%
   select(-Mother_tongue)
 
 mpf_mo_to <- left_join(mpf, mo_to, by = "FINREGISTRYID")
@@ -558,7 +572,7 @@ mpf_mar <- left_join(mpf_mar, ever_divor, by = "FINREGISTRYID")
 # 
 # apparently some spouses have marriage information even if they're not index persons.
 
- mpf_mar <- mpf_mar %>% 
+mpf_mar <- mpf_mar %>% 
   mutate(ever_married = case_when(
     is.na(ever_married) & index_person == 1 ~ 0,
     TRUE ~ ever_married
@@ -572,7 +586,7 @@ mpf_mar <- left_join(mpf_mar, ever_divor, by = "FINREGISTRYID")
 mpf <- mpf_mar
 
 rm(dvv_mar_filt, spouse_id, ever_mar, marry_id, 
-  all_married, divor, divor_index, divor_spouse, ever_divor, mpf_mar, index, allspouses)
+   all_married, divor, divor_index, divor_spouse, ever_divor, mpf_mar, index, allspouses)
 gc()
 
 
@@ -602,7 +616,12 @@ gc()
 #     select(mother_tongue) %>% table
 
 
-# Emigration ######
+
+# EMIGRATION ######
+
+# JANUARY 2023: in some individuals, emigration date was later than the death date. 
+# this is clearly wrong, and demonstrates the inconsistency in some of the DVV dates related to living places.
+# as a rule of thumb, death date is more likely to be correct.  
 
 # MARCH 2022: WE WILL USE ONLY A SIMPLE DEFINITION OF EMIGRATION. 
 # Take information only from DVV relatives' "emigration_date" variable.
@@ -635,6 +654,16 @@ probable_emigrants <- emigrants_relatives %>%
 mpf_emigr <- left_join(mpf, probable_emigrants, by = "FINREGISTRYID") %>%
   mutate(emigrated = ifelse((is.na(emigrated) & index_person == 1), 0, emigrated))
 
+## if death date < emigration date, emigration date will be removed
+# 102 cases have death < emigration
+mpf_emigr %>%
+  filter(death_date < emigration_date) %>%
+  nrow
+
+# recode emigration_date to missing 
+mpf_emigr$emigration_date[mpf_emigr$death_date < mpf_emigr$emigration_date] <- NA
+
+
 
 # not run, immigration definition
 # mpf_emigr <- left_join(mpf_emigr, probable_immigrants, by = "FINREGISTRYID")
@@ -652,6 +681,7 @@ mpf_emigr %>%
 #            1 5278416   61389       0
 #
 #
+
 
 
 mpf <- mpf_emigr 
@@ -701,17 +731,17 @@ mpf <- mpf_emigr
 # mpf <- mpf %>%
 #   # complete follow-up
 #   mutate(complete_followup = case_when(
-    
+
 #     emigrated == 1,
 #     TRUE ~ 0
-    
+
 #   )) %>%
 #   # end of fu date
 #   mutate(end_of_followup = case_when(
-    
+
 #     !is.na(emigration_date) ~ emigration_date,
 #     !is.na(death_date) & is.na(emigration_date) ~ death_date
-    
+
 #   ))
 
 
@@ -782,8 +812,8 @@ all_social_assist <- bind_rows(s_a_ids, s_a_sp_ids) %>% distinct() %>%
 
 mpf <- left_join(mpf, all_social_assist, by = "FINREGISTRYID") %>%
   mutate(in_social_assistance_registries = ifelse(is.na(in_social_assistance_registries), 
-                                             0, 
-                                             in_social_assistance_registries))
+                                                  0, 
+                                                  in_social_assistance_registries))
 
 # check
 # mpf %>%
@@ -818,7 +848,7 @@ gc()
 # duplicates <- mpf %>%
 #   filter(duplicated(FINREGISTRYID)) %>%
 #   pull(FINREGISTRYID)
-#
+
 # mpf %>%
 #   filter(FINREGISTRYID %in% duplicates)
 
@@ -829,9 +859,8 @@ mpf <- mpf %>% distinct()
 
 
 
-mpf_intermediate_backup <- mpf
 
- 
+
 # mothers and fathers ids
 
 # id_mother
@@ -917,12 +946,6 @@ mpf <- mpf %>%
 
 thl_birth # read in the beginning
 
-
-
-# If death date 01-01-2020 or later set it as NA
-# 
-mpf <- mpf %>%
-  mutate(death_date = as.IDate(ifelse(death_date < as.IDate('2020-01-01'), death_date, NA))) 
 
 
 
@@ -1026,7 +1049,8 @@ mpf <- left_join(mpf, malf, by = "FINREGISTRYID") %>%
 
 # cancer
 
-cancer <- fread(cancer_path, select = c("FINREGISTRYID")) %>% as_tibble %>%
+cancer <- fread(cancer_path, select = c("finregistryid")) %>% as_tibble %>%
+  rename("FINREGISTRYID" = "finregistryid") %>%
   distinct() %>%
   mutate(in_cancer_registry = 1) 
 
@@ -1046,13 +1070,12 @@ mpf <- left_join(mpf, cancer, by = "FINREGISTRYID") %>%
 
 
 
-
 # duplicate check
 nrow(mpf) #  7166416
 
 
 
-# identify duplicate ids - 133 unique IDs
+# identify duplicate ids 
 # no duplicates!
 dupl <- mpf %>%
   mutate(dupl = duplicated(FINREGISTRYID)) %>%
@@ -1065,17 +1088,6 @@ if(length(dupl) > 0) {
 
 
 
-# add SES variables
-ses <- fread(ses_path) %>% as_tibble
-
-# rename to lower case
-mpf_ses <- left_join(mpf, ses, by = "FINREGISTRYID") %>%
-  rename(ses = SES,
-        occupation = OCCUPATION,
-        edulevel = EDULEVEL,
-        edufield = EDUFIELD)
-
-mpf <- mpf_ses
 
 # add drug purchases
 drug_purchases <- fread(drug_purchases_path) %>% as_tibble
@@ -1090,9 +1102,7 @@ mpf <- mpf %>%
   left_join(kanta_prescriptions, by = c("FINREGISTRYID" = "PATIENT_ID"))
 
 
-
 # save 
-setwd("/data/projects/mpf/mpf_create/")
-write.csv(mpf, "minimal_phenotype_main_032022.csv", 
-    row.names = FALSE)
-
+setwd("/data/processed_data/minimal_phenotype/")
+write.csv(mpf, "minimal_phenotype_2023-05-02.csv", 
+          row.names = FALSE)
