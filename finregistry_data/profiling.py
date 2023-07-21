@@ -29,9 +29,10 @@ def check_min_subjects(values, df, col, id_col):
             n_subjects = len(set(df.loc[df[col] == value, id_col].values))
             value = value if n_subjects >= MIN_SUBJECTS else MIN_SUBJECTS_STR
             res = np.append(res, value)
+            if value == MIN_SUBJECTS_STR:
+                break
     else:
         res = values
-    res = np.unique(res)
     res = " ".join(res.astype(str))
     return res
 
