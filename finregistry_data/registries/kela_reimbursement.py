@@ -5,9 +5,9 @@ Reads Kela Reimbursement data, applies the preprocessing steps below and writes 
 - Parse dates to YYYY-MM-DD
 - Rename HETU to FINREGISTRYID
 - Uppercase column names
-- Remove redundant columns `APVM` and `LPVM` in drug reimbursements
-- TODO: use `APVM` and `LPVM` if `ALPV` or `LOPV` are missing
-- TODO: replace "Tieto puuttuu" with NAs
+- Combine date columns in 175_522_2020_LAAKEKORVAUSOIKEUDET.csv.finreg_IDs
+- Harmonize ICD code formats (remove dots from ICD codes)
+- Concat the data into one file
 
 Input files: 
 - 175_522_2020_LAAKEKORVAUSOIKEUDET.csv.finreg_IDs
@@ -16,23 +16,22 @@ Input files:
 Output files: 
 - reimbursements.csv
 - reimbursements.feather
-- drug_reimbursements.csv
-- drug_reimbursements.feather
 """
 
 import pandas as pd
+import numpy as np
 
 from finregistry_data.config import (
-    KELA_DRUG_REIMBURSEMENTS_DATA_PATH,
-    KELA_REIMBURSERMENTS_DATA_PATH,
+    KELA_REIMBURSEMENTS_175_DATA_PATH,
+    KELA_REIMBURSEMENTS_81_DATA_PATH,
     KELA_REIMBURSEMENT_OUTPUT_DIR,
 )
 from finregistry_data.utils import write_data
 
 
-def preprocess_kela_reimbursements(file):
+def preprocess_reimbursements_81(file):
     """
-    Preprocess Kela Reimbursements dataset
+    Preprocess Kela Reimbursements 81_522_2022_KORVAUSOIKEUDET.csv.finreg_IDs dataset
     """
     # Read data
     dtypes = {
@@ -52,18 +51,21 @@ def preprocess_kela_reimbursements(file):
     for date_col in date_cols:
         df[date_col] = pd.to_datetime(df[date_col], errors="coerce").dt.date
 
-    # Rename HETU to FINREGISTRYID
-    df = df.rename(columns={"HETU": "FINREGISTRYID"})
-
     # Uppercase column names
     df.columns = df.columns.str.upper()
+
+    # Rename columns
+    df = df.rename(columns={"HETU": "FINREGISTRYID"})
+
+    # Remove dots from ICD codes
+    df["DIAGNOOSI_KOODI"] = df["DIAGNOOSI_KOODI"].str.replace(".", "", regex=False)
 
     return df
 
 
-def preprocess_kela_drug_reimbursements(file):
+def preprocess_reimbursements_175(file):
     """
-    Preprocess Kela Drug Reimbursements dataset
+    Preprocess Kela Reimbursements 175_522_2020_LAAKEKORVAUSOIKEUDET.csv.finreg_IDs dataset
     """
     # Read data
     dtypes = {
@@ -77,28 +79,81 @@ def preprocess_kela_drug_reimbursements(file):
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes)
 
-    # Parse dates
-    date_cols = ["APVM", "LPVM"]
-    for date_col in date_cols:
-        df[date_col] = pd.to_datetime(df[date_col], errors="coerce").dt.date
+    # Parse APVM and LPVM with format YYYYMM
+    # Use 15th as the date as exact dates are missing
+    for date_col in ["APVM", "LPVM"]:
+        df[date_col] = df[date_col].astype(str) + "15"
+        df[date_col] = pd.to_datetime(
+            df[date_col], format="%Y%m%d", errors="coerce"
+        ).dt.date
 
-    # Rename HETU to FINREGISTRYID
-    df = df.rename(columns={"HETU": "FINREGISTRYID"})
+    # Parse ALPV & LOPV with format YYYY-MM-DD
+    for date_col in ["ALPV", "LOPV"]:
+        df[date_col] = pd.to_datetime(
+            df[date_col], format="%Y-%m-%d", errors="coerce"
+        ).dt.date
+
+    # Merge APVM with ALPV and LOPV with LPVM
+    # Use APVM/LPVM by default and insert ALPV/LOPV if APVM/LPVM is missing
+    df["ALPV"] = np.where(df["ALPV"].isnull(), df["APVM"], df["ALPV"])
+    df["LOPV"] = np.where(df["LOPV"].isnull(), df["LPVM"], df["LPVM"])
 
     # Drop redundant columns APVM and LPVM
-    # Note: could be checked if they contain any information when ALPV and LOPV are missing
     df = df.drop(columns=["APVM", "LPVM"])
+
+    # Rename columns
+    df = df.rename(
+        columns={
+            "HETU": "FINREGISTRYID",
+            "SK1": "KORVAUSOIKEUS_KOODI",
+            "DIAG": "DIAGNOOSI_KOODI",
+            "ALPV": "KORVAUSOIKEUS_ALPV",
+            "LOPV": "KORVAUSOIKEUS_LOPV",
+        }
+    )
+
+    # Add missing columns as NAs
+    df["DIAGNOOSI_SELITE"] = pd.NA
+    df["KORVAUSOIKEUS_SELITE"] = pd.NA
+
+    # Remove dots from ICD codes
+    df["DIAGNOOSI_KOODI"] = df["DIAGNOOSI_KOODI"].str.replace(".", "", regex=False)
+
+    return df
+
+
+def concat_data(df1, df2):
+    """
+    Concat data into a single dataframe and drop duplicated values
+    """
+    cols = [
+        "FINREGISTRYID",
+        "DIAGNOOSI_KOODI",
+        "DIAGNOOSI_SELITE",
+        "KORVAUSOIKEUS_KOODI",
+        "KORVAUSOIKEUS_SELITE",
+        "KORVAUSOIKEUS_ALPV",
+        "KORVAUSOIKEUS_LOPV",
+    ]
+    df = pd.concat([df1[cols], df2[cols]], ignore_index=True)
+    df = df.drop_duplicates(
+        subset=[
+            "FINREGISTRYID",
+            "KORVAUSOIKEUS_ALPV",
+            "KORVAUSOIKEUS_LOPV",
+            "DIAGNOOSI_KOODI",
+            "KORVAUSOIKEUS_KOODI",
+        ],
+        keep="first",
+    )
+    df = df.reset_index(drop=True)
 
     return df
 
 
 if __name__ == "__main__":
-    # Reimbursements
-    df = preprocess_kela_reimbursements(KELA_REIMBURSERMENTS_DATA_PATH)
+    df1 = preprocess_reimbursements_81(KELA_REIMBURSEMENTS_81_DATA_PATH)
+    df2 = preprocess_reimbursements_175(KELA_REIMBURSEMENTS_175_DATA_PATH)
+    df = concat_data(df1, df2)
     write_data(df, KELA_REIMBURSEMENT_OUTPUT_DIR, "reimbursements", "csv")
     write_data(df, KELA_REIMBURSEMENT_OUTPUT_DIR, "reimbursements", "feather")
-
-    # Drug reimbursements
-    df = preprocess_kela_drug_reimbursements(KELA_DRUG_REIMBURSEMENTS_DATA_PATH)
-    write_data(df, KELA_REIMBURSEMENT_OUTPUT_DIR, "drug_reimbursements", "csv")
-    write_data(df, KELA_REIMBURSEMENT_OUTPUT_DIR, "drug_reimbursements", "feather")
