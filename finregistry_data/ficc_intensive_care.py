@@ -51,24 +51,23 @@ def preprocess_teho_data(df):
     """Preprocess Teho dataset"""
     df = parse_dates(df, ["HOSP_DISCH_TIME", "ADM_TIME", "DISCH_TIME"])
     df = drop_columns(df)
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     return df
 
 
 def preprocess_tiss_data(df):
     """Preprocess TISS dataset"""
     df = parse_dates(df, ["DATETIME"])
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     return df
 
 
 if __name__ == "__main__":
     teho = read_data(FICC_INTENSIVE_CARE_TEHO_DATA_PATH)
     tiss = read_data(FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH)
+    
     teho = preprocess_teho_data(teho)
     tiss = preprocess_tiss_data(tiss)
-
-    # change ID to FINREGISTRYID
-    teho = teho.rename(columns={"TNRO": "FINREGISTRYID"})
-    tiss = tiss.rename(columns={"TNRO": "FINREGISTRYID"})
     
     write_data(teho, FICC_INTENSIVE_CARE_OUTPUT_DIR, "intensive_care", "csv")
     write_data(tiss, FICC_INTENSIVE_CARE_OUTPUT_DIR, "tiss", "csv")
