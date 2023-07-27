@@ -46,6 +46,12 @@ KELA_KANTA_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_kanta"
 KELA_PURCHASE_INPUT_DIR = ORIGINAL_DATA_DIR / "kela_purchase"
 KELA_PURCHASE_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_purchase"
 
+# KELA Reimbursement
+KELA_REIMBURSEMENT_INPUT_DIR = ORIGINAL_DATA_DIR / "kela_reimbursement"
+KELA_REIMBURSEMENTS_175_DATA_PATH = KELA_REIMBURSEMENT_INPUT_DIR / "175_522_2020_LAAKEKORVAUSOIKEUDET.csv.finreg_IDs"
+KELA_REIMBURSEMENTS_81_DATA_PATH = KELA_REIMBURSEMENT_INPUT_DIR / "81_522_2022_KORVAUSOIKEUDET.csv.finreg_IDs"
+KELA_REIMBURSEMENT_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_reimbursement"
+
 # Pension
 ETK_PENSION_INPUT_DIR = ORIGINAL_DATA_DIR / "etk_pension"
 ETK_PENSION_OUTPUT_DIR = PROCESSED_DATA_DIR / "etk_pension"
@@ -69,4 +75,23 @@ SF_OCCUPATION_DATA_PATHS = [
 SF_SES_DATA_PATHS = [
     SF_SOCIOECONOMIC_INPUT_DIR / "sose_u1442_a.csv.finreg_IDs",
     SF_SOCIOECONOMIC_INPUT_DIR / "sose_u1442_al10.csv.finreg_IDs"
+]
+
+# DVV
+DVV_INPUT_DIR = ORIGINAL_DATA_DIR / "dvv"
+DVV_OUTPUT_DIR = PROCESSED_DATA_DIR / "dvv"
+DVV_LIVING_HISTORY_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_asuinhist.txt.finreg_IDs"
+]
+DVV_MARRIAGES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_aviohist.txt.finreg_IDs"
+]
+DVV_RELATIVES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDs"
 ]

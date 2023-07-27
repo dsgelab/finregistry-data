@@ -250,5 +250,11 @@ def parse_dates(df):
 if __name__ == "__main__":
     df = read_data(THL_BIRTH_DATA_PATH)
     df = parse_dates(df)
+
+    # change header to upper case
+    df.columns= df.columns.str.upper()
+    # change TNRO to FINREGISTRYID
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "csv")
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "feather")
