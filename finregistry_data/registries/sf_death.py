@@ -7,22 +7,24 @@ Reads the data, applies the preprocessing steps below and writes the result to f
 - Reformat dates 
 - TODO: Impute mid-year date (July 1st) for rows with only year available
 
+The original data contains two types of files: tutkimus ("study") and vuosi ("year"). 
+Only tutkimus files are preprocessed as tutkimus contains all information included
+in vuosi, apart from some differences in variables for a small portion of FinRegistry IDs.
+
 Input files: 
 - thl2019_1776_ksyy_tutkimus.csv.finreg_IDs
 - thl2021_2196_ksyy_tutkimus.csv.finreg_IDs
-- thl2019_1776_ksyy_vuosi.csv.finreg_IDs
-- thl2021_2196_ksyy_vuosi.csv.finreg_IDs
+- (thl2019_1776_ksyy_vuosi.csv.finreg_IDs)
+- (thl2021_2196_ksyy_vuosi.csv.finreg_IDs)
 
 Output files: 
-- death_vuosi_<YYYY-MM-DD>.csv / .feather
-- death_tutkimus_<YYYY-MM-DD>.csv / .feather
+- death_<YYYY-MM-DD>.csv / .feather
 """
 
 import pandas as pd
 import logging
 
 from finregistry_data.config import (
-    SF_DEATH_VUOSI_DATA_PATHS,
     SF_DEATH_TUTKIMUS_DATA_PATHS,
     SF_DEATH_OUTPUT_DIR,
 )
@@ -86,27 +88,21 @@ def format_dates(df, date_cols):
 if __name__ == "__main__":
     # Read data
     logging.info("Reading data")
-    vuosi = read_data(SF_DEATH_VUOSI_DATA_PATHS)
-    tutkimus = read_data(SF_DEATH_TUTKIMUS_DATA_PATHS)
+    dfs = read_data(SF_DEATH_TUTKIMUS_DATA_PATHS)
 
-    # Merge data
-    logging.info("Merging data")
-    vuosi = merge_data(vuosi)
-    tutkimus = merge_data(tutkimus)
+    # Merge data from different years
+    logging.info("Merging data from different years")
+    df = merge_data(dfs)
 
     # Format date columns
     logging.info("Formatting dates")
-    vuosi = format_dates(vuosi, ["KPV"])
-    tutkimus = format_dates(tutkimus, ["KPV"])
+    df = format_dates(df, ["KPV"])
 
     # change TNRO to FINREGISTRYID
-    vuosi = vuosi.rename(columns={"TNRO": "FINREGISTRYID"})
-    tutkimus = tutkimus.rename(columns={"TNRO": "FINREGISTRYID"})    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     
     # Write the output to file
     logging.info("Writing data")
-    write_data(vuosi, SF_DEATH_OUTPUT_DIR, "death_vuosi", "csv")
-    write_data(vuosi, SF_DEATH_OUTPUT_DIR, "death_vuosi", "feather")
-    write_data(tutkimus, SF_DEATH_OUTPUT_DIR, "death_tutkimus", "csv")
-    write_data(tutkimus, SF_DEATH_OUTPUT_DIR, "death_tutkimus", "feather")
+    write_data(df, SF_DEATH_OUTPUT_DIR, "death", "csv")
+    write_data(df, SF_DEATH_OUTPUT_DIR, "death", "feather")
 

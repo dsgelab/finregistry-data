@@ -70,10 +70,6 @@ SF_SES_DATA_PATHS = [
 # SF Causes of death 
 SF_DEATH_INPUT_DIR = ORIGINAL_DATA_DIR / "sf_death"
 SF_DEATH_OUTPUT_DIR = PROCESSED_DATA_DIR / "sf_death"
-SF_DEATH_VUOSI_DATA_PATHS = [
-    SF_DEATH_INPUT_DIR / "thl2019_1776_ksyy_vuosi.csv.finreg_IDs",
-    SF_DEATH_INPUT_DIR / "thl2021_2196_ksyy_vuosi.csv.finreg_IDs"
-]
 SF_DEATH_TUTKIMUS_DATA_PATHS = [
     SF_DEATH_INPUT_DIR / "thl2019_1776_ksyy_tutkimus.csv.finreg_IDs",
     SF_DEATH_INPUT_DIR / "thl2021_2196_ksyy_tutkimus.csv.finreg_IDs"
