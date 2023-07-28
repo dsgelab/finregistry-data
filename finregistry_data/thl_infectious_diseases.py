@@ -225,6 +225,7 @@ def preprocess_data(df):
     df = flatten_lists(df)
     df = add_covid_indicator(df)
     df = parse_dates(df, ["sampling_date"])
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     return df
 
 
