@@ -6,7 +6,7 @@ Reads THL Vaccination data, applies the preprocessing steps below and writes the
 - parse dates
 - replace missing (0) and invalid (-1, -2) values with NA 
 - drop redundant columns
-- TODO: create column COVID
+- create column COVID
 
 Input files: 
 - thl2196_rokotussuoja.csv
