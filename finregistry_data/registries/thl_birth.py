@@ -22,7 +22,7 @@ NA_VALUES = ["", " "]
 
 def read_data(filepath=THL_BIRTH_DATA_PATH):
     """
-    Read THL Birth dataset. 
+    Read THL Birth dataset.
     Numeric columns with at least one NaN are read as floats.
     """
     dtypes = {
@@ -250,5 +250,10 @@ def parse_dates(df):
 if __name__ == "__main__":
     df = read_data(THL_BIRTH_DATA_PATH)
     df = parse_dates(df)
+    df.columns = df.columns.str.upper()
+    df = df.rename(
+        columns={"LAPSI_TNRO": "LAPSI_FINREGISTRYID", "AITI_TNRO": "AITI_FINREGISTRYID"}
+    )
+
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "csv")
     write_data(df, THL_BIRTH_OUTPUT_DIR, "birth", "feather")
