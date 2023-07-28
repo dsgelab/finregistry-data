@@ -86,5 +86,14 @@ if __name__ == "__main__":
     anomaly = read_anomaly_data()
     basic = preprocess_basic_data(basic)
     anomaly = preprocess_anomaly_data(anomaly)
+
+    
+    # change header to upper case
+    basic.columns= basic.columns.str.upper()
+    anomaly.columns= anomaly.columns.str.upper()
+    # change TNRO to FINREGISTRYID
+    basic = basic.rename(columns={"TNRO": "FINREGISTRYID"})
+    anomaly = anomaly.rename(columns={"TNRO": "FINREGISTRYID"})
+    
     write_data(basic, THL_MALFORMATIONS_OUTPUT_DIR, "malformations_basic", "csv")
     write_data(anomaly, THL_MALFORMATIONS_OUTPUT_DIR, "malformations_anomaly", "csv")
