@@ -122,7 +122,7 @@ def add_covid_indicator(df):
     `COVID` is True if any of the following applies:
     - `LAAKEAINE_SELITE` contains "cov", "cor", "kor" "mod", "astra", "co19", "cvid" or "cominarty"  but does not contain "dukoral", "ticovac" or "vesiro"
     - `LAAKEAINE` is "J07BX03"
-    - `VACCINE_PROTECTION` contains 29 
+    - `VACCINE_PROTECTION` contains 29
     """
     logging.info("Adding COVID")
 
@@ -159,6 +159,7 @@ def preprocess_data(df):
     df = replace_missing_and_invalid_with_na(df)
     df = drop_columns(df)
     df = add_covid_indicator(df)
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
     return df
 
 
@@ -169,4 +170,3 @@ if __name__ == "__main__":
     df = preprocess_data(df)
     write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "csv")
     write_data(df, THL_VACCINATION_OUTPUT_DIR, "vaccination", "feather")
-
