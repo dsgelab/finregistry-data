@@ -42,6 +42,16 @@ FICC_INTENSIVE_CARE_TEHO_TISS_DATA_PATH = FICC_INTENSIVE_CARE_INPUT_DIR / "thl20
 KELA_KANTA_INPUT_DIR = ORIGINAL_DATA_DIR / "kela_kanta"
 KELA_KANTA_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_kanta"
 
+# KELA Drug Purchases
+KELA_PURCHASE_INPUT_DIR = ORIGINAL_DATA_DIR / "kela_purchase"
+KELA_PURCHASE_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_purchase"
+
+# KELA Reimbursement
+KELA_REIMBURSEMENT_INPUT_DIR = ORIGINAL_DATA_DIR / "kela_reimbursement"
+KELA_REIMBURSEMENTS_175_DATA_PATH = KELA_REIMBURSEMENT_INPUT_DIR / "175_522_2020_LAAKEKORVAUSOIKEUDET.csv.finreg_IDs"
+KELA_REIMBURSEMENTS_81_DATA_PATH = KELA_REIMBURSEMENT_INPUT_DIR / "81_522_2022_KORVAUSOIKEUDET.csv.finreg_IDs"
+KELA_REIMBURSEMENT_OUTPUT_DIR = PROCESSED_DATA_DIR / "kela_reimbursement"
+
 # Pension
 ETK_PENSION_INPUT_DIR = ORIGINAL_DATA_DIR / "etk_pension"
 ETK_PENSION_OUTPUT_DIR = PROCESSED_DATA_DIR / "etk_pension"
@@ -71,3 +81,30 @@ SF_SES_DATA_PATHS = [
 THL_SOSHILMO_INPUT_DIR = ORIGINAL_DATA_DIR / "thl_soshilmo"
 THL_SOSHILMO_DATA_PATH = THL_SOSHILMO_INPUT_DIR / "thl2019_1776_soshilmo.csv.finreg_IDs"
 THL_SOSHILMO_OUTPUT_DIR = PROCESSED_DATA_DIR / "thl_soshilmo"
+
+# SF Causes of death 
+SF_DEATH_INPUT_DIR = ORIGINAL_DATA_DIR / "sf_death"
+SF_DEATH_OUTPUT_DIR = PROCESSED_DATA_DIR / "sf_death"
+SF_DEATH_TUTKIMUS_DATA_PATHS = [
+    SF_DEATH_INPUT_DIR / "thl2019_1776_ksyy_tutkimus.csv.finreg_IDs",
+    SF_DEATH_INPUT_DIR / "thl2021_2196_ksyy_tutkimus.csv.finreg_IDs"
+]
+
+# DVV
+DVV_INPUT_DIR = ORIGINAL_DATA_DIR / "dvv"
+DVV_OUTPUT_DIR = PROCESSED_DATA_DIR / "dvv"
+DVV_LIVING_HISTORY_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_asuinhist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_asuinhist.txt.finreg_IDs"
+]
+DVV_MARRIAGES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_aviohist.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_aviohist.txt.finreg_IDs"
+]
+DVV_RELATIVES_DATA_PATHS = [
+    DVV_INPUT_DIR / "Tulokset_1900-1959_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1960-1979_tutkhenk_ja_sukulaiset.txt.finreg_IDs",
+    DVV_INPUT_DIR / "Tulokset_1980-2010_tutkhenk_ja_sukulaiset.txt.finreg_IDs"
+]
