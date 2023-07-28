@@ -77,12 +77,18 @@ SF_SES_DATA_PATHS = [
     SF_SOCIOECONOMIC_INPUT_DIR / "sose_u1442_al10.csv.finreg_IDs"
 ]
 
+# THL Social Hilmo
+THL_SOSHILMO_INPUT_DIR = ORIGINAL_DATA_DIR / "thl_soshilmo"
+THL_SOSHILMO_DATA_PATH = THL_SOSHILMO_INPUT_DIR / "thl2019_1776_soshilmo.csv.finreg_IDs"
+THL_SOSHILMO_OUTPUT_DIR = PROCESSED_DATA_DIR / "thl_soshilmo"
+
 # SF Causes of death 
 SF_DEATH_INPUT_DIR = ORIGINAL_DATA_DIR / "sf_death"
 SF_DEATH_OUTPUT_DIR = PROCESSED_DATA_DIR / "sf_death"
 SF_DEATH_TUTKIMUS_DATA_PATHS = [
     SF_DEATH_INPUT_DIR / "thl2019_1776_ksyy_tutkimus.csv.finreg_IDs",
     SF_DEATH_INPUT_DIR / "thl2021_2196_ksyy_tutkimus.csv.finreg_IDs"
+]
 
 # DVV
 DVV_INPUT_DIR = ORIGINAL_DATA_DIR / "dvv"
