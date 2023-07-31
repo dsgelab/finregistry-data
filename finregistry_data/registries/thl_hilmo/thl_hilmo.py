@@ -4,9 +4,9 @@ THL Hilmo data preprocessing
 Reads the data, applies the preprocessing steps below and writes the result to a file.
 - Combine files into a single output by category
 - Harmonize date formats
+- Rename TNRO to FINREGISTRYID
 - TODO: combine everything to a single file, merging based on Hilmo ID
 - TODO: remove duplicated rows
-- TODO: rename TNRO to FINREGISTRYID
 
 Input files: 
 - THL2021_2196_HILMO_2019_2021.csv.finreg_IDs
@@ -80,6 +80,7 @@ def preprocess_hilmo_main(file):
     - Fix data types
     - Convert date formats
     - Insert missing columns as NA
+    - Rename TNRO to FINREGISTRYID
     - TODO: harmonize column names, e.g. possibly LPVM-LOMAPVM, JONOPVM-JOPVM, LANTOKOTAR-LANTTAR, JATTAR-JATKOODTAR
 
     Notes:
@@ -162,7 +163,7 @@ def preprocess_hilmo_main(file):
 
     # Parse dates
     # Note: times are omitted
-    for date_col in (set(date_cols) & set(df.columns)):
+    for date_col in set(date_cols) & set(df.columns):
         df[date_col] = pd.to_datetime(df[date_col]).dt.date
 
     # Insert missing columns as NAs
@@ -170,10 +171,10 @@ def preprocess_hilmo_main(file):
     missing_cols = [col for col in all_cols if col not in df.columns]
     for col in missing_cols:
         df[col] = pd.NA
-        
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+
+    # Rename TNRO to FINREGISTRYID
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+
     assert df.shape[1] == len(all_cols)
 
     return df
@@ -184,13 +185,12 @@ def preprocess_hilmo_diag(file):
     Preprocess THL Hilmo Diag
     - Fix data types
     - Convert date formats
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "KENTTA": str, "N": int, "KOODI": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -199,13 +199,12 @@ def preprocess_hilmo_haitmp(file):
     """
     Preprocess THL Hilmo Haitmp
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "HAITMP": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -214,14 +213,13 @@ def preprocess_hilmo_hhaitta(file):
     """
     Preprocess THL Hilmo HHAITTA
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     - TODO: missing values ("-" in HHAITTA)
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "HHAITTA": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -230,7 +228,7 @@ def preprocess_hilmo_laakkeet(file):
     """
     Preprocess THL Hilmo LAAKKEET
     - Fix data types
-    - TODO: Covert date formats (keep only date)
+    - Rename TNRO to FINREGISTRYID
 
     Note: the older Hilmo files includes datetimes and the newer one only dates
     """
@@ -247,10 +245,8 @@ def preprocess_hilmo_laakkeet(file):
     df["MAAR_PVM"] = pd.to_datetime(
         df["MAAR_PVM"].str[:9],
     ).dt.date
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -259,13 +255,12 @@ def preprocess_hilmo_psyklaake(file):
     """
     Preprocess THL Hilmo PSYKLAAKE
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TOTLAAKPSYK": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -275,6 +270,7 @@ def preprocess_hilmo_psykp(file):
     Preprocess THL Hilmo PSYKP
     - Fix data types
     - Insert missing columns as NAs
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {
         "HILMO_ID": int,
@@ -304,10 +300,9 @@ def preprocess_hilmo_psykp(file):
     missing_cols = [col for col in all_cols if col not in df.columns]
     for col in missing_cols:
         df[col] = pd.NA
-        
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+
     assert df.shape[1] == len(dtypes.keys())
 
     return df
@@ -317,13 +312,12 @@ def preprocess_hilmo_psykppak(file):
     """
     Preprocess THL Hilmo PSYKPPAK
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TOTPAKPSYK": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -332,6 +326,7 @@ def preprocess_hilmo_syp(file):
     """
     Preprocess THL Hilmo syp
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {
         "HILMO_ID": int,
@@ -370,10 +365,8 @@ def preprocess_hilmo_syp(file):
         "KOMPL5": str,
     }
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -383,16 +376,15 @@ def preprocess_hilmo_tehohoito(file):
     Preprocess THL Hilmo Tehohoito
     - Fix data types
     - Convert date formats
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TEHOTYYPPI": str}
     date_cols = ["TEHOALKUPVM", "TEHOLOPPUPVM"]
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, parse_dates=date_cols, encoding="latin-1"
     )
-    
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -402,16 +394,15 @@ def preprocess_hilmo_toimenpide(file):
     Preprocess THL Hilmo Toimenpide
     - Fix data types
     - Convert date formats
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "N": int, "TOIMP": str}
     date_cols = ["TOIMPALKUPVM", "TOIMPLOPPUPVM"]
     df = pd.read_csv(
         file, sep=";", dtype=dtypes, parse_dates=date_cols, encoding="latin-1"
     )
-    
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
+
     assert df.shape[1] == (len(dtypes.keys()) + len(date_cols))
     return df
 
@@ -420,13 +411,12 @@ def preprocess_hilmo_tusyy(file):
     """
     Preprocess THL Hilmo Tusyy
     - Fix data types
+    - Rename TNRO to FINREGISTRYID
     """
     dtypes = {"HILMO_ID": int, "TNRO": str, "TUSYY": str}
     df = pd.read_csv(file, sep=";", dtype=dtypes, encoding="latin-1")
+    df = df.rename(columns={"TNRO": "FINREGISTRYID"})
 
-    # jcd comment - quick fix, but not rerun yet
-    # df = df.rename(columns={"TNRO": "FINREGISTRYID"})
-    
     assert df.shape[1] == len(dtypes.keys())
     return df
 
@@ -455,16 +445,10 @@ if __name__ == "__main__":
     preprocessing_loop(THL_HILMO_HAITMP, preprocess_hilmo_haitmp, "hilmo_haitmp")
     preprocessing_loop(THL_HILMO_HHAITTA, preprocess_hilmo_hhaitta, "hilmo_hhaitta")
     preprocessing_loop(THL_HILMO_LAAKKEET, preprocess_hilmo_laakkeet, "hilmo_laakkeet")
-    preprocessing_loop(
-        THL_HILMO_PSYKLAAKE, preprocess_hilmo_psyklaake, "hilmo_psyklaake"
-    )
+    preprocessing_loop(THL_HILMO_PSYKLAAKE, preprocess_hilmo_psyklaake, "hilmo_psyklaake")
     preprocessing_loop(THL_HILMO_PSYKP, preprocess_hilmo_psykp, "hilmo_psykp")
     preprocessing_loop(THL_HILMO_PSYKPPAK, preprocess_hilmo_psykppak, "hilmo_psykppak")
     preprocessing_loop(THL_HILMO_SYP, preprocess_hilmo_syp, "hilmo_syp")
-    preprocessing_loop(
-        THL_HILMO_TEHOHOITO, preprocess_hilmo_tehohoito, "hilmo_tehohoito"
-    )
-    preprocessing_loop(
-        THL_HILMO_TOIMENPIDE, preprocess_hilmo_toimenpide, "hilmo_toimenpide"
-    )
+    preprocessing_loop(THL_HILMO_TEHOHOITO, preprocess_hilmo_tehohoito, "hilmo_tehohoito")
+    preprocessing_loop(THL_HILMO_TOIMENPIDE, preprocess_hilmo_toimenpide, "hilmo_toimenpide")
     preprocessing_loop(THL_HILMO_TULOSYY, preprocess_hilmo_tusyy, "hilmo_tulosyy")
