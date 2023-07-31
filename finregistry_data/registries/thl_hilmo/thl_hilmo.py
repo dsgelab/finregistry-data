@@ -434,8 +434,12 @@ def preprocessing_loop(files, func, output_filename):
     output_path = THL_HILMO_OUTPUT_DIR / (output_filename + "_" + today + ".csv")
 
     for file in tqdm(files):
-        header = True if file == files[0] else False
-        func(file).to_csv(output_path, mode="a", index=False, header=header)
+        df = func(file)
+        if file == files[0]: 
+            header = True 
+            cols = df.columns # get column order from the first file
+
+        df[cols].to_csv(output_path, mode="a", index=False, header=header)
 
 
 if __name__ == "__main__":
