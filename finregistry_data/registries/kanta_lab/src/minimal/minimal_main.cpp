@@ -115,11 +115,9 @@ int main(int argc, char *argv[]) {
         if((lines_valid_status == 0) | (lines_valid_status == 3)) {
             if((valid_line_count == 0)) {
                 // Writing header
-                res_file << "FINREGISTRYID;DATE_TIME;SERVICE_PROVIDER;LAB_ID;LAB_ID_SOURCE;LAB_ABBREVIATION;LAB_VALUE;LAB_UNIT;LAB_ABNORMALITY\n"; 
+                res_file << "FINREGISTRYID;LAB_DATE_TIME;LAB_SERVICE_PROVIDER;LAB_ID;LAB_ID_SOURCE;LAB_ABBREVIATION;LAB_VALUE;LAB_UNIT;LAB_ABNORMALITY\n"; 
                 ++valid_line_count;
             } else {
-
-
                 // Fixing the NA indicators to actual NAs
                 fix_nas(final_line_vec);
 
@@ -196,6 +194,8 @@ std::string clean_units(std::string lab_unit) {
     lab_unit = remove_chars(lab_unit, '-');
     lab_unit = remove_chars(lab_unit, ')');
     lab_unit = remove_chars(lab_unit, '(');
+    lab_unit = remove_chars(lab_unit, '{');
+    lab_unit = remove_chars(lab_unit, '}');
 
     return(lab_unit);
 }
