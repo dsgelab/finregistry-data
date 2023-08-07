@@ -8,14 +8,14 @@
  * 
  * @return void
  * 
- * Maps the OMOP concetps IDs when both the lab ID and abbreviation map. 
- * We can map about 60% of the local lab codes this way
+ * Maps the OMOP concetps IDs, using both the lab ID and abbreviation map. 
+ * We can map about 87% of the data this way
  * 
  * Reads in the minimal data from stdin. The delimiter is expected to be ";"
  * Expects the columns to be:
  * - FINREGISTRYID
- * - DATE_TIME
- * - SERVICE_PROVIDER
+ * - LAB_DATE_TIME
+ * - LAB_SERVICE_PROVIDER
  * - LAB_ID
  * - LAB_ID_SOURCE
  * - LAB_ABBREVIATION
@@ -32,8 +32,8 @@
  * 
  * Expects the following commandline arguments:
  *  - res_path: The path to the results directory
- *  - omop_group_id_map_path: The path to the OMOP group ID map. 
- *      Mapping from lab IDs and abbreviations to OMOP group IDs. The delimiter is expected
+ *  - omop_concept_map_path: The path to the OMOP concept ID map. 
+ *      Mapping from lab IDs and abbreviations to OMOP concept IDs. The delimiter is expected
  *      to be "\t". Expects columns: LAB_ID, LAB_SOURCE, LAB_ABBREVIATION, UNIT, OMOP_ID, NAME. 
  *      The columns names are irrelevant but they need to be in the correct order. 
  *      LAB_SOURCE is either LABfi, LABfi_HUS, LABfi_TMP, LABfi_TKU.
@@ -41,7 +41,7 @@
 int main(int argc, char *argv[]) {
     // Arguments
     std::string res_path = argv[1];
-    std::string omop_group_id_map_path = argv[2];
+    std::string omop_concept_map_path = argv[2];
 
     // Results File
     std::vector<std::string> full_res_path_vec = {res_path, "processed/data/kanta_lab_minimal_omop.csv"};    
@@ -50,13 +50,13 @@ int main(int argc, char *argv[]) {
     res_file.open(full_res_path); check_out_open(res_file, full_res_path); 
 
     // OMOP Maps
-    // The OMOP group ID has separate maps for each lab source
+    // The OMOP concept ID has separate maps for each lab source
     // LABfi, LABfi_HUS, LABfi_TMP, LABfi_TKU
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> omop_group_id_map;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> omop_concept_map;
     // The mapping to the OMOP name is unique for each group ID
     std::unordered_map<std::string, std::string> omop_names;
     // Reading in OMOP map from file
-    read_omop_file(omop_group_id_map_path, omop_group_id_map, omop_names);
+    read_omop_file(omop_concept_map_path, omop_concept_map, omop_names);
 
     // Flag for first line
     int first_line = 1;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     while(std::getline(std::cin, line)) {
         if(first_line == 1) {
             // Column headers
-            res_file << "FINREGISTRYID;DATE_TIME;SERVICE_PROVIDER;LAB_ID;LAB_ID_SOURCE;LAB_ABBREVIATION;LAB_VALUE;LAB_UNIT;LAB_ABNORMALITY;OMOP_ID;OMOP_NAME" << "\n";
+            res_file << "FINREGISTRYID;LAB_DATE_TIME;LAB_SERVICE_PROVIDER;LAB_ID;LAB_ID_SOURCE;LAB_ABBREVIATION;LAB_VALUE;LAB_UNIT;LAB_ABNORMALITY;OMOP_ID;OMOP_NAME" << "\n";
             first_line = 0;
             continue;
         }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
         std::string service_provider = line_vec[2];
         std::string lab_id = line_vec[3];
         std::string lab_id_source = line_vec[4];
-        std::string lab_abbreviation = line_vec[5];
+        std::string lab_abbreviation = remove_chars(line_vec[5], ' ');
         std::string lab_value = line_vec[6];
         std::string lab_unit = line_vec[7];
         std::string lab_abnormality = line_vec[8];  
@@ -88,9 +88,9 @@ int main(int argc, char *argv[]) {
   
         // Finding OMOP mapping
         // Currently identifying the OMOP concept by the lab ID and abbreviation.
-        // We can map about 60% of the local lab codes this way
-        std::string omop_identifier = concat_string({lab_id, lab_abbreviation}, " ");
-        std::string omop_id = get_omop_id(omop_group_id_map, omop_lab_source, omop_identifier);
+        // We can map about 87% of the data this way
+        std::string omop_identifier = get_omop_identifier(lab_id, lab_abbreviation);
+        std::string omop_id = get_omop_id(omop_concept_map, omop_lab_source, omop_identifier);
         std::string omop_name = get_omop_name(omop_id, omop_names);
 
         // Writing to results file

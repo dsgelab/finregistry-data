@@ -21,3 +21,4 @@ void check_in_open(std::ifstream &file_stream,
         exit(EXIT_FAILURE);
     }
 }
+
