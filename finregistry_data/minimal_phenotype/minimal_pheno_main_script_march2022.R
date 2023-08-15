@@ -15,18 +15,25 @@ library(stringr)
 # note, put the to the beginning of each path
 
 dvv_dir <- "/data/processed_data/dvv/"
-
+# list.files(dvv_dir, pattern="csv")
 dvv_living_name <- "living_history_2023-06-14.csv"
 dvv_marriage_name <- "marriages_2023-06-14.csv"
 dvv_relative_name <- "relatives_2023-06-14.csv"
+
 id_bd_path <- "/data/original_data/dvv/Finregistry_IDs_and_full_DOB_SEX.txt"
+
+# list.files("/data/processed_data/thl_birth", pattern="csv")
+# list.files("/data/processed_data/thl_vaccination", pattern="csv")
+# list.files("/data/processed_data/thl_infectious_diseases", pattern="csv")
+# list.files("/data/processed_data/thl_malformations", pattern="csv")
+# list.files("/data/processed_data/thl_cancer", pattern="csv")
 birth_path <- "/data/processed_data/thl_birth/birth_2023-06-26.csv"
 vaccine_path <- "/data/processed_data/thl_vaccination/vaccination_2023-06-26.csv"
 infect_path <- "/data/processed_data/thl_infectious_diseases/infectious_diseases_2023-06-26.csv"
 malf_path <- "/data/processed_data/thl_malformations/malformations_anomaly_2023-06-26.csv"
 cancer_path <- "/data/processed_data/thl_cancer/cancer_2023-06-26.csv"
 
-# paths to the custom datafiles created for the minimal pheno 
+# paths to the custom datafiles created for the minimal pheno
 drug_purchases_path <- '/data/projects/mpf/mpf_create/drug_purchases.csv'
 kanta_prescriptions_path <- '/data/projects/mpf/mpf_create/kanta_prescriptions.csv'
 # kela purchases not joined
@@ -85,8 +92,8 @@ id_living <- dvv_living %>% select(FINREGISTRYID)
 id_mar <- dvv_marriage %>% select(FINREGISTRYID)
 id_relative <- dvv_relative %>% select(FINREGISTRYID)
 id_birth <- thl_birth %>%
-  select(LAPSI_TNRO) %>%
-  rename(FINREGISTRYID = LAPSI_TNRO) %>%
+  select(LAPSI_FINREGISTRYID) %>%
+  rename(FINREGISTRYID = LAPSI_FINREGISTRYID) %>%
   filter(FINREGISTRYID != "")
 
 
@@ -107,7 +114,7 @@ all_relative_ids <- dvv_relative %>% select(RELATIVE_ID) %>% unique
 
 # mpf is the minimum phenotype file
 mpf <- all_ids %>%
-  mutate(index_person = 1)
+  mutate(INDEX_PERSON = 1)
 
 # get all relative id's
 all_relative_ids <- all_relative_ids %>%
@@ -129,7 +136,7 @@ only_spouses <- setdiff(all_spouse_ids, all_relative_ids)
 
 # join relatives and spouses to index persons
 only_rels_and_spouses <- bind_rows(only_relatives, only_spouses) %>%
-  mutate(index_person = 0)
+  mutate(INDEX_PERSON = 0)
 
 mpf_all_ids <- bind_rows(mpf, only_rels_and_spouses)
 
@@ -167,13 +174,13 @@ death_dates <- dvv_relative %>%
   distinct() 
 
 
+
 ## Death dates from causes of death registry 
 
 # Causes of death dirs and names
 sf_dir <- "/data/processed_data/sf_death/"
-# cod_name <- "thl2019_1776_ksyy_tutkimus.csv.finreg_IDsp"
-# cod_name_vuosi <- "thl2019_1776_ksyy_vuosi.csv.finreg_IDsp"
-cod_recent_name <- "death_tutkimus_2023-06-27.csv"
+# list.files(sf_dir, pattern="csv")
+cod_recent_name <- "death_2023-08-10.csv"
 
 # load causes of death
 cat("Reading sf_death", "\n")
@@ -203,9 +210,10 @@ compare_death_dates <- left_join(mpf_death_date, all_cod_dates, by = "FINREGISTR
 ## checks ##
 # There's not full overlap between COD and DVV registries.
 
-
 # in 1815 cases, death dates are not identical.
 
+# check where neither is not null
+# dim(compare_death_dates[!is.na(compare_death_dates$DEATH_DATE) & !is.na(compare_death_dates$KPV) & compare_death_dates$DEATH_DATE != compare_death_dates$KPV,])
 #
 #
 compare_death_dates %>%
@@ -216,17 +224,14 @@ compare_death_dates %>%
 #
 # percentiles of differences
 
-# 0%       1%      10%      20%      30%      40%        
-# -7305 -356.60    -5.00    -1.00    -1.00    -1.00     
-#
-# 50%       60%      70%      80%       90%     99%     100% 
-# 1.00     1.00     1.00     3.00    10.00   273.86   366.00 
+#       0%       1%      10%      20%      30%      40%      50%      60%      70%      80%      90%      99%     100% 
+# -7305.00  -356.60    -5.00    -1.00    -1.00    -1.00     1.00     1.00     1.00     3.00    10.00   273.86   366.00
 #
 #
 #
-# No one has negatife lifespan.
+# No one has negative lifespan.
 
-# identify those with discrebant death dates
+# identify those with discrepant death dates
 not_identical_death_dates <- compare_death_dates %>%
   filter(DEATH_DATE != KPV) %>%
   mutate(deathdiff = difftime(DEATH_DATE, KPV) %>% as.numeric) %>%
@@ -261,7 +266,7 @@ bd_dates_2 <- left_join(death_dates, missing_death_dates, by = "FINREGISTRYID") 
   )) %>%
   select(-c(DEATH_DATE.x, DEATH_DATE.y))
 
-# replace death dates (from dvv_relatives) with COD dates for those with discrebancies
+# replace death dates (from dvv_relatives) with COD dates for those with discrepancies
 bd_dates_2 <- bd_dates_2 %>%
   left_join(use_cod_for_these, by = "FINREGISTRYID") %>% 
   mutate(DEATH_DATE = case_when(
@@ -283,6 +288,7 @@ mpf <- mpf_temporary
 # remove temporary files to save memory
 rm(death_dates, bd_dates_2, missing_cod_death_dates, missing_relative_death_dates,
    cod_date, cod, cod_vuosi, cod_name, cod_name_vuosi)
+
 gc()
 
 # Now 'mpf' has 7,166,673 rows.
@@ -348,7 +354,7 @@ dvv_living <- change_post_codes %>%
 
 # get the latest residence place. Checked a few dates, they match e.g. date of death
 
-# arrange according to descing start of residence, and select the latest. 
+# arrange according to descending start of residence, and select the latest. 
 residence <- dvv_living %>% 
   group_by(FINREGISTRYID) %>%
   arrange(desc(START_OF_RESIDENCE), .by_group = TRUE) %>%
@@ -369,14 +375,14 @@ mpf <- test %>% rename(RESIDENCE_TYPE_LAST = RESIDENCE_TYPE,
                        RESIDENCE_START_DATE_LAST = START_OF_RESIDENCE,
                        RESIDENCE_END_DATE_LAST = END_OF_RESIDENCE)
 
-#### I AM HERE - JOANNE ####
+######################################################################
 
 
 # first place of residence  #####
 # note, there's low match  in DOB and first recorded place of residence
 
 birth_dates <- mpf %>%
-  select(FINREGISTRYID, date_of_birth)
+  select(FINREGISTRYID, DATE_OF_BIRTH)
 
 # note: these take time!!
 #
@@ -392,10 +398,10 @@ birth_dates <- mpf %>%
 # first residences according to the end date
 # - to be used at least in immigration
 first_residence_by_end_date <- dvv_living %>%
-  select(FINREGISTRYID, Start_of_residence, End_of_residence,
-         Residence_type, Post_code, Latitude, Longitude) %>%
+  select(FINREGISTRYID, START_OF_RESIDENCE, END_OF_RESIDENCE,
+         RESIDENCE_TYPE, POST_CODE, LATITUDE, LONGITUDE) %>%
   group_by(FINREGISTRYID) %>%
-  arrange(End_of_residence, by.group = TRUE) %>%
+  arrange(END_OF_RESIDENCE, by.group = TRUE) %>%
   slice(1) %>%
   ungroup()
 
@@ -445,19 +451,19 @@ first_residence <- first_residence_by_end_date
 resi <- left_join(first_residence, birth_dates, by = "FINREGISTRYID")
 
 firstresi <- resi %>%
-  rename(post_code_first = Post_code,
-         latitude_first = Latitude,
-         longitude_first = Longitude,
-         residence_start_date_first = Start_of_residence,
-         residence_end_date_first = End_of_residence,
-         residence_type_first = Residence_type) %>%
-  select(FINREGISTRYID, post_code_first, latitude_first, longitude_first,
-         residence_start_date_first, residence_end_date_first, residence_type_first)
+  rename(POST_CODE_FIRST = POST_CODE,
+         LATITUDE_FIRST = LATITUDE,
+         LONGITUDE_FIRST = LONGITUDE,
+         RESIDENCE_START_DATE_FIRST = START_OF_RESIDENCE,
+         RESIDENCE_END_DATE_FIRST = END_OF_RESIDENCE,
+         RESIDENCE_TYPE_FIRST = RESIDENCE_TYPE) %>%
+  select(FINREGISTRYID, POST_CODE_FIRST, LATITUDE_FIRST, LONGITUDE_FIRST,
+         RESIDENCE_START_DATE_FIRST, RESIDENCE_END_DATE_FIRST, RESIDENCE_TYPE_FIRST)
 
 mpf_resi <- left_join(mpf, firstresi, by = "FINREGISTRYID")
 
 
-# check that colum number is correct before joining to the official data
+# check that column number is correct before joining to the official data
 if(ncol(mpf_resi) > 17) {
   stop("too many columns, have some joins failed?")
 }
@@ -478,8 +484,8 @@ gc()
 
 # take mother tongue variable from relatives registry
 mo_to <- dvv_relative %>%
-  select(Relative_ID, Mother_tongue) %>%
-  rename(FINREGISTRYID = Relative_ID) %>%
+  select(RELATIVE_ID, MOTHER_TONGUE) %>%
+  rename(FINREGISTRYID = RELATIVE_ID) %>%
   distinct()
 
 # 1055 duplicate relative ids. Find out which duplicate ids to keep
@@ -512,11 +518,12 @@ emigr_singled <- mo_to_dupl %>%
 
 # bind singled-out cases with earlier duplicates to those with no duplicates
 mo_to <- bind_rows(mo_to_unique, emigr_singled) %>% 
-  mutate(mother_tongue = case_when(
-    Mother_tongue %in% c("fi", "sv", "ru") ~ Mother_tongue,
-    Mother_tongue == "" ~ NA_character_,
+  mutate(MOTHER_TONGUE2 = case_when(
+    MOTHER_TONGUE %in% c("fi", "sv", "ru") ~ MOTHER_TONGUE,
+    MOTHER_TONGUE == "" ~ NA_character_,
     TRUE ~ "other")) %>%
-  select(-Mother_tongue)
+  select(-MOTHER_TONGUE) %>%
+  rename(MOTHER_TONGUE=MOTHER_TONGUE2)
 
 mpf_mo_to <- left_join(mpf, mo_to, by = "FINREGISTRYID")
 
@@ -531,14 +538,14 @@ dvv_marriage %>% glimpse
 dvv_marriage$FINREGISTRYID %>% duplicated %>% sum()
 
 dvv_mar_filt <- dvv_marriage %>%
-  filter(Current_marital_status %in% c(2:8)|!(is.na(Ending_reason))) # n = 3,685,050
+  filter(CURRENT_MARITAL_STATUS %in% c(2:8)|!(is.na(ENDING_REASON))) # n = 3,685,050
 
-spouse_id <- dvv_mar_filt$Spouse_personal_ID
+spouse_id <- dvv_mar_filt$SPOUSE_ID
 marry_id <- dvv_mar_filt$FINREGISTRYID
 
 all_married <- c(spouse_id, marry_id) %>% unique
 
-ever_mar <- as_tibble(all_married) %>% mutate(ever_married = 1) %>%
+ever_mar <- as_tibble(all_married) %>% mutate(EVER_MARRIED = 1) %>%
   rename(FINREGISTRYID = value) %>%
   filter(FINREGISTRYID != "")
 
@@ -546,19 +553,19 @@ ever_mar <- as_tibble(all_married) %>% mutate(ever_married = 1) %>%
 # divorced index persons
 
 divor_index <- dvv_marriage %>%
-  filter((Current_marital_status %in% c(4, 7) | Ending_reason %in% c(1, 5, 6, 8))) %>%
+  filter((CURRENT_MARITAL_STATUS %in% c(4, 7) | ENDING_REASON %in% c(1, 5, 6, 8))) %>%
   pull(FINREGISTRYID)
 
 # divorced spouses, filter only from ending reason. 
 divor_spouse <- dvv_marriage %>%
-  filter(Ending_reason %in% c(1, 5, 6, 8)) %>%
-  pull(Spouse_personal_ID)
+  filter(ENDING_REASON %in% c(1, 5, 6, 8)) %>%
+  pull(SPOUSE_ID)
 
 ever_divor <- unique(c(divor_index, divor_spouse))
 
 # create a df and a variable, remember to filter empty id's away
 ever_divor <- as_tibble(ever_divor) %>%
-  mutate(ever_divorced = 1) %>%
+  mutate(EVER_DIVORCED = 1) %>%
   rename(FINREGISTRYID = value) %>%
   filter(FINREGISTRYID != "")
 
@@ -575,13 +582,13 @@ mpf_mar <- left_join(mpf_mar, ever_divor, by = "FINREGISTRYID")
 # apparently some spouses have marriage information even if they're not index persons.
 
 mpf_mar <- mpf_mar %>% 
-  mutate(ever_married = case_when(
-    is.na(ever_married) & index_person == 1 ~ 0,
-    TRUE ~ ever_married
+  mutate(EVER_MARRIED = case_when(
+    is.na(EVER_MARRIED) & INDEX_PERSON == 1 ~ 0,
+    TRUE ~ EVER_MARRIED
   )) %>%
-  mutate(ever_divorced = case_when(
-    is.na(ever_divorced) & index_person == 1 ~ 0,
-    TRUE ~ ever_divorced
+  mutate(EVER_DIVORCED = case_when(
+    is.na(EVER_DIVORCED) & INDEX_PERSON == 1 ~ 0,
+    TRUE ~ EVER_DIVORCED
   ))
 
 
@@ -638,32 +645,32 @@ gc()
 
 # emigrants from relatives
 emigrants_relatives <- dvv_relative %>%
-  filter(Home_town == 200 | !is.na(Emigration_date)) %>%
-  select(Relative_ID, Country_of_residence, 
-         Country_name, Emigration_date, Home_town, 
-         Municipality_name) %>%
-  rename(FINREGISTRYID = Relative_ID) %>%
+  filter(HOME_TOWN == 200 | !is.na(EMIGRATION_DATE)) %>%
+  select(RELATIVE_ID, COUNTRY_OF_RESIDENCE, 
+         COUNTRY_NAME, EMIGRATION_DATE, HOME_TOWN, 
+         MUNICIPALITY_NAME) %>%
+  rename(FINREGISTRYID = RELATIVE_ID) %>%
   distinct()
 
 probable_emigrants <- emigrants_relatives %>%
-  select(FINREGISTRYID, Emigration_date) %>%
-  rename(emigration_date = Emigration_date) %>%
+  select(FINREGISTRYID, EMIGRATION_DATE) %>%
+  #rename(emigration_date = Emigration_date) %>%
   ungroup %>%
-  mutate(emigrated = 1)
+  mutate(EMIGRATED = 1)
 
 
 # emigrated
 mpf_emigr <- left_join(mpf, probable_emigrants, by = "FINREGISTRYID") %>%
-  mutate(emigrated = ifelse((is.na(emigrated) & index_person == 1), 0, emigrated))
+  mutate(EMIGRATED = ifelse((is.na(EMIGRATED) & INDEX_PERSON == 1), 0, EMIGRATED))
 
 ## if death date < emigration date, emigration date will be removed
 # 102 cases have death < emigration
 mpf_emigr %>%
-  filter(death_date < emigration_date) %>%
+  filter(DEATH_DATE < EMIGRATION_DATE) %>%
   nrow
 
 # recode emigration_date to missing 
-mpf_emigr$emigration_date[mpf_emigr$death_date < mpf_emigr$emigration_date] <- NA
+mpf_emigr$EMIGRATION_DATE[mpf_emigr$DEATH_DATE < mpf_emigr$EMIGRATION_DATE] <- NA
 
 
 
@@ -672,7 +679,7 @@ mpf_emigr$emigration_date[mpf_emigr$death_date < mpf_emigr$emigration_date] <- N
 
 # check
 mpf_emigr %>%
-  select(index_person, emigrated) %>% table(., useNA = "ifany")
+  select(INDEX_PERSON, EMIGRATED) %>% table(., useNA = "ifany")
 #
 #
 # Most of the emigrated are non-index persons.
@@ -755,7 +762,7 @@ mpf <- mpf_emigr
 
 # load social hilmo
 data_dir <- "/data/processed_data/thl_soshilmo/"
-social_hilmo_name <- "thl2019_1776_soshilmo.csv.finreg_IDsp"
+social_hilmo_name <- "soshilmo_2023-06-19.csv"
 
 social_hilmo <- fread(paste0(data_dir, social_hilmo_name)) %>% as_tibble
 
@@ -764,14 +771,14 @@ social_hilmo <- fread(paste0(data_dir, social_hilmo_name)) %>% as_tibble
 # Select all unique id's in social hilmo registry and indicate them with 
 # assisted_living = 1
 in_social_hilmo <- social_hilmo %>%
-  select(TNRO) %>%
-  rename(FINREGISTRYID = TNRO) %>%
+  select(FINREGISTRYID) %>%
+  #rename(FINREGISTRYID = TNRO) %>%
   distinct() %>%
-  mutate(in_social_hilmo = 1)
+  mutate(IN_SOCIAL_HILMO = 1)
 
 # join to mpf
 mpf <- left_join(mpf, in_social_hilmo, by = "FINREGISTRYID") %>%
-  mutate(in_social_hilmo = ifelse(is.na(in_social_hilmo), 0, in_social_hilmo)) 
+  mutate(IN_SOCIAL_HILMO = ifelse(is.na(IN_SOCIAL_HILMO), 0, IN_SOCIAL_HILMO)) 
 
 
 # check against index person status
@@ -796,26 +803,26 @@ gc()
 # 
 
 social_assist_dir <- "/data/processed_data/thl_social_assistance/"
-social_assist_name <- "3214_FinRegistry_toitu_MattssonHannele07122020.csv.finreg_IDsp"
-social_assist_spouse_name <- "3214_FinRegistry_puolisontoitu_MattssonHannele07122020.csv.finreg_IDsp"
+# list.files(social_assist_dir, pattern="csv")
+social_assist_name <- "provision_2023-06-19.csv"
+social_assist_spouse_name <- "spouse_provision_2023-06-19.csv"
 
 
 social_assist <- fread(paste0(social_assist_dir, social_assist_name)) %>% as_tibble
 social_assist_spouse <- fread(paste0(social_assist_dir, social_assist_spouse_name)) %>% as_tibble
 
 s_a_ids <- social_assist %>%
-  select(TNRO)
+  select(FINREGISTRYID)
 s_a_sp_ids <- social_assist_spouse %>%
-  select(TNRO)
+  select(FINREGISTRYID)
 
 all_social_assist <- bind_rows(s_a_ids, s_a_sp_ids) %>% distinct() %>%
-  mutate(in_social_assistance_registries = 1) %>%
-  rename(FINREGISTRYID = TNRO)
+  mutate(IN_SOCIAL_ASSISTANCE_REGISTRIES = 1)
 
 mpf <- left_join(mpf, all_social_assist, by = "FINREGISTRYID") %>%
-  mutate(in_social_assistance_registries = ifelse(is.na(in_social_assistance_registries), 
+  mutate(IN_SOCIAL_ASSISTANCE_REGISTRIES = ifelse(is.na(IN_SOCIAL_ASSISTANCE_REGISTRIES), 
                                                   0, 
-                                                  in_social_assistance_registries))
+                                                  IN_SOCIAL_ASSISTANCE_REGISTRIES))
 
 # check
 # mpf %>%
@@ -868,9 +875,9 @@ mpf <- mpf %>% distinct()
 # id_mother
 
 mothers = dvv_relative %>%
-  filter(Relationship == "3a") %>%
-  rename(id_mother = Relative_ID) %>%
-  select(FINREGISTRYID, id_mother)
+  filter(RELATIONSHIP == "3a") %>%
+  rename(ID_MOTHER = RELATIVE_ID) %>%
+  select(FINREGISTRYID, ID_MOTHER)
 #
 #
 # checks
@@ -898,9 +905,9 @@ mpf <- mpf %>% left_join(mothers)
 #id_father
 
 fathers = dvv_relative %>%
-  filter(Relationship == "3i") %>%
-  rename(id_father = Relative_ID) %>%
-  select(FINREGISTRYID, id_father)
+  filter(RELATIONSHIP == "3i") %>%
+  rename(ID_FATHER = RELATIVE_ID) %>%
+  select(FINREGISTRYID, ID_FATHER)
 #
 # check
 # 
@@ -928,8 +935,8 @@ mpf <-  mpf %>% left_join(fathers)
 # 
 # no duplicates here!
 number_of_children = dvv_relative %>%
-  filter(Relationship == "2") %>%
-  count(FINREGISTRYID, name = 'number_of_children')
+  filter(RELATIONSHIP == "2") %>%
+  count(FINREGISTRYID, name = 'NUMBER_OF_CHILDREN')
 
 
 
@@ -938,7 +945,7 @@ mpf <-  mpf %>% left_join(number_of_children)
 # set number of children to 0 if index person doesn't have any children.
 mpf <- mpf %>%
   as_tibble() %>%
-  mutate(number_of_children = ifelse(is.na(number_of_children) & index_person == 1, 0, number_of_children))
+  mutate(NUMBER_OF_CHILDREN = ifelse(is.na(NUMBER_OF_CHILDREN) & INDEX_PERSON == 1, 0, NUMBER_OF_CHILDREN))
 
 
 
@@ -946,7 +953,7 @@ mpf <- mpf %>%
 # mpf = mpf %>% mutate(date_of_birth = `DOB(YYYY-MM-DD)`)
 # mpf = mpf %>% select(-`DOB(YYYY-MM-DD)`)
 
-thl_birth # read in the beginning
+# thl_birth # read in the beginning
 
 
 
@@ -955,39 +962,38 @@ thl_birth # read in the beginning
 #
 # no duplicates
 mothers_birth <- thl_birth %>%
-  distinct(AITI_TNRO) %>%
-  mutate(birth_registry_mother = 1)
+  distinct(AITI_FINREGISTRYID) %>%
+  mutate(BIRTH_REGISTRY_MOTHER = 1)
 
 
 
 mpf <- mpf %>%
-  left_join(mothers_birth, by = c("FINREGISTRYID" = "AITI_TNRO")) %>%
-  mutate(birth_registry_mother = ifelse(is.na(birth_registry_mother), 0, 1)) 
+  left_join(mothers_birth, by = c("FINREGISTRYID" = "AITI_FINREGISTRYID")) %>%
+  mutate(BIRTH_REGISTRY_MOTHER = ifelse(is.na(BIRTH_REGISTRY_MOTHER), 0, 1)) 
 
 
 # Add a column for having records in THL Birth registry as a child
 #
 # no duplicates
 children <- thl_birth %>%
-  distinct(LAPSI_TNRO) %>%
-  mutate(birth_registry_child = 1)
+  distinct(LAPSI_FINREGISTRYID) %>%
+  mutate(BIRTH_REGISTRY_CHILD = 1)
 
 
 mpf <- mpf %>%
-  left_join(children, by = c("FINREGISTRYID" = "LAPSI_TNRO")) %>%
-  mutate(birth_registry_child = ifelse(is.na(birth_registry_child), 0, 1))
+  left_join(children, by = c("FINREGISTRYID" = "LAPSI_FINREGISTRYID")) %>%
+  mutate(BIRTH_REGISTRY_CHILD = ifelse(is.na(BIRTH_REGISTRY_CHILD), 0, 1))
 
 
-# In vaccination registrer
+# In vaccination registry
 
 
-vaccine <- fread(vaccine_path, select = c("TNRO")) %>% as_tibble %>%
-  mutate(in_vaccination_registry = 1) %>%
-  distinct() %>%
-  rename(FINREGISTRYID = TNRO)
+vaccine <- fread(vaccine_path, select = c("FINREGISTRYID")) %>% as_tibble %>%
+  mutate(IN_VACCINATION_REGISTRY = 1) %>%
+  distinct()
 
 mpf <- left_join(mpf, vaccine, by = "FINREGISTRYID") %>%
-  mutate(in_vaccination_registry = replace.na.0(in_vaccination_registry))
+  mutate(IN_VACCINATION_REGISTRY = replace.na.0(IN_VACCINATION_REGISTRY))
 
 
 # table for index persons and in_vaccination_registry
@@ -1002,13 +1008,12 @@ mpf <- left_join(mpf, vaccine, by = "FINREGISTRYID") %>%
 
 # in infectious disease registry
 
-infect <- fread(infect_path, select = c("TNRO")) %>% as_tibble %>%
+infect <- fread(infect_path, select = c("FINREGISTRYID")) %>% as_tibble %>%
   distinct() %>%
-  mutate(in_infect_dis_registry = 1) %>%
-  rename(FINREGISTRYID = TNRO)
+  mutate(IN_INFECT_DIS_REGISTRY = 1)
 
 mpf <- left_join(mpf, infect, by = "FINREGISTRYID") %>%
-  mutate(in_infect_dis_registry = replace.na.0(in_infect_dis_registry))  
+  mutate(IN_INFECT_DIS_REGISTRY = replace.na.0(IN_INFECT_DIS_REGISTRY))  
 
 
 # check against index_person (this table includes individual duplicates)
@@ -1029,13 +1034,12 @@ mpf <- left_join(mpf, infect, by = "FINREGISTRYID") %>%
 
 # in Malformations_registry
 
-malf <- fread(malf_path, select = c("TNRO")) %>% as_tibble %>%
+malf <- fread(malf_path, select = c("FINREGISTRYID")) %>% as_tibble %>%
   distinct() %>%
-  mutate(in_malformations_registry = 1) %>%
-  rename(FINREGISTRYID = TNRO)
+  mutate(IN_MALFORMATIONS_REGISTRY = 1)
 
 mpf <- left_join(mpf, malf, by = "FINREGISTRYID") %>%
-  mutate(in_malformations_registry = replace.na.0(in_malformations_registry)) 
+  mutate(IN_MALFORMATIONS_REGISTRY = replace.na.0(IN_MALFORMATIONS_REGISTRY)) 
 #
 # check against index_person 
 #
@@ -1051,13 +1055,12 @@ mpf <- left_join(mpf, malf, by = "FINREGISTRYID") %>%
 
 # cancer
 
-cancer <- fread(cancer_path, select = c("finregistryid")) %>% as_tibble %>%
-  rename("FINREGISTRYID" = "finregistryid") %>%
+cancer <- fread(cancer_path, select = c("FINREGISTRYID")) %>% as_tibble %>%
   distinct() %>%
-  mutate(in_cancer_registry = 1) 
+  mutate(IN_CANCER_REGISTRY = 1) 
 
 mpf <- left_join(mpf, cancer, by = "FINREGISTRYID") %>%
-  mutate(in_cancer_registry = replace.na.0(in_cancer_registry)) 
+  mutate(IN_CANCER_REGISTRY = replace.na.0(IN_CANCER_REGISTRY)) 
 #
 #
 # check against index person
@@ -1092,19 +1095,20 @@ if(length(dupl) > 0) {
 
 
 # add drug purchases
+### THIS DATASET HAS NOT BEEN HARMONISED YET !!! ####
 drug_purchases <- fread(drug_purchases_path) %>% as_tibble
 
 mpf <- mpf %>%
-  left_join(drug_purchases, by = c("FINREGISTRYID" = "HETU"))
+  left_join(drug_purchases, by = c("FINREGISTRYID" = "HETU")) %>%
+  rename(DRUG_PURCHASES = drug_purchases)
 
 # add kanta prescriptions
 kanta_prescriptions <- fread(kanta_prescriptions_path) %>% as_tibble
 
 mpf <- mpf %>%
-  left_join(kanta_prescriptions, by = c("FINREGISTRYID" = "PATIENT_ID"))
+  left_join(kanta_prescriptions, by = c("FINREGISTRYID" = "PATIENT_ID")) %>%
+  rename(KANTA_PRESCRIPTIONS = kanta_prescriptions)
 
-# change header to uppercase
-header(mpf) <- toupper(header(mpf))
 
 # add automatic date
 today <- Sys.Date()
@@ -1114,3 +1118,4 @@ filename <- paste0("minimal_phenotype_",today,".csv")
 setwd("/data/processed_data/minimal_phenotype/")
 write.csv(mpf, filename, 
           row.names = FALSE)
+
