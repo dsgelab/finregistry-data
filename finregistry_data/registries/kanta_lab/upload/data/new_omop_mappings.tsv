@@ -1,0 +1,407 @@
+OMOP_ID	LAB_ABBREVIATION	LAB_ID	LAB_UNIT	COUNT_LAB	COUNT_OMOP	PERCENTAGE_LAB	OMOP_NAME
+3002385	e-rdw	1349	%	1203540	19057744	6.3%	Erythrocyte distribution width [Ratio]
+3002385	e-rdw	11086	%	3621640	19057744	19.0%	Erythrocyte distribution width [Ratio]
+3002385	e-rdw	0450	%	1775988	19057744	9.3%	Erythrocyte distribution width [Ratio]
+3002385	e-rdw	10838	%	510709	19057744	2.7%	Erythrocyte distribution width [Ratio]
+3002385	e-rdw	50498	%	390098	19057744	2.0%	Erythrocyte distribution width [Ratio]
+3013115	b-eos	0428	e9/l	173345	2734971	6.3%	Eosinophils [#/volume] in Blood
+3013115	b-eos	0177	e9/l	71783	2734971	2.6%	Eosinophils [#/volume] in Blood
+3013115	b-eos	0039	e9/l	114525	2734971	4.2%	Eosinophils [#/volume] in Blood
+3013115	b-eos	1101330	e9/l	88570	2734971	3.2%	Eosinophils [#/volume] in Blood
+3013115	b-eos	0156	e9/l	129349	2734971	4.7%	Eosinophils [#/volume] in Blood
+3013115	b-eos	0911	e9/l	35899	2734971	1.3%	Eosinophils [#/volume] in Blood
+40764999	pt-gfreepi	0232	ml/min/173m2	1292813	13438654	9.6%	Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)
+40764999	pt-gfreepi	6354	ml/min/173m2	315573	13438654	2.3%	Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)
+40764999	pt-gfre	10083	ml/min/173m2	509102	13438654	3.8%	Glomerular filtration rate/1.73 sq M.predicted [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)
+3035941	e-mch	101558	pg	345195	32215468	1.1%	MCH [Entitic mass]
+3019069	l-mono	0145	%	129314	2869320	4.5%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	0693	%	127144	2869320	4.4%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	0312	%	167980	2869320	5.9%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	10466	%	217260	2869320	7.6%	Monocytes/100 leukocytes in Blood
+3019069	l-mono	9213	%	88017	2869320	3.1%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	693	%	414097	2869320	14.4%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	45070	%	33378	2869320	1.2%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	50125	%	36240	2869320	1.3%	Monocytes/100 leukocytes in Blood
+3019069	l-monos	0184	%	63874	2869320	2.2%	Monocytes/100 leukocytes in Blood
+3020564	p-krea	2142	µmol/l	1050950	24772572	4.2%	Creatinine [Moles/volume] in Serum or Plasma
+3021601	u-prot-o	21708	binary	160596	293499	54.7%	Nitrite [Presence] in Urine by Test strip
+3021601	u-prot-o	9025	binary	6261	293499	2.1%	Nitrite [Presence] in Urine by Test strip
+3026782	u-osmest	0292	mosm/kgh2o	129430	852496	15.2%	Osmolality of Urine
+3026782	u-osmest	0714	mosm/kgh2o	190590	852496	22.4%	Osmolality of Urine
+3011397	u-hb-o	21704	binary	160598	261160	61.5%	Hemoglobin [Presence] in Urine by Test strip
+3018418	p-ph	50099	NA	12923	1173037	1.1%	pH of Serum or Plasma
+3018418	s-ph	11554	NA	157500	1173037	13.4%	pH of Serum or Plasma
+3018418	s-ph	45093	NA	34070	1173037	2.9%	pH of Serum or Plasma
+3018418	s-ph	50100	NA	73942	1173037	6.3%	pH of Serum or Plasma
+3022096	l-baso	9215	%	90494	2809207	3.2%	Basophils/100 leukocytes in Blood
+3022096	l-baso	0692	%	127001	2809207	4.5%	Basophils/100 leukocytes in Blood
+3022096	l-baso	0147	%	129259	2809207	4.6%	Basophils/100 leukocytes in Blood
+3022096	l-baso	0389	%	45097	2809207	1.6%	Basophils/100 leukocytes in Blood
+3022096	l-baso	11668	%	58243	2809207	2.1%	Basophils/100 leukocytes in Blood
+3027945	e-retik	8319	%	164182	467094	35.1%	Reticulocytes/100 erythrocytes in Blood
+3019198	b-lymf	3223	e9/l	155399	3335617	4.7%	Lymphocytes [#/volume] in Blood
+3019198	b-lymf	0043	e9/l	116078	3335617	3.5%	Lymphocytes [#/volume] in Blood
+3019198	b-ly	0154	e9/l	130120	3335617	3.9%	Lymphocytes [#/volume] in Blood
+3019198	b-lymf	9230	e9/l	85241	3335617	2.6%	Lymphocytes [#/volume] in Blood
+3019198	b-lymf	0903	e9/l	35888	3335617	1.1%	Lymphocytes [#/volume] in Blood
+3019198	b-lymf	03223	e9/l	41109	3335617	1.2%	Lymphocytes [#/volume] in Blood
+3019198	b-ly	1602922	e9/l	90224	3335617	2.7%	Lymphocytes [#/volume] in Blood
+3047826	s-amh	6310	µg/l	14814	26683	55.5%	Mullerian inhibiting substance [Mass/volume] in Serum or Plasma
+3047826	s-amh	8296	µg/l	8126	26683	30.5%	Mullerian inhibiting substance [Mass/volume] in Serum or Plasma
+3047826	s-amh	50366	µg/l	1695	26683	6.4%	Mullerian inhibiting substance [Mass/volume] in Serum or Plasma
+3047826	s-amh	12684	µg/l	1158	26683	4.3%	Mullerian inhibiting substance [Mass/volume] in Serum or Plasma
+3016502	ab-hbo2sat	10530	%	231223	952201	24.3%	Oxygen saturation in Arterial blood
+3009542	b-hkr	101358	%	345053	32584769	1.1%	Hematocrit [Volume Fraction] of Blood
+3000850	u-epit	0571	e6/l	20543	819814	2.5%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	0385	e6/l	154505	819814	18.8%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	980	e6/l	150668	819814	18.4%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	1360	e6/l	51468	819814	6.3%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	9243	e6/l	43525	819814	5.3%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	6566	e6/l	42944	819814	5.2%	Epithelial cells [#/volume] in Urine
+3000850	u-epit	0980	e6/l	9105	819814	1.1%	Epithelial cells [#/volume] in Urine
+3021347	s-ca-iona	50098	mmol/l	150811	3050767	4.9%	Calcium.ionized [Moles/volume] in Serum or Plasma
+3021347	s-ca-iona	11564	mmol/l	161053	3050767	5.3%	Calcium.ionized [Moles/volume] in Serum or Plasma
+3021347	fs-ca-ion	0681	mmol/l	86138	3050767	2.8%	Calcium.ionized [Moles/volume] in Serum or Plasma
+3021347	p-ca-iona	50097	mmol/l	414095	3050767	13.6%	Calcium.ionized [Moles/volume] in Serum or Plasma
+3032035	l-liuskat	0679	%	102350	185078	55.3%	Polymorphonuclear cells/100 leukocytes in Blood
+3000965	p-crp-o	50158	mg/l	32868	126290	26.0%	C reactive protein [Presence] in Serum or Plasma
+3000965	p-crp-o	1217	mg/l	2620	126290	2.1%	C reactive protein [Presence] in Serum or Plasma
+3000965	p-crp-o	10004	mg/l	2521	126290	2.0%	C reactive protein [Presence] in Serum or Plasma
+3007461	b-trom	102791	e9/l	344527	29928106	1.2%	Platelets [#/volume] in Blood
+3001308	fp-kol-ldl	2099	mmol/l	62893	6055775	1.0%	Cholesterol in LDL [Moles/volume] in Serum or Plasma
+3001308	fp-kol-ldl	102099	mmol/l	61240	6055775	1.0%	Cholesterol in LDL [Moles/volume] in Serum or Plasma
+3002030	l-lymf	9212	%	88929	2179700	4.1%	Lymphocytes/100 leukocytes in Blood
+3002030	l-lymf	0046	%	127147	2179700	5.8%	Lymphocytes/100 leukocytes in Blood
+3002030	l-lymf	10453	%	27051	2179700	1.2%	Lymphocytes/100 leukocytes in Blood
+3048773	fp-trigly	4530	mmol/l	364180	4216399	8.6%	Triglyceride [Moles/volume] in Serum or Plasma --fasting
+3048773	fp-trigly	102770	mmol/l	61561	4216399	1.5%	Triglyceride [Moles/volume] in Serum or Plasma --fasting
+3018010	l-neut	0141	%	130084	2737845	4.8%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	10459	%	221636	2737845	8.1%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	0355	%	167930	2737845	6.1%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	0156	%	65736	2737845	2.4%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	45068	%	33390	2737845	1.2%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	9211	%	89759	2737845	3.3%	Neutrophils/100 leukocytes in Blood
+3018010	l-neut	50159	%	45040	2737845	1.6%	Neutrophils/100 leukocytes in Blood
+3010517	vb-hb-co	50035	%	110356	191222	57.7%	Carboxyhemoglobin/Hemoglobin.total in Venous blood
+3010517	vb-hb-co	8278	%	49934	191222	26.1%	Carboxyhemoglobin/Hemoglobin.total in Venous blood
+42529201	p-ca19-9	50374	ku/l	11085	51816	21.4%	Cancer Ag 19-9 [Units/volume] in Serum or Plasma by Immunoassay
+42529201	p-ca19-9	3412	ku/l	4071	51816	7.9%	Cancer Ag 19-9 [Units/volume] in Serum or Plasma by Immunoassay
+3017732	b-neut	0426	e9/l	195141	5237164	3.7%	Neutrophils [#/volume] in Blood
+3017732	b-neut	1103238	e9/l	90777	5237164	1.7%	Neutrophils [#/volume] in Blood
+3017732	b-neut	0151	e9/l	129340	5237164	2.5%	Neutrophils [#/volume] in Blood
+3017732	b-neut	0158	e9/l	64767	5237164	1.2%	Neutrophils [#/volume] in Blood
+3020682	u-albkre	9522	mg/mmol	66104	559644	11.8%	Albumin/Creatinine [Ratio] in Urine
+3019550	p-na	103622	mmol/l	249422	21281204	1.2%	Sodium [Moles/volume] in Serum or Plasma
+3006315	b-baso	0912	e9/l	35877	3130264	1.1%	Basophils [#/volume] in Blood
+3006315	b-baso	9227	e9/l	90983	3130264	2.9%	Basophils [#/volume] in Blood
+3006315	b-baso	0157	e9/l	130598	3130264	4.2%	Basophils [#/volume] in Blood
+3006315	b-baso	0040	e9/l	114748	3130264	3.7%	Basophils [#/volume] in Blood
+3003396	ab-be	4913	mmol/l	10910	535910	2.0%	Base excess in Arterial blood by calculation
+3003396	ab-be	50030	mmol/l	186702	535910	34.8%	Base excess in Arterial blood by calculation
+3003396	ab-be	10083	mmol/l	155749	535910	29.1%	Base excess in Arterial blood by calculation
+3003396	ab-be	0204	mmol/l	14065	535910	2.6%	Base excess in Arterial blood by calculation
+3003396	ab-be	0766	mmol/l	11681	535910	2.2%	Base excess in Arterial blood by calculation
+3024731	e-mcv	101357	fl	345569	32260581	1.1%	MCV [Entitic volume]
+3018095	u-leuk	0376	e6/l	154555	1415018	10.9%	Leukocytes [#/volume] in Urine
+3018095	u-leuk	0712	e6/l	172750	1415018	12.2%	Leukocytes [#/volume] in Urine
+3018095	u-leuk	8367	e6/l	31039	1415018	2.2%	Leukocytes [#/volume] in Urine
+3018095	u-leuk	0570	e6/l	20374	1415018	1.4%	Leukocytes [#/volume] in Urine
+3001604	b-monos	0042	e9/l	114854	2777666	4.1%	Monocytes [#/volume] in Blood
+3037121	u-prot	0249	mg/l	1908	79227	2.4%	Protein [Mass/volume] in Urine
+3030905	b-liuskat	0038	e9/l	93487	166367	56.2%	Polymorphonuclear cells [#/volume] in Blood
+3030467	u-lier	981	e6/l	150650	1010043	14.9%	Casts [#/volume] in Urine by Automated count
+3030467	u-lier	0981	e6/l	131225	1010043	13.0%	Casts [#/volume] in Urine by Automated count
+3030467	u-lier	6567	e6/l	42860	1010043	4.2%	Casts [#/volume] in Urine by Automated count
+3009035	s-b12-vit	4824	pmol/l	12177	519634	2.3%	Cobalamin (Vitamin B12) [Moles/volume] in Serum or Plasma
+3009035	p-b12-vit	1137	pmol/l	5398	519634	1.0%	Cobalamin (Vitamin B12) [Moles/volume] in Serum or Plasma
+3021440	l-promyel	0675	%	9833	109193	9.0%	Promyelocytes/100 leukocytes in Blood
+3021440	l-prom	0317	%	21346	109193	19.5%	Promyelocytes/100 leukocytes in Blood
+3021440	l-promyel	9209	%	14433	109193	13.2%	Promyelocytes/100 leukocytes in Blood
+3021440	l-prom	50127	%	2396	109193	2.2%	Promyelocytes/100 leukocytes in Blood
+3021440	l-promyel	8702	%	5073	109193	4.6%	Promyelocytes/100 leukocytes in Blood
+3002582	u-eryt	0377	e6/l	154522	1422054	10.9%	Erythrocytes [#/volume] in Urine
+3002582	u-eryt	0711	e6/l	184226	1422054	13.0%	Erythrocytes [#/volume] in Urine
+3002582	u-eryt	8366	e6/l	31217	1422054	2.2%	Erythrocytes [#/volume] in Urine
+3002582	u-eryt	0569	e6/l	20450	1422054	1.4%	Erythrocytes [#/volume] in Urine
+36304419	u-bakt	0157	binary	7051	377569	1.9%	Bacteria [Presence] in Urine
+36304419	u-bakt	0919	binary	3819	377569	1.0%	Bacteria [Presence] in Urine
+36304419	u-bakt	0573	binary	4913	377569	1.3%	Bacteria [Presence] in Urine
+3019150	u-suhti	0730	NA	132967	1170657	11.4%	Specific gravity of Urine by Refractometry
+3019150	u-suhti	0352	NA	20731	1170657	1.8%	Specific gravity of Urine by Refractometry
+3018251	fp-gluk	101468	mmol/l	104362	5714374	1.8%	Fasting glucose [Moles/volume] in Serum or Plasma
+3018251	fp-gluk	1600479	mmol/l	58907	5714374	1.0%	Fasting glucose [Moles/volume] in Serum or Plasma
+3011897	s-kaseiie	8234	ku/l	2595	3702	70.1%	Casein IgE Ab [Units/volume] in Serum
+3029287	u-solut	20033	binary	185978	208101	89.4%	Urinalysis microscopic panel [#/volume] - Urine by Automated count
+1001926	u-bupre-o	0686	binary	2414	14878	16.2%	Buprenorphine [Presence] in Urine by Screen method
+1001926	u-bupre-o	14203	binary	1173	14878	7.9%	Buprenorphine [Presence] in Urine by Screen method
+1001926	u-bupre-o	11186	binary	1016	14878	6.8%	Buprenorphine [Presence] in Urine by Screen method
+3006504	l-eos	0690	%	127042	3164274	4.0%	Eosinophils/100 leukocytes in Blood
+3006504	l-eos	9214	%	86672	3164274	2.7%	Eosinophils/100 leukocytes in Blood
+3006504	l-eos	0146	%	129280	3164274	4.1%	Eosinophils/100 leukocytes in Blood
+40761847	s-rcora8e	20811	ku/l	1849	2651	69.7%	Hazelnut recombinant (rCor a) 8 IgE Ab [Units/volume] in Serum
+43055554	cb-be	0769	mmol/l	20990	378547	5.5%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	151	mmol/l	92172	378547	24.3%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	10084	mmol/l	26805	378547	7.1%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	9218	mmol/l	13678	378547	3.6%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	4923	mmol/l	9758	378547	2.6%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	5400	mmol/l	5655	378547	1.5%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	0101	mmol/l	8896	378547	2.4%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	50031	mmol/l	17599	378547	4.6%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+43055554	cb-be	0206	mmol/l	5607	378547	1.5%	Base excess.100% oxygenated [Moles/volume] standard in Capillary blood by calculation
+3019145	s-hcg-b-v	4235	pmol/l	3978	53666	7.4%	Choriogonadotropin.beta subunit free [Mass/volume] in Serum or Plasma
+3007368	li-igg	0291	mg/l	1069	14876	7.2%	IgG [Mass/volume] in Cerebral spinal fluid
+3027315	b-po2	0107	kpa	43585	186322	23.4%	Oxygen [Partial pressure] in Blood
+3003458	p-pi	1431	mmol/l	17426	902618	1.9%	Phosphate [Moles/volume] in Serum or Plasma
+3014576	p-cl	20800	mmol/l	28874	978771	3.0%	Chloride [Moles/volume] in Serum or Plasma
+3009343	cb-ph	0528	NA	13543	477467	2.8%	pH of Capillary blood
+3009343	cb-ph	0695	NA	23903	477467	5.0%	pH of Capillary blood
+3023602	fp-kol-hdl	102097	mmol/l	61875	5525028	1.1%	Cholesterol in HDL [Moles/volume] in Serum or Plasma
+3020059	p-ca-albk	8568	mmol/l	40135	318292	12.6%	Calcium [Moles/volume] corrected for albumin in Serum or Plasma
+3020059	p-ca-albk	50444	mmol/l	55589	318292	17.5%	Calcium [Moles/volume] corrected for albumin in Serum or Plasma
+3020059	p-ca-albk	10068	mmol/l	6906	318292	2.2%	Calcium [Moles/volume] corrected for albumin in Serum or Plasma
+3046279	p-pct	50407	µg/l	22377	107967	20.7%	Procalcitonin [Mass/volume] in Serum or Plasma
+3046279	p-pct	6462	µg/l	17209	107967	15.9%	Procalcitonin [Mass/volume] in Serum or Plasma
+3046279	p-pct	12590	µg/l	6430	107967	6.0%	Procalcitonin [Mass/volume] in Serum or Plasma
+3034860	s-iglck-v	0169	mg/l	5565	104108	5.3%	Kappa light chains.free [Mass/volume] in Serum
+3034860	s-iglck-v	20112	mg/l	1374	104108	1.3%	Kappa light chains.free [Mass/volume] in Serum
+3034860	s-iglck-v	0994	mg/l	4053	104108	3.9%	Kappa light chains.free [Mass/volume] in Serum
+40771025	p-d-25	1220	nmol/l	90981	1091633	8.3%	25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Moles/volume] in Serum or Plasma
+3024889	vb-hb-met	8279	%	50185	181951	27.6%	Methemoglobin/Hemoglobin.total in Venous blood
+3024889	vb-hb-met	50037	%	101403	181951	55.7%	Methemoglobin/Hemoglobin.total in Venous blood
+3016431	s-ca-ion	3673	mmol/l	42403	1686251	2.5%	Calcium.ionized [Moles/volume] adjusted to pH 7.4 in Serum or Plasma
+3016431	p-ca-ion.	50309	mmol/l	262529	1686251	15.6%	Calcium.ionized [Moles/volume] adjusted to pH 7.4 in Serum or Plasma
+3012544	vb-ph	8270	NA	50241	349570	14.4%	pH of Venous blood
+3012544	vb-ph	0531	NA	6078	349570	1.7%	pH of Venous blood
+3012544	vb-ph	0341	NA	4306	349570	1.2%	pH of Venous blood
+3026361	b-eryt	101341	e12/l	345493	30252225	1.1%	Erythrocytes [#/volume] in Blood
+3010421	b-ph	0103	ph	44226	221234	20.0%	pH of Blood
+3002173	ab-hb	10091	g/l	235823	582595	40.5%	Hemoglobin [Mass/volume] in Arterial blood
+3002173	ab-hb	4945	g/l	23345	582595	4.0%	Hemoglobin [Mass/volume] in Arterial blood
+3002173	ab-hb	0069	g/l	8834	582595	1.5%	Hemoglobin [Mass/volume] in Arterial blood
+3008401	s-pujoe	0902	ku/l	2571	34376	7.5%	Mugwort IgE Ab [Units/volume] in Serum
+3008401	s-pujoe	419	ku/l	12513	34376	36.4%	Mugwort IgE Ab [Units/volume] in Serum
+3008401	s-pujoe	9303	ku/l	2154	34376	6.3%	Mugwort IgE Ab [Units/volume] in Serum
+3008401	s-pujoe	53110	ku/l	1424	34376	4.1%	Mugwort IgE Ab [Units/volume] in Serum
+3013707	b-la	102203	mm/h	94451	4213650	2.2%	Erythrocyte sedimentation rate by Westergren method
+3019225	ph	9018	NA	64299	302232	21.3%	pH of Specimen
+3019225	ph	1530	NA	28360	302232	9.4%	pH of Specimen
+3002179	l-metamye	0677	%	10660	63134	16.9%	Metamyelocytes/100 leukocytes in Blood
+3002179	l-metam	50129	%	1235	63134	2.0%	Metamyelocytes/100 leukocytes in Blood
+3022948	fp-fe	0585	µmol/l	11151	401626	2.8%	Iron [Moles/volume] in Serum or Plasma
+3022948	fp-fe	0799	µmol/l	9264	401626	2.3%	Iron [Moles/volume] in Serum or Plasma
+3022948	fp-fe	45017	µmol/l	6263	401626	1.6%	Iron [Moles/volume] in Serum or Plasma
+3022948	fp-fe	2566	µmol/l	4019	401626	1.0%	Iron [Moles/volume] in Serum or Plasma
+3023351	s-dpteroe	440	ku/l	12060	39564	30.5%	European house dust mite IgE Ab [Units/volume] in Serum
+3023351	s-dpteroe	0906	ku/l	2561	39564	6.5%	European house dust mite IgE Ab [Units/volume] in Serum
+3023351	s-dpteroe	9310	ku/l	1857	39564	4.7%	European house dust mite IgE Ab [Units/volume] in Serum
+3023351	s-dpteroe	53069	ku/l	1383	39564	3.5%	European house dust mite IgE Ab [Units/volume] in Serum
+3000081	s-klotsa	484	nmol/l	3078	88704	3.5%	cloZAPine [Moles/volume] in Serum or Plasma
+3000081	s-klotsa	0484	nmol/l	3645	88704	4.1%	cloZAPine [Moles/volume] in Serum or Plasma
+3003932	ua-pco2	50162	kpa	7840	45921	17.1%	Carbon dioxide [Partial pressure] in Arterial cord blood
+3003932	ua-pco2	0075	kpa	1794	45921	3.9%	Carbon dioxide [Partial pressure] in Arterial cord blood
+3011412	b-cd3	0873	e9/l	1908	29391	6.5%	CD3 cells [#/volume] in Blood
+3011412	b-t-cd3	50001	e9/l	1427	29391	4.9%	CD3 cells [#/volume] in Blood
+3019900	fp-kol	102095	mmol/l	61852	5654283	1.1%	Cholesterol [Moles/volume] in Serum or Plasma
+3003633	s-ovomuke	20253	ku/l	6007	7933	75.7%	Ovomucoid IgE Ab [Units/volume] in Serum
+3021614	p-rf	50074	u/ml	9120	121968	7.5%	Rheumatoid factor [Units/volume] in Serum or Plasma
+3021614	p-rf	3550	u/ml	4766	121968	3.9%	Rheumatoid factor [Units/volume] in Serum or Plasma
+3021447	vb-pco2	8271	kpa	50230	470776	10.7%	Carbon dioxide [Partial pressure] in Venous blood
+43055557	vb-be	9220	mmol/l	10648	382979	2.8%	Base excess.100% oxygenated [Moles/volume] standard in Venous blood by calculation
+43055557	vb-be	8273	mmol/l	34281	382979	9.0%	Base excess.100% oxygenated [Moles/volume] standard in Venous blood by calculation
+43055557	vb-be	50032	mmol/l	85030	382979	22.2%	Base excess.100% oxygenated [Moles/volume] standard in Venous blood by calculation
+43055557	vb-be	10085	mmol/l	13603	382979	3.6%	Base excess.100% oxygenated [Moles/volume] standard in Venous blood by calculation
+43055557	vb-be	5386	mmol/l	17315	382979	4.5%	Base excess.100% oxygenated [Moles/volume] standard in Venous blood by calculation
+3021901	cb-hbo2sat	1534	%	95902	104562	91.7%	Oxygen saturation in Capillary blood
+3009814	fp-trfesat	9906	%	38747	171985	22.5%	Iron saturation [Molar fraction] in Serum or Plasma
+3009814	fp-trfesat	4606	%	13401	171985	7.8%	Iron saturation [Molar fraction] in Serum or Plasma
+3015322	s-alfa-1	9327	g/l	5097	66163	7.7%	Alpha 1 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3015322	s-alfa-1	9921	g/l	1004	66163	1.5%	Alpha 1 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3016293	p-hco3	106	mmol/l	143215	438915	32.6%	Bicarbonate [Moles/volume] in Serum or Plasma
+40758310	s-he4	20853	pmol/l	9136	35936	25.4%	Human epididymis protein 4 [Moles/volume] in Serum or Plasma
+40758310	s-he4	6397	pmol/l	8019	35936	22.3%	Human epididymis protein 4 [Moles/volume] in Serum or Plasma
+40758310	s-he4	8537	pmol/l	1542	35936	4.3%	Human epididymis protein 4 [Moles/volume] in Serum or Plasma
+40758310	s-he4	9686	pmol/l	2926	35936	8.1%	Human epididymis protein 4 [Moles/volume] in Serum or Plasma
+3007778	s-k/l-s-v	0996	NA	4020	93282	4.3%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3007778	s-k/l-s-v	50207	NA	10893	93282	11.7%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3007778	s-k/l-s-v	8648	NA	1442	93282	1.5%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3007778	s-k/l-s-v	0339	NA	4455	93282	4.8%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3007778	s-k/l-s-v	10747	NA	6198	93282	6.6%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3007778	s-k/l-s-v	20114	NA	1349	93282	1.4%	Kappa light chains/Lambda light chains [Mass Ratio] in Serum
+3018405	ap-laktaat	50210	mmol/l	260543	302831	86.0%	Lactate [Moles/volume] in Arterial blood
+3018405	ap-laktaat	0231	mmol/l	19835	302831	6.5%	Lactate [Moles/volume] in Arterial blood
+3018405	ab-laktaat	0415	mmol/l	8166	302831	2.7%	Lactate [Moles/volume] in Arterial blood
+3028653	ab-hb-co	50034	%	255904	568745	45.0%	Carboxyhemoglobin/Hemoglobin.total in Arterial blood
+3028653	ab-hb-co	0072	%	8073	568745	1.4%	Carboxyhemoglobin/Hemoglobin.total in Arterial blood
+3032080	b-inr-pik	1630673	NA	14027	38789	36.2%	INR in Blood by Coagulation assay
+3032080	b-inr-pik	3630673	NA	6456	38789	16.6%	INR in Blood by Coagulation assay
+3032080	b-inr-pik	2630673	NA	5631	38789	14.5%	INR in Blood by Coagulation assay
+3025159	l-bla	0316	%	21350	85038	25.1%	Blasts/100 leukocytes in Blood
+3025159	l-blastit	0674	%	9873	85038	11.6%	Blasts/100 leukocytes in Blood
+3037551	p-ca12-5	50372	ku/l	20594	164493	12.5%	Cancer Ag 125 [Units/volume] in Serum or Plasma
+3037551	p-ca12-5	3414	ku/l	5624	164493	3.4%	Cancer Ag 125 [Units/volume] in Serum or Plasma
+3026989	p-t3-v	2775	pmol/l	12407	240711	5.2%	Triiodothyronine (T3) Free [Moles/volume] in Serum or Plasma
+3026989	p-t3-v	50377	pmol/l	8626	240711	3.6%	Triiodothyronine (T3) Free [Moles/volume] in Serum or Plasma
+3026989	p-t3-v	8639	pmol/l	15001	240711	6.2%	Triiodothyronine (T3) Free [Moles/volume] in Serum or Plasma
+3026989	p-t3-v	9644	pmol/l	4480	240711	1.9%	Triiodothyronine (T3) Free [Moles/volume] in Serum or Plasma
+3004809	l-sauvat	0678	%	7596	35929	21.1%	Band form neutrophils/100 leukocytes in Blood
+3006217	ab-hb-met	50036	%	255886	580955	44.0%	Methemoglobin/Hemoglobin.total in Arterial blood
+3006217	ab-hb-met	0070	%	7978	580955	1.4%	Methemoglobin/Hemoglobin.total in Arterial blood
+3009508	u-krea	0581	mmol/l	50668	1152572	4.4%	Creatinine [Moles/volume] in Urine
+3009508	u-krea	0198	mmol/l	33517	1152572	2.9%	Creatinine [Moles/volume] in Urine
+3024354	vb-po2	8272	kpa	50225	352698	14.2%	Oxygen [Partial pressure] in Venous blood
+3024354	vb-po2	0343	kpa	4447	352698	1.3%	Oxygen [Partial pressure] in Venous blood
+3004529	vb-hbo2sat	8275	%	50214	225814	22.2%	Oxygen [Partial pressure] adjusted to patient's actual temperature in Venous blood
+3004529	vb-hbo2sat	0122	%	6268	225814	2.8%	Oxygen [Partial pressure] adjusted to patient's actual temperature in Venous blood
+3004529	vb-hbo2sat	0348	%	4446	225814	2.0%	Oxygen [Partial pressure] adjusted to patient's actual temperature in Venous blood
+3006245	ly-b-cd19	10974	%	3737	11633	32.1%	CD3-CD19+ cells/100 cells in Blood
+3006245	ly-b-cd19	50004	%	1377	11633	11.8%	CD3-CD19+ cells/100 cells in Blood
+3003694	e-aborh	30084	binary	13661	30368	45.0%	ABO and Rh group [Type] in Blood
+1175573	fl-strbnho	6383	binary	5318	23681	22.5%	Streptococcus agalactiae DNA [Presence] in Vaginal fluid by NAA with probe detection
+1175573	fl-strbnho	21440	binary	14836	23681	62.6%	Streptococcus agalactiae DNA [Presence] in Vaginal fluid by NAA with probe detection
+1175573	fl-strbnho	9997	binary	1516	23681	6.4%	Streptococcus agalactiae DNA [Presence] in Vaginal fluid by NAA with probe detection
+1175573	fl-strbnho	54296	binary	1687	23681	7.1%	Streptococcus agalactiae DNA [Presence] in Vaginal fluid by NAA with probe detection
+3009214	p-lh	2265	u/l	3564	76508	4.7%	Lutropin [Units/volume] in Serum or Plasma
+3009214	p-lh	50376	u/l	7164	76508	9.4%	Lutropin [Units/volume] in Serum or Plasma
+3027238	p-tpoab	9650	ku/l	6453	79112	8.2%	Thyroperoxidase Ab [Units/volume] in Serum or Plasma
+3013290	b-pco2	0104	kpa	43971	186117	23.6%	Carbon dioxide [Partial pressure] in Blood
+3000185	fs-trfesat	4606	%	15486	54435	28.4%	Iron saturation [Mass Fraction] in Serum or Plasma
+3000185	fs-trfesat	10100	%	6227	54435	11.4%	Iron saturation [Mass Fraction] in Serum or Plasma
+3001893	pf-eos	0521	%	1160	5306	21.9%	Eosinophils/100 leukocytes in Pleural fluid
+3001893	pf-eos	13407	%	1464	5306	27.6%	Eosinophils/100 leukocytes in Pleural fluid
+3001893	pf-eos	50138	%	1406	5306	26.5%	Eosinophils/100 leukocytes in Pleural fluid
+3015377	p-ca	4514	mmol/l	22020	1097639	2.0%	Calcium [Moles/volume] in Serum or Plasma
+3003888	s-timotee	420	ku/l	12802	40294	31.8%	Timothy IgE Ab [Units/volume] in Serum
+3003888	s-timotee	53133	ku/l	2591	40294	6.4%	Timothy IgE Ab [Units/volume] in Serum
+3003888	s-timotee	9302	ku/l	2208	40294	5.5%	Timothy IgE Ab [Units/volume] in Serum
+3003888	s-timotee	0901	ku/l	2518	40294	6.2%	Timothy IgE Ab [Units/volume] in Serum
+3005322	p-ige	1673	ku/l	5506	163066	3.4%	IgE [Units/volume] in Serum or Plasma
+3025547	s-tygl-va	20449	ku/l	1939	11286	17.2%	Thyroglobulin Ab [Units/volume] in Serum or Plasma
+3020874	s-maitoe	456	ku/l	6225	20358	30.6%	Milk IgE Ab [Units/volume] in Serum
+3012565	du-tilav	0208	ml	4078	11840	34.4%	Volume of 24 hour Urine
+3012565	du-tilavu	205	ml	1119	11840	9.5%	Volume of 24 hour Urine
+3023081	b-hb-co	13412	%	26513	239964	11.0%	Carboxyhemoglobin/Hemoglobin.total in Blood
+3004119	vb-hb	10092	g/l	46151	110340	41.8%	Hemoglobin [Mass/volume] in Venous blood
+3004119	vb-hb	5388	g/l	24497	110340	22.2%	Hemoglobin [Mass/volume] in Venous blood
+3004119	vb-hb	4950	g/l	10115	110340	9.2%	Hemoglobin [Mass/volume] in Venous blood
+3000060	b-b-cd19	10978	e6/l	3842	21667	17.7%	B lymphocytes [#/volume] in Blood
+42529215	p-fsh	50375	u/l	11636	30172	38.6%	Follitropin [Units/volume] in Serum or Plasma by Immunoassay
+42529215	p-fsh	1422	u/l	6111	30172	20.3%	Follitropin [Units/volume] in Serum or Plasma by Immunoassay
+3018171	p-hcg	2122	u/l	31692	109529	28.9%	Choriogonadotropin [Units/volume] in Serum or Plasma
+3018171	p-hcg	50281	u/l	9749	109529	8.9%	Choriogonadotropin [Units/volume] in Serum or Plasma
+3011841	s-rjugr1e	21320	ku/l	4398	6006	73.2%	English Walnut IgE Ab [Units/volume] in Serum
+3043723	s-beta-1	9325	g/l	5043	65236	7.7%	Beta 1 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3043723	s-beta-1	9923	g/l	1009	65236	1.5%	Beta 1 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3018133	u-ca	0445	mmol/l	1887	11343	16.6%	Calcium [Moles/volume] in Urine
+3020491	b-gluk	0270	mmol/l	4020	6928	58.0%	Glucose [Moles/volume] in Blood
+3003785	p-cea	2034	µg/l	11514	322043	3.6%	Carcinoembryonic Ag [Mass/volume] in Serum or Plasma
+3018301	s-testovl	10005	pmol/l	10058	62807	16.0%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	00143	pmol/l	15953	62807	25.4%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	50121	pmol/l	5132	62807	8.2%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	8408	pmol/l	2520	62807	4.0%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	9261	pmol/l	2529	62807	4.0%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	10078	pmol/l	1024	62807	1.6%	Testosterone Free [Moles/volume] in Serum or Plasma
+3018301	s-testovl	11079	pmol/l	1537	62807	2.4%	Testosterone Free [Moles/volume] in Serum or Plasma
+3025577	b-cr	2147	µg/l	9213	12518	73.6%	Chromium [Mass/volume] in Blood
+3047169	s-iglcl-v	0261	mg/l	5479	100858	5.4%	Lambda light chains.free [Mass/volume] in Serum or Plasma
+3047169	s-iglcl-v	20113	mg/l	1357	100858	1.3%	Lambda light chains.free [Mass/volume] in Serum or Plasma
+3047169	s-iglcl-v	0995	mg/l	4031	100858	4.0%	Lambda light chains.free [Mass/volume] in Serum or Plasma
+3030366	p-kysc	0358	mg/l	9345	140114	6.7%	Cystatin C [Mass/volume] in Serum or Plasma
+3007930	b-hb-met	13413	%	26528	232800	11.4%	Methemoglobin/Hemoglobin.total in Blood
+36304997	b-tbifng	54254	u/ml	5497	18745	29.3%	Mycobacterium tuberculosis stimulated gamma interferon release by CD4+ and CD8+ T-cells [Units/volume] in Blood
+3029713	s-mkomp-1	0621	g/l	8586	71463	12.0%	Protein.monoclonal band 1 [Mass/volume] in Serum or Plasma by Electrophoresis
+3017181	l-myel	0350	%	21397	120559	17.7%	Myelocytes/100 leukocytes in Blood
+3017181	l-myel	50128	%	10678	120559	8.9%	Myelocytes/100 leukocytes in Blood
+3017181	l-myelos	0676	%	10930	120559	9.1%	Myelocytes/100 leukocytes in Blood
+3017181	l-myelos	9208	%	14076	120559	11.7%	Myelocytes/100 leukocytes in Blood
+3017181	l-myel	8703	%	5075	120559	4.2%	Myelocytes/100 leukocytes in Blood
+3004959	ua-be	50168	mmol/l	2301	9940	23.1%	Base excess in Arterial cord blood by calculation
+3051741	s-pappa	10823	mu/l	11357	99878	11.4%	Pregnancy associated plasma protein A [Mass/volume] in Serum or Plasma
+3025839	fs-trigly	1102770	mmol/l	28016	1335007	2.1%	Triglyceride [Moles/volume] in Serum or Plasma
+3004789	fp-transf	0586	g/l	11461	350551	3.3%	Transferrin [Mass/volume] in Serum or Plasma
+3004789	fp-transf	0802	g/l	9602	350551	2.7%	Transferrin [Mass/volume] in Serum or Plasma
+3035880	pf-ph	8025	NA	1096	9473	11.6%	pH of Pleural fluid
+3035880	pf-ph	10193	NA	1612	9473	17.0%	pH of Pleural fluid
+3035880	pf-ph	20032	NA	1252	9473	13.2%	pH of Pleural fluid
+40761872	s-rarah2e	20799	ku/l	6617	9652	68.6%	Peanut recombinant (rAra h) 2 IgE Ab [Units/volume] in Serum
+3035797	s-mkomp-2	0622	g/l	8584	68765	12.5%	Protein.monoclonal band 2 [Mass/volume] in Serum or Plasma by Electrophoresis
+3050449	cu-alb	3557	ug/min	12114	18607	65.1%	Albumin [Mass/time] in Urine collected for unspecified duration
+3005229	s-alfa-2	9326	g/l	4983	65670	7.6%	Alpha 2 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3005229	s-alfa-2	9922	g/l	1001	65670	1.5%	Alpha 2 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3020630	s-prot	0614	g/l	8577	245763	3.5%	Protein [Mass/volume] in Serum or Plasma
+3011960	p-bnp	4616	ng/l	19238	353944	5.4%	Natriuretic peptide B [Mass/volume] in Serum or Plasma
+3043747	s-beta-2	9324	g/l	4980	65495	7.6%	Beta 2 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3043747	s-beta-2	9924	g/l	1007	65495	1.5%	Beta 2 globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+42529200	p-ca15-3	50373	ku/l	10888	33965	32.1%	Cancer Ag 15-3 [Units/volume] in Serum or Plasma by Immunoassay
+42529200	p-ca15-3	3587	ku/l	2554	33965	7.5%	Cancer Ag 15-3 [Units/volume] in Serum or Plasma by Immunoassay
+3010375	b-cya-ms	11615	µg/l	2346	128813	1.8%	cycloSPORINE [Mass/volume] in Blood
+3010375	b-cya-ms	11929	µg/l	2074	128813	1.6%	cycloSPORINE [Mass/volume] in Blood
+3000764	u-bendi-o	0774	binary	3710	19525	19.0%	Benzodiazepines [Presence] in Urine
+3000764	u-bendi-o	11178	binary	1470	19525	7.5%	Benzodiazepines [Presence] in Urine
+3023465	s-gamma	8986	g/l	2192	69891	3.1%	Gamma globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3023465	s-gamma	10735	g/l	1116	69891	1.6%	Gamma globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3023465	s-gamma	9925	g/l	1002	69891	1.4%	Gamma globulin [Mass/volume] in Serum or Plasma by Electrophoresis
+3006598	ua-ph	0074	NA	3324	44205	7.5%	pH of Arterial cord blood
+3006598	ua-ph	50160	NA	6088	44205	13.8%	pH of Arterial cord blood
+3019420	s-trypt	50446	µg/l	1177	10557	11.1%	Tryptase [Mass/volume] in Serum or Plasma
+3019420	s-trypt	12590	µg/l	1693	10557	16.0%	Tryptase [Mass/volume] in Serum or Plasma
+3042585	fp-b6-vit	6080	nmol/l	1097	2868	38.2%	Pyridoxine [Moles/volume] in Serum or Plasma
+3048689	f-calpro	4871	ug/g	22293	383601	5.8%	Calprotectin [Mass/mass] in Stool
+43055190	u-makrof	0622	count/field	1249	1385	90.2%	Macrophages [#/area] in Urine sediment by Microscopy high power field
+3012336	p-haptog	50146	g/l	4969	81382	6.1%	Haptoglobin [Mass/volume] in Serum or Plasma
+3012336	p-haptog	1545	g/l	1020	81382	1.3%	Haptoglobin [Mass/volume] in Serum or Plasma
+3003329	sy-lymf	0283	%	1075	8187	13.1%	Lymphocytes/100 leukocytes in Synovial fluid
+3027831	ly-nk	10975	%	4435	11165	39.7%	CD3-CD16+CD56+ (Natural killer) cells/100 cells in Blood
+3027831	ly-nk	50008	%	1427	11165	12.8%	CD3-CD16+CD56+ (Natural killer) cells/100 cells in Blood
+3005013	s-psa-v	4900	µg/l	13564	324430	4.2%	Prostate Specific Ag Free [Mass/volume] in Serum or Plasma
+3020891	b-temp	0562	c	6233	26504	23.5%	Body temperature
+40761871	s-rarah3e	20802	ku/l	2123	3439	61.7%	Peanut recombinant (rAra h) 3 IgE Ab [Units/volume] in Serum
+3001079	p-vrab-o	4577	binary	15839	76374	20.7%	Blood group antibody screen [Presence] in Serum or Plasma
+3016894	li-vzvnho	17736	binary	1172	1253	93.5%	Varicella zoster virus DNA [Presence] in Cerebral spinal fluid by NAA with probe detection
+3021706	ua-po2	50164	kpa	7811	42399	18.4%	Oxygen [Partial pressure] in Arterial cord blood
+3020073	ly-cd4/cd8	0869	NA	1908	8144	23.4%	CD3+CD4+ (T4 helper) cells/CD3+CD8+ (T8 suppressor cells) cells [# Ratio] in Specimen
+43534046	s-estdiol	20823	nmol/l	3092	5866	52.7%	Estradiol (E2) [Moles/volume] in Serum or Plasma by High sensitivity method
+3016031	s-mantele	8764	ku/l	1273	3068	41.5%	Almond IgE Ab [Units/volume] in Serum
+3016228	ly-cd19	0870	%	1907	8067	23.6%	CD19 cells/100 cells in Blood
+3016228	ly-cd19	9291	%	1072	8067	13.3%	CD19 cells/100 cells in Blood
+21491979	s-prlbio	50096	mu/l	1678	8200	20.5%	Prolactin monomeric [Units/volume] in Serum or Plasma
+3024474	li-alb	0292	mg/l	1073	13374	8.0%	Albumin [Mass/volume] in Cerebral spinal fluid
+40759040	s-c-pep-a	50224	nmol/l	4396	11768	37.4%	C peptide [Moles/volume] in Serum or Plasma --post meal
+3014599	s-munavae	457	ku/l	6025	20919	28.8%	Egg white IgE Ab [Units/volume] in Serum
+3004248	s-shbg	0648	nmol/l	1342	79121	1.7%	Sex hormone binding globulin [Moles/volume] in Serum or Plasma
+3039429	sa-korsol	6358	nmol/l	2375	8788	27.0%	Cortisol [Moles/volume] in Saliva (oral fluid)
+3039429	sa-korsol	10972	nmol/l	1766	8788	20.1%	Cortisol [Moles/volume] in Saliva (oral fluid)
+3003284	s-p-anca	9318	titre	1280	3469	36.9%	Neutrophil cytoplasmic Ab.perinuclear [Titer] in Serum by Immunofluorescence
+3042602	p-urea-dj	0479	mmol/l	4692	13946	33.6%	Urea [Moles/volume] in Serum or Plasma --post dialysis
+42528717	s-ranao3e	21275	ku/l	4592	6575	69.8%	Cashew nut recombinant (rAna o) 3 IgE Ab [Units/volume] in Serum
+3012494	s-maapähe	478	ku/l	7910	18811	42.0%	Peanut IgE Ab [Units/volume] in Serum
+3028300	u-canna-o	0779	binary	1877	12052	15.6%	Cannabinoids [Presence] in Urine
+3026470	b-co	3965	µg/l	2768	13135	21.1%	Cobalt [Mass/volume] in Blood
+42870365	b-crp	1216	mg/l	2292	23901	9.6%	C reactive protein [Mass/volume] in Blood by High sensitivity method
+3011951	s-aspfume	447	ku/l	1407	5368	26.2%	Aspergillus fumigatus IgE Ab [Units/volume] in Serum
+3011951	s-aspfume	13600	ku/l	1021	5368	19.0%	Aspergillus fumigatus IgE Ab [Units/volume] in Serum
+3000899	s-stpn7f	21223	ug/ml	1012	1100	92.0%	Streptococcus pneumoniae Danish serotype 7F IgG Ab [Mass/volume] in Serum
+40761873	s-rarah1e	20801	ku/l	2318	3562	65.1%	Peanut recombinant (rAra h) 1 IgE Ab [Units/volume] in Serum
+1175426	ly-t-cd3	50002	%	1424	19302	7.4%	CD3 cells/100 lymphocytes in Blood
+1175426	ly-t-cd3	10973	%	4447	19302	23.0%	CD3 cells/100 lymphocytes in Blood
+1175426	ly-cd3	0872	%	1908	19302	9.9%	CD3 cells/100 lymphocytes in Blood
+3036312	s-lohie	480	ku/l	1020	1925	53.0%	Salmon IgE Ab [Units/volume] in Serum
+3010503	b-cd19	0871	e9/l	1909	8077	23.6%	CD19 cells [#/volume] in Blood
+3010503	b-cd19	9292	e9/l	1075	8077	13.3%	CD19 cells [#/volume] in Blood
+3001501	gluk-pika	604760	mmol/l	1442	6017	24.0%	Glucose [Moles/volume] in Capillary blood by Glucometer
+3001501	gluk-pika	602923	mmol/l	2469	6017	41.0%	Glucose [Moles/volume] in Capillary blood by Glucometer
+3016750	cu-kesto	0211	min	3605	8064	44.7%	Collection duration of Urine
+44806071	p-kardabm	6496	mpl	1173	1914	61.3%	Cardiolipin IgM antibody measurement
+40766207	s-rarah8e	20806	ku/l	1675	3865	43.3%	Peanut recombinant (rAra h) 8 IgE Ab [Units/volume] in Serum
+40767665	s-rarah9e	20803	ku/l	1931	2985	64.7%	Peanut recombinant (rAra h) 9 IgE Ab [Units/volume] in Serum
+42870531	s-rcora1e	20810	ku/l	1312	2626	50.0%	Hazelnut recombinant (rCor a) 1 IgE Ab [Units/volume] in Serum
+3026250	b-tacroms	11930	µg/l	2619	93205	2.8%	Tacrolimus [Mass/volume] in Blood
+3026250	b-tacroms	11616	µg/l	2238	93205	2.4%	Tacrolimus [Mass/volume] in Blood
+3031309	s-prlrec	50095	%	1674	8207	20.4%	Prolactin monomeric/Prolactin.total in Serum or Plasma
+3019230	vb-hbo2	3241	%	1852	34399	5.4%	Fractional oxyhemoglobin in Venous blood
+3028286	s-album	9920	g/l	1001	60160	1.7%	Albumin [Mass/volume] in Serum or Plasma by Electrophoresis
+42869904	kt/v	9609	NA	1133	4288	26.4%	Kt/V.Peritoneal Dialysis
+3045781	s-inhibb	20040	ng/l	1302	5372	24.2%	Inhibin B [Mass/volume] in Serum or Plasma
+3044254	-inabrsv	8577	binary	2994	8310	36.0%	Respiratory syncytial virus RNA [Presence] in Specimen by NAA with probe detection
+3045462	u-prokre	9605	g/mol	3375	11915	28.3%	Protein/Creatinine [Ratio] in Urine
+3048469	s-ohkarba	13957	µmol/l	1183	20822	5.7%	10-Hydroxycarbazepine [Moles/volume] in Serum or Plasma
+3006665	s-stpn18c	21065	ug/ml	1014	1117	90.8%	Streptococcus pneumoniae Danish serotype 18C IgG Ab [Mass/volume] in Serum

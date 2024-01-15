@@ -1,5 +1,32 @@
 #include "../header.h"
 
+
+void read_lab_id_abbrv_map(std::string file_path,
+                           std::map<std::string, std::unordered_set<std::string>> &elems) {
+   // open
+    std::ifstream in_file;
+    in_file.open(file_path);
+    check_in_open(in_file, file_path, 1);
+    // Read
+    std::string line;
+    std::map<std::string, std::unordered_set<std::string>> phs;
+    char delim = find_delim(file_path);
+    while (std::getline(in_file, line)) {
+        std::vector<std::string> line_vec = split(line, &delim);
+        elems[line_vec[0]].insert(line_vec[1]);
+    }
+    in_file.close();
+
+    // Print first 10 elems of elems
+    std::cout << "Printing first 10 elems of " << file_path << std::endl;
+    for(auto &elem: elems) {
+        std::cout << elem.first << " <--> ";
+        for(auto &elem2: elem.second)
+            std::cout << elem2 << " ";
+        std::cout << std::endl;
+    }
+}
+
 /**
  * @brief Fixes phs that often have no units
  * 
@@ -13,11 +40,15 @@
 */
 void fix_phs(std::string &lab_id,
              std::string &lab_abbrv,
-             std::string &lab_unit) {
-    std::unordered_set<std::string> phs = {"8522 p-ph", "9010 s-ca-ion", "1530 u-ph", "9225 p-ca-ion", "8869 u-ph-huu", "8423 s-ph", "5098 s-ph(akt)", "586 c++/7.40", "13900 p-ca-ion.", "8523 s-ph"};
-
-    if((phs.find(concat_string({lab_id, lab_abbrv}, " ")) != phs.end()) & (lab_unit == "NA")) lab_unit = "ph";
+             std::string &lab_unit,
+             std::map<std::string, std::unordered_set<std::string>> &phs) {
+    if(phs.find(lab_id) != phs.end()) {
+        if(phs[lab_id].find(lab_abbrv) != phs[lab_id].end()) {
+            if(lab_unit == "NA") lab_unit = "ph";
+        }
+    } 
 }
+
 
 /**
  * @brief Fixes titles that have random units and values even though they are not measurements
@@ -34,17 +65,36 @@ void fix_phs(std::string &lab_id,
 void fix_titles(std::string &lab_id,
                   std::string &lab_abbrv,
                   std::string &lab_unit,
-                  std::string &lab_value) {
-    std::unordered_set<std::string> titles = {"2474 b-pvk-t", "2473 b-pvk", "2474 b-pvkt", "90 b-pvk+t", "139 u-bakt", "147 vekapak1", 
-                                              "158 b-diffi", "185 u-solut", "248 pt-gfre-md", "273 b-pvk+tkd,ig",
-                                              "298 fp-lipidit", "316 pu-baktvi1", "412 fs-lipidit", "437 u-tutk-1,ph", "452 b-tvk", 
-                                              "462 fp-kol-ind", "471 b-pvk", "516 b-pvk+tmd", "559 2hgluk", "568 vb-he-tase"
-                                              "618 s-hbvpak", "672 s-keliseu", "695 pt-gluk-r1", "723 cb-het-ion", "760 b-baktjvi",
-                                              "761 s-ruokaer", "774 b-pvk+tkd", "777 pt-gluk-2h", "798 vb-vkperus", "803 u-kemseul,ph", 
-                                              "852 pt-kt/v1", "958 cb-bepika", "983 pocabrc", "993 vb-vklaaja", "994 pes.j‰l"};
-    if((titles.find(concat_string({lab_id, lab_abbrv}, " ")) != titles.end())) {
-        lab_unit = "ordered";
-        lab_value = "NA";
+                  std::string &lab_value,
+                  std::map<std::string, std::unordered_set<std::string>> &titles) {
+
+    if(titles.find(lab_id) != titles.end()) {
+        if(titles[lab_id].find(lab_abbrv) != titles[lab_id].end()) {
+            // this is actually a bug, want to remove the data and not 
+            // make it pH but represents the current data
+            lab_unit = "ordered";
+        }
+    }
+}
+
+/**
+ * @brief Converts units from e6/l to e9/l
+ * 
+ * @param lab_value The lab value of the lab test
+ * @param lab_unit The lab unit of the lab test
+ * 
+ * @return void
+ * 
+ * Converts units from e6/l to e9/l.
+*/
+void unit_conversion(std::string lab_value,
+                     std::string lab_unit) {
+    // Convert e6/l to e9/l
+    if(lab_unit == "e6/l") {
+        double lab_value_double = std::stod(lab_value);
+        lab_value_double = lab_value_double / 1000;
+        lab_value = std::to_string(lab_value_double);
+        lab_unit = "e9/l";
     }
 }
 
@@ -64,7 +114,7 @@ void fix_inrs(std::string &lab_id,
               std::string &lab_unit) {
     std::unordered_set<std::string> inrs = {"4520 p-tt-inr", "4520 p-inr", "955 p-inr."};
 
-    if((inrs.find(concat_string({lab_id, lab_abbrv}, " ")) != inrs.end()) & (lab_unit == "NA")) lab_unit = "inr";
+    if((inrs.find(concat_string(std::vector<std::string>({lab_id, lab_abbrv}), " ")) != inrs.end()) & (lab_unit == "NA")) lab_unit = "inr";
 }
 
 /**
@@ -98,7 +148,7 @@ int remove_illegal_measure_year(std::string &date_time,
     std::string year = date_time.substr(0, 4);
     try {
         int year_int = std::stoi(year);
-        if(year_int < 2014) {
+        if(year_int < 2014 || year_int > 2023) {
             keep = 0;
         } 
     } catch(...) {
@@ -147,6 +197,27 @@ int remove_illegal_values(std::string &lab_value,
         // This means we end up having neither lab value nor abnormality
         if(lab_abnorm == "NA") keep = 0;
     }
+    return(keep);
+}
+
+/**
+ * @brief Removes illegal measure statuses that are D or P
+ * 
+ * @param measure_status The measure status of the lab test
+ * @param keep Whether the line should be kept or not
+ * 
+ * @return void
+ * 
+ * If the measure status is D or P, the line is removed. D stands for deleted information and P for a preliminary result. The entrie with missing information
+ * are kept. We have found that this increases the coverage across different 
+ * areas of Finland. Indicating that the actual status is missing from specific
+ * providers.
+ */
+int remove_bad_measure_status(std::string measure_status,
+                              int keep) {
+    if(measure_status == "NA") return(keep);
+    if(measure_status == "D") return(0);
+    if(measure_status == "P") return(0);
     return(keep);
 }
 
