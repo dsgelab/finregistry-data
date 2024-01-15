@@ -8,33 +8,53 @@
  * @param res_path Path to results directory
  * 
  * @return void 
+ * 
+ * @details Reads in all previous duplines files into a map.
+ * The map has the duplicate lines as keys and the value is 0 if the duplicate line is from a previous file and 1 if the duplicate line is from the current file.
+ * The idea originally was to also track the number of times a duplicate line has been seen, but this has not been implemented yet.
 */
 void get_previous_dup_lines(std::unordered_map<std::string, int> &all_dup_lines, 
                             std::string file,
+                            std::string date,
                             std::string res_path) {
     // For first file, nothing to read in yet
     if(file != "1") {
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        cout << "Reading in previous duplicate line files" << endl;
         int crnt_file_no = std::stoi(file);
         // Read in all previous duplines files
         for(int file_no=1; file_no < crnt_file_no; file_no++) {
+            std::chrono::steady_clock::time_point file_begin = std::chrono::steady_clock::now();
+
             // File path
-            std::vector<std::string> duplines_path_vec = {res_path, "processed/reports/problem_rows/duplines_", std::to_string(file_no), ".csv"};    
+            std::vector<std::string> duplines_path_vec = {res_path, "processed/reports/problem_rows/duplines_", std::to_string(file_no), "_", date, ".tsv"};    
             std::string duplines_path = concat_string(duplines_path_vec, std::string(""));
-            cout << duplines_path << endl;
 
             // Opening file
-            std::ifstream duplines_file; duplines_file.open(duplines_path); check_in_open(duplines_file, duplines_path);
+            std::ifstream duplines_file; 
+            duplines_file.open(duplines_path); 
+            int file_open = check_in_open(duplines_file, duplines_path, 0);
 
-            // Reading in lines
-            std::string line;
-            while(std::getline(duplines_file, line)) {
-                std::vector<std::string> line_vec = split(line, "\t");
-                // Adding file specific counts
-                all_dup_lines[line_vec[0]] = 0;
+            if(file_open == 1) {
+                // Reading in lines
+                std::string line;
+                while(std::getline(duplines_file, line)) {
+                    std::vector<std::string> line_vec = splitString(line, '\t');
+                    // Zero means the duplicate is from a previous file
+                    all_dup_lines[line_vec[0]] = 0;
+                }
+                duplines_file.close();
             }
-            duplines_file.close();
-        }
+
+            std::chrono::steady_clock::time_point file_end = std::chrono::steady_clock::now();
+
+            std::cout << "Reading duplicate lines from file " << std::to_string(file_no) << " took = " << std::chrono::duration_cast<std::chrono::minutes>(file_end - file_begin).count() << "[min]" << std::endl;
+        }  
+         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+        std::cout << "Time took reading all duplicate line files in = " << std::chrono::duration_cast<std::chrono::minutes>(end - begin).count() << "[min]" << std::endl;
     }
+
 }
 
 /**
@@ -49,6 +69,7 @@ void get_previous_dup_lines(std::unordered_map<std::string, int> &all_dup_lines,
 */
 void read_thl_sote_map(std::unordered_map<std::string, std::string> &thl_sote_map,
                    std::string thl_sote_path) {
+    cout << "Reading in THL Sote map" << endl;
     // Opening file
     std::ifstream lab_file; lab_file.open(thl_sote_path); check_in_open(lab_file, thl_sote_path);
 
@@ -79,13 +100,15 @@ void read_thl_sote_map(std::unordered_map<std::string, std::string> &thl_sote_ma
 **/
 void read_thl_lab_id_abbrv_map(std::unordered_map<std::string, std::string> &thl_abbrv_map,
                                std::string thl_abbrv_path) {
+    cout << "Reading in national lab ID - abbreviation map." << endl;
     // Opening file
     std::ifstream abbrv_file; abbrv_file.open(thl_abbrv_path); check_in_open(abbrv_file, thl_abbrv_path);
+    char delim = find_delim(thl_abbrv_path);
 
     // Reading in lines
     std::string line;
     while(std::getline(abbrv_file, line)) {
-        std::vector<std::string> line_vec = split(line, "\t");
+        std::vector<std::string> line_vec = splitString(line, delim);
 
         std::string lab_id = line_vec[0];
         std::string lab_abbrv = line_vec[1];
@@ -93,84 +116,6 @@ void read_thl_lab_id_abbrv_map(std::unordered_map<std::string, std::string> &thl
         thl_abbrv_map[lab_id] = lab_abbrv;
     }
     abbrv_file.close();
-}
-
-
-std::vector<std::string> read_correct_lines(std::string &line,
-                                            unsigned long long &total_line_count,
-                                            unsigned long long &skip_count,
-                                            std::ofstream &error_file,
-                                            int &lines_valid_status) {
-    int n_cols(25);
-    const char *delim = ";";
-    std::vector<std::string> new_line_vec;
-
-    /// LINE VECTORS
-    std::vector<std::string> final_line_vec(25);
-    // Split values and copy into line vector
-    std::vector<std::string> line_vec(split(line, delim));   
-
-    // Seemingly correctly defined line
-    if(int(line_vec.size()) == n_cols) {
-        // Can savely copy into the final line vector
-        std::copy(line_vec.begin(), line_vec.end(), final_line_vec.begin());
-        // Line is valid
-        lines_valid_status = 0;
-
-    // TOO MANY COLUMNS, can't fix at the moment. Line invalid.
-    } else if(int(line_vec.size()) > n_cols) {
-        lines_valid_status = 1;
-        
-    // TOO FEW COLUMNS, fixing if early line break i.e. "B-Lym\nf"
-    } else if(int(line_vec.size()) < n_cols)  {
-        // Getting next line
-        std::string new_line;
-        std::getline(std::cin, new_line); 
-        ++total_line_count;
-        new_line_vec = split(new_line, delim);
-    // Checking that new line has too few columns also -> likely a continuation of the previous line
-    if(int(new_line_vec.size()) < n_cols) {
-        // Concatinating back last element of previous line with first of new line
-        std::string new_name = concat_string(std::vector<std::string> {line_vec[line_vec.size()-1], new_line_vec[0]});
-        line_vec.at(line_vec.size()-1) =  new_name;
-
-        // Concatinating the two line vectors
-        line_vec.insert(line_vec.end(), next(new_line_vec.begin()), new_line_vec.end());
-
-        // Concatination gives reasonable line. Line is valid, using it.
-        if(int(line_vec.size()) == n_cols) {
-            std::copy(line_vec.begin(), line_vec.end(), final_line_vec.begin());
-            // Line(s) is valid
-            lines_valid_status = 0;
-        
-        // Concatination does not give us a valid line. Both are invalid. 
-        } else {
-            lines_valid_status = 2;
-        }
-        // New line is actually a full line. Line is invalid. Newline is valid, using it. 
-        } else if(int(new_line_vec.size()) == n_cols) { 
-            // Copping new line into the final line vector
-            std::copy(new_line_vec.begin(), new_line_vec.end(), final_line_vec.begin());
-            // Line invalid, new line valid
-            lines_valid_status = 3;
-        // Both lines are invalid.
-        } else {
-            lines_valid_status = 2;
-        }
-    } 
-
-
-    /// Writing lines to error files
-    // Line is invalid
-    if((lines_valid_status == 1) | (lines_valid_status == 3)) {
-        error_file << concat_string(line_vec, ";") << "\n";
-        ++skip_count;
-    }  
-    // Newline is also invalid
-    if(lines_valid_status == 2) {
-        error_file <<  concat_string(new_line_vec, ";") << "\n";
-    }
-    return final_line_vec;
 }
 
 /**
@@ -183,7 +128,7 @@ std::vector<std::string> read_correct_lines(std::string &line,
  * @details Different NA indicators are Puuttuu, "", TYHJÄ, _, -1 (except in value column)
 */
 void fix_nas(std::vector<std::string> &final_line_vec) {
-    int n_cols(25);
+    int n_cols(46);
     // Replacing different NA indicators with NA
     for(int elem_idx=0; elem_idx < n_cols; elem_idx++) {
         // Replacing NAs
@@ -191,6 +136,7 @@ void fix_nas(std::vector<std::string> &final_line_vec) {
             (final_line_vec[elem_idx] == "\"\"") | 
             (final_line_vec[elem_idx] == "TYHJÄ") | 
             (final_line_vec[elem_idx] == "_") |
+            (final_line_vec[elem_idx] == "NULL") |
             ((final_line_vec[elem_idx] == "-1") & (elem_idx != 19))) { // -1 in value not considered NA
             final_line_vec[elem_idx] = "NA";
             }
@@ -262,7 +208,7 @@ std::string get_lab_abbrv(std::unordered_map<std::string, std::string> &thl_abbr
     std::string lab_abbrv;
     if(lab_id_source == "0") {
         lab_name = to_lower(lab_name);
-        lab_name = remove_chars(lab_name, ' ');
+        lab_name = lab_name;
         lab_abbrv = lab_name;
     } else {
         // Mapping lab IDs to abbreviations
@@ -275,34 +221,69 @@ std::string get_lab_abbrv(std::unordered_map<std::string, std::string> &thl_abbr
     return(lab_abbrv);
 }
 
+/**
+ * @brief Writes the row count report
+ * 
+ * @param report_path Reference to the path to the report directory
+ * @param date Reference to the date
+ * @param total_line_count Reference to the total line count
+ * @param valid_line_count Reference to the valid line count
+ * @param dup_count Reference to the duplicate line count
+ * @param na_count Reference to the missing line count
+ * @param hetu_count Reference to the non-official hetu line count
+ * @param stat_count Reference to the bad measure status line count
+ * 
+ * @return void
+ * 
+ * @details Writes the row count report.
+*/
 void write_row_count_report(std::string &report_path,
+                            std::string &date,
                             unsigned long long &total_line_count,
                             unsigned long long &valid_line_count,
-                            unsigned long long &skip_count,
                             unsigned long long &dup_count,
-                            unsigned long long &na_count) {
+                            unsigned long long &na_count,
+                            unsigned long long &hetu_count,
+                            unsigned long long &stat_count) {
+    cout << "Writing row line report" << endl;
     // Opening 
     std::ofstream report_file;
     report_file.open(report_path); check_out_open(report_file, report_path);
 
     // Writing 
-    report_file << "All rows: " << total_line_count << "\n";
-    report_file << "Usable rows: " << valid_line_count << "\n";
-    report_file << "Skipped rows: " << skip_count << "\n";
-    report_file << "Duplicate rows: " << dup_count << "\n";
-    report_file << "Missing value rows: " << na_count << "\n";
+    report_file << "All:" << "\t" << total_line_count << "\n";
+    report_file << "Usable: "  << "\t" <<  valid_line_count << "\n";
+    report_file << "Duplicate: "  << "\t" <<  dup_count << "\n";
+    report_file << "Missing: "  << "\t" <<  na_count << "\n";
+    report_file << "Bad_measure_status: "  << "\t" <<  stat_count << "\n";
+    report_file << "Non-official_hetu: "  << "\t" <<  hetu_count << "\n";
     report_file << endl;
 
     // Closing
     report_file.close();  
 }
 
+/**
+ * @brief Writes the duplicate lines file
+ * 
+ * @param res_path Reference to the path to the results directory
+ * @param file Reference to the current file number
+ * @param date Reference to the date
+ * @param report_path Reference to the path to the report directory
+ * @param all_dup_lines Reference to the map with all duplicate lines
+ * 
+ * @return void
+ * 
+ * @details Writes the duplicate lines file. 
+*/
 void write_dup_lines_file(std::string &res_path,
                           std::string &file,
+                          std::string &date,
                           std::string &report_path,
                           std::unordered_map<std::string, int> &all_dup_lines) {
+    cout << "Writing duplicate lines file" << endl;
     // File paths
-    std::vector<std::string> duplines_path_vec = {res_path, "processed/reports/problem_rows/", "duplines_", file, ".csv"};    
+    std::vector<std::string> duplines_path_vec = {res_path, "processed/reports/problem_rows/", "duplines_", file, "_", date, ".tsv"};    
     std::string duplines_path = concat_string(duplines_path_vec, std::string(""));
 
     // Opening
@@ -311,7 +292,8 @@ void write_dup_lines_file(std::string &res_path,
 
     // Writing
     for(const std::pair<const std::string, int>& elem: all_dup_lines) {
-        if(elem.second != 0) {
+        // Status of 1 means that the line was newly found in the current file
+        if(elem.second != 0) { 
             duplines_file << elem.first << "\t" << elem.second << "\n";
         }
     }
